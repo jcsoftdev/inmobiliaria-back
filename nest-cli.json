@@ -54,6 +54,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/real-state-gateway/tsconfig.app.json"
       }
+    },
+    "user-management": {
+      "type": "application",
+      "root": "apps/user-management",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-management/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-management/tsconfig.app.json"
+      }
     }
   }
 }
