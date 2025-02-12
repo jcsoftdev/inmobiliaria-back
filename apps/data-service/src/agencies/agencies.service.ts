@@ -1,6 +1,6 @@
+import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
-import { PrismaService } from '@data-service/prisma.service'
 import { CreateAgencyDto, UpdateAgencyDto } from '@app/contracts/agencies'
 
 @Injectable()

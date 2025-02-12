@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { ClientsService } from './clients.service'
-import { CLIENTS_PATTERNS, Client } from '@app/contracts/clients'
+import { CLIENTS_PATTERNS, CreateClientDto } from '@app/contracts/clients'
 
 @Controller()
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @MessagePattern(CLIENTS_PATTERNS.CREATE)
-  create(@Payload() createClientDto: Client) {
+  create(@Payload() createClientDto: CreateClientDto) {
     return this.clientsService.create(createClientDto)
   }
 
@@ -21,16 +21,4 @@ export class ClientsController {
   findOne(@Payload() id: number) {
     return this.clientsService.findOne(id)
   }
-
-  /*
-  @MessagePattern('updateClient')
-  update(@Payload() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(updateClientDto.id, updateClientDto)
-  }
-
-  @MessagePattern('removeClient')
-  remove(@Payload() id: number) {
-    return this.clientsService.remove(id)
-  }
-    */
 }

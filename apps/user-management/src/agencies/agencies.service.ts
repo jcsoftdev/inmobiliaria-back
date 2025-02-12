@@ -1,9 +1,4 @@
-import {
-  AGENCIES_PATTERNS,
-  Agency,
-  CreateAgencyDto,
-  UpdateAgencyDto,
-} from '@app/contracts/agencies'
+import { AGENCIES_PATTERNS, Agency } from '@app/contracts/agencies'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { Observable } from 'rxjs'

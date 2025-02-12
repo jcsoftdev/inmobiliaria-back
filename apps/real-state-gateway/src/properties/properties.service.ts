@@ -6,7 +6,8 @@ import { Observable } from 'rxjs'
 @Injectable()
 export class PropertiesService {
   constructor(
-    @Inject('PROPERTIES_CLIENT') private readonly propertiesClient: ClientProxy,
+    @Inject('PROPERTIES_CLIENT')
+    private readonly propertiesClient: ClientProxy,
   ) {}
 
   findAll(): Observable<Property[]> {

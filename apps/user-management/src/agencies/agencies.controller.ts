@@ -1,12 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { AgenciesService } from './agencies.service'
-import {
-  AGENCIES_PATTERNS,
-  Agency,
-  CreateAgencyDto,
-  UpdateAgencyDto,
-} from '@app/contracts/agencies'
+import { AGENCIES_PATTERNS, Agency } from '@app/contracts/agencies'
 
 @Controller()
 export class AgenciesController {
