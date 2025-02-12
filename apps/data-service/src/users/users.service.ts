@@ -44,6 +44,8 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return this.prismaService.users.delete({ where: { id } })
+    return this.prismaService.users.delete({
+      where: { id: Number(id) }, // Convertimos a número por si acaso
+    })
   }
 }

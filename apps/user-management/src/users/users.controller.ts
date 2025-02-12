@@ -22,15 +22,13 @@ export class UsersController {
     return this.usersService.findOne(id)
   }
 
-  /*
-  @MessagePattern('updateUser')
-  update(@Payload() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(updateUserDto.id, updateUserDto)
+  @MessagePattern(USERS_PATTERNS.UPDATE)
+  update(@Payload() updateUserDto: User) {
+    return this.usersService.update(updateUserDto)
   }
 
-  @MessagePattern('removeUser')
+  @MessagePattern(USERS_PATTERNS.REMOVE)
   remove(@Payload() id: number) {
     return this.usersService.remove(id)
   }
-    */
 }

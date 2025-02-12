@@ -24,4 +24,14 @@ export class UsersController {
   create(@Body() data: User): Observable<User> {
     return this.usersService.create(data)
   }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() data: User): Observable<User> {
+    return this.usersService.update(+id, data)
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string): Observable<User> {
+    return this.usersService.delete(+id)
+  }
 }

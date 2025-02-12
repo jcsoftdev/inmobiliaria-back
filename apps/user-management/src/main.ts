@@ -16,8 +16,10 @@ async function bootstrap() {
     },
   )
   app.useGlobalFilters(new GlobalRpcExceptionFilter())
-  app.listen()
+  await app.listen()
 }
-bootstrap().then(() =>
-  console.log(`User Management Microservice is running on port ${port}`),
-)
+bootstrap()
+  .then(() =>
+    console.log(`User Management Microservice is running on port ${port}`),
+  )
+  .catch(console.error)

@@ -1,7 +1,11 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { UsersService } from './users.service'
-import { USERS_PATTERNS, CreateUserDto } from '@app/contracts/users'
+import {
+  USERS_PATTERNS,
+  CreateUserDto,
+  UpdateUserDto,
+} from '@app/contracts/users'
 
 @Controller()
 export class UsersController {
@@ -20,5 +24,15 @@ export class UsersController {
   @MessagePattern(USERS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number) {
     return this.usersService.findOne(id)
+  }
+
+  @MessagePattern(USERS_PATTERNS.UPDATE)
+  update(@Payload() { id, data }: { id: number; data: UpdateUserDto }) {
+    return this.usersService.update(id, data)
+  }
+
+  @MessagePattern(USERS_PATTERNS.REMOVE)
+  delete(@Payload() payload: { id: number }) {
+    return this.usersService.remove(payload.id)
   }
 }

@@ -17,4 +17,15 @@ export class UsersService {
   create(data: User): Observable<User> {
     return this.userManagementClient.send<User>(USERS_PATTERNS.CREATE, data)
   }
+
+  update(id: number, data: Partial<User>): Observable<User> {
+    return this.userManagementClient.send<User>(USERS_PATTERNS.UPDATE, {
+      id,
+      data,
+    })
+  }
+
+  delete(id: number): Observable<User> {
+    return this.userManagementClient.send<User>(USERS_PATTERNS.REMOVE, { id })
+  }
 }
