@@ -40,6 +40,8 @@ export class AgenciesService {
   }
 
   remove(id: number) {
-    return this.prismaService.agencies.delete({ where: { id } })
+    return this.prismaService.agencies.delete({
+      where: { id: Number(id) },
+    })
   }
 }

@@ -21,4 +21,12 @@ export class AgenciesService {
   findOne(id: number): Observable<Agency> {
     return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.FIND_ONE, id)
   }
+
+  update(id: Agency): Observable<Agency> {
+    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.UPDATE, id)
+  }
+
+  remove(id: number): Observable<Agency> {
+    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.REMOVE, id)
+  }
 }

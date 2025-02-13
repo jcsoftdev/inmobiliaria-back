@@ -1,7 +1,11 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { AgenciesService } from './agencies.service'
-import { AGENCIES_PATTERNS, CreateAgencyDto } from '@app/contracts/agencies'
+import {
+  AGENCIES_PATTERNS,
+  CreateAgencyDto,
+  UpdateAgencyDto,
+} from '@app/contracts/agencies'
 
 @Controller()
 export class AgenciesController {
@@ -20,5 +24,15 @@ export class AgenciesController {
   @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number) {
     return this.agenciesService.findOne(id)
+  }
+
+  @MessagePattern(AGENCIES_PATTERNS.UPDATE)
+  update(@Payload() { id, data }: { id: number; data: UpdateAgencyDto }) {
+    return this.agenciesService.update(id, data)
+  }
+
+  @MessagePattern(AGENCIES_PATTERNS.REMOVE)
+  delete(@Payload() payload: { id: number }) {
+    return this.agenciesService.remove(payload.id)
   }
 }
