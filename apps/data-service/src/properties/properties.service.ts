@@ -5,7 +5,7 @@ import { CreatePropertyDto, UpdatePropertyDto } from '@app/contracts/properties'
 import {
   ERROR_TYPES,
   TypedRpcException,
-} from '@app/common/exceptions/types-rpc.exception'
+} from '@app/common/exceptions/rpc.exception'
 
 @Injectable()
 export class PropertiesService {
@@ -13,9 +13,10 @@ export class PropertiesService {
 
   create(createPropertyDto: CreatePropertyDto) {
     if (!createPropertyDto.agencyId || !createPropertyDto.userId) {
-      return new TypedRpcException(ERROR_TYPES.BAD_REQUEST, {
-        message: 'AgencyId and UserId are required',
+      throw new TypedRpcException({
+        errorType: ERROR_TYPES.BAD_REQUEST,
         statusCode: 400,
+        message: 'Agency ID and User ID are required',
       })
     }
     return this.prismaService.properties.create({

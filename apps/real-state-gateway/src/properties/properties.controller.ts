@@ -17,6 +17,7 @@ export class PropertiesController {
 
   @Get()
   findAll(): Observable<Property[]> {
+    console.log('Hello')
     return this.propertiesService.findAll()
   }
 

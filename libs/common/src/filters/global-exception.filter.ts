@@ -3,20 +3,20 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-  InternalServerErrorException,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { RpcException } from '@nestjs/microservices'
-import { RpcError } from '@app/common/exceptions/types-rpc.exception'
+import { RpcExceptionSerializedWithResponse } from '@app/common/exceptions/rpc.exception'
+import { CustomHttpException } from '@app/common/exceptions/http.exception'
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: RpcError, host: ArgumentsHost) {
+export class AllExceptionsFilter
+  implements ExceptionFilter<RpcExceptionSerializedWithResponse>
+{
+  catch(exception: RpcExceptionSerializedWithResponse, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
 
     console.error('🚨 Exception Type:', exception?.constructor?.name)
-    console.error('🚨 Full Exception:', exception)
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
@@ -25,24 +25,27 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode: status,
         message: this.extractMessage(errorResponse),
       })
-    } else if (exception instanceof RpcException) {
-      console.log('✅ Caught RpcException')
-      const errorResponse = exception.getError()
-      response.status(400).json({
-        statusCode: 400,
-        message: this.extractMessage(errorResponse),
-      })
     } else {
-      console.log('❌ Unknown exception type')
-      const internalError = new InternalServerErrorException({
-        status: exception.statusCode ?? 500,
+      //
+      console.log(
+        '❌ Unknown exception type [Posible from another microservice]',
+        exception.errorResponse,
+      )
+      const internalError = new CustomHttpException({
+        statusCode: exception.errorResponse.statusCode ?? 500,
         message: exception?.message ?? 'An internal server error occurred',
+        errorType: exception.errorResponse.errorType,
       })
 
-      response.status(400).json({
-        statusCode: internalError.getStatus(),
-        message: internalError.message,
-      })
+      console.log(
+        '🚨 Internal Error:',
+        internalError.message,
+        internalError.getStatus(),
+      )
+
+      response
+        .status(internalError.getStatus())
+        .json(internalError.getResponse())
     }
   }
 
