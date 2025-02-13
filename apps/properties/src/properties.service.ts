@@ -9,6 +9,7 @@ export class PropertiesService {
     @Inject('DATABASE_SERVICE_CLIENT')
     private readonly propertiesClient: ClientProxy,
   ) {}
+
   findAll(): Observable<Property[]> {
     return this.propertiesClient.send<Property[]>(
       PROPERTIES_PATTERNS.FIND_ALL,
@@ -28,5 +29,13 @@ export class PropertiesService {
       PROPERTIES_PATTERNS.FIND_ONE,
       id,
     )
+  }
+
+  update(id: Property): Observable<Property> {
+    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.UPDATE, id)
+  }
+
+  remove(id: number): Observable<Property> {
+    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.REMOVE, id)
   }
 }

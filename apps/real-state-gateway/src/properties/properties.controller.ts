@@ -1,6 +1,14 @@
 import { Property } from '@app/contracts/properties'
 import { PropertiesService } from '@gateway/properties/properties.service'
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  Param,
+} from '@nestjs/common'
 import { Observable } from 'rxjs'
 
 @Controller('properties')
@@ -15,5 +23,18 @@ export class PropertiesController {
   @Post()
   create(@Body() data: Property): Observable<Property> {
     return this.propertiesService.create(data)
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() data: Property,
+  ): Observable<Property> {
+    return this.propertiesService.update(+id, data)
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string): Observable<Property> {
+    return this.propertiesService.delete(+id)
   }
 }

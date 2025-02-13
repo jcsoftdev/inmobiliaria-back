@@ -11,7 +11,6 @@ export class ClientsService {
   ) {}
 
   findAll(): Observable<Client[]> {
-    console.log('findAll')
     return this.userManagementClient.send<Client[]>(
       CLIENTS_PATTERNS.FIND_ALL,
       {},

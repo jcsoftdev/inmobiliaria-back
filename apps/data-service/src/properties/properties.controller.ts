@@ -2,8 +2,8 @@ import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { PropertiesService } from './properties.service'
 import {
-  CreatePropertyDto,
   PROPERTIES_PATTERNS,
+  CreatePropertyDto,
   UpdatePropertyDto,
 } from '@app/contracts/properties'
 
@@ -13,7 +13,6 @@ export class PropertiesController {
 
   @MessagePattern(PROPERTIES_PATTERNS.CREATE)
   create(@Payload() createPropertyDto: CreatePropertyDto) {
-    console.log({ createPropertyDto })
     return this.propertiesService.create(createPropertyDto)
   }
 
@@ -28,15 +27,12 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.UPDATE)
-  update(@Payload() updatePropertyDto: UpdatePropertyDto) {
-    return this.propertiesService.update(
-      updatePropertyDto.id,
-      updatePropertyDto,
-    )
+  update(@Payload() { id, data }: { id: number; data: UpdatePropertyDto }) {
+    return this.propertiesService.update(id, data)
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.REMOVE)
-  remove(@Payload() id: number) {
-    return this.propertiesService.remove(id)
+  delete(@Payload() playload: { id: number }) {
+    return this.propertiesService.remove(playload.id)
   }
 }
