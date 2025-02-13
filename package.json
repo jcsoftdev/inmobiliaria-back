@@ -17,7 +17,6 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/inmobiliaria/test/jest-e2e.json",
     "prepare": "husky"
   },
   "dependencies": {
@@ -83,10 +82,14 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@app/exceptions(|/.*)$": "<rootDir>/libs/exceptions/src/$1",
-      "^@contracts/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1",
-      "^@shared/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
+      "^@app/common$": "<rootDir>/libs/common/src",
+      "^@app/common/(.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/contracts$": "<rootDir>/libs/contracts/src",
+      "^@app/contracts/(.*)$": "<rootDir>/libs/contracts/src/$1",
+      "^@data-service/(.*)$": "<rootDir>/apps/data-service/src/$1",
+      "^@gateway/(.*)$": "<rootDir>/apps/real-state-gateway/src/$1",
+      "^@properties/(.*)$": "<rootDir>/apps/properties/src/$1"
     }
+
   }
 }
