@@ -21,4 +21,12 @@ export class ClientsService {
   findOne(id: number): Observable<Client> {
     return this.clientsClient.send<Client>(CLIENTS_PATTERNS.FIND_ONE, id)
   }
+
+  update(id: Client): Observable<Client> {
+    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.UPDATE, id)
+  }
+
+  remove(id: number): Observable<Client> {
+    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.REMOVE, id)
+  }
 }

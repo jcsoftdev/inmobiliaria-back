@@ -22,15 +22,13 @@ export class ClientsController {
     return this.clientsService.findOne(id)
   }
 
-  /*
-  @MessagePattern('updateClient')
-  update(@Payload() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(updateClientDto.id, updateClientDto)
+  @MessagePattern(CLIENTS_PATTERNS.UPDATE)
+  update(@Payload() updateClientDto: Client) {
+    return this.clientsService.update(updateClientDto)
   }
 
-  @MessagePattern('removeClient')
+  @MessagePattern(CLIENTS_PATTERNS.REMOVE)
   remove(@Payload() id: number) {
     return this.clientsService.remove(id)
   }
-    */
 }
