@@ -13,7 +13,7 @@ export const ERROR_TYPES = {
 export interface RpcError {
   errorType?: string
   statusCode?: number
-  message?: string
+  message?: string | object
 }
 
 export class RpcExceptionSerializedWithResponse {

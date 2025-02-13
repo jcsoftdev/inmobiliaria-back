@@ -1,12 +1,12 @@
+import { Response } from 'express'
+import { CustomHttpException } from '@app/common/exceptions/http.exception'
+import { RpcExceptionSerializedWithResponse } from '@app/common/exceptions/rpc.exception'
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
 } from '@nestjs/common'
-import { Response } from 'express'
-import { RpcExceptionSerializedWithResponse } from '@app/common/exceptions/rpc.exception'
-import { CustomHttpException } from '@app/common/exceptions/http.exception'
 
 @Catch()
 export class AllExceptionsFilter
@@ -16,7 +16,7 @@ export class AllExceptionsFilter
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
 
-    console.error('🚨 Exception Type:', exception?.constructor?.name)
+    console.error('🚨 Exception Type RPC:', exception?.constructor?.name)
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
@@ -29,11 +29,13 @@ export class AllExceptionsFilter
       //
       console.log(
         '❌ Unknown exception type [Posible from another microservice]',
-        exception.errorResponse,
+        exception,
       )
       const internalError = new CustomHttpException({
         statusCode: exception.errorResponse.statusCode ?? 500,
-        message: exception?.message ?? 'An internal server error occurred',
+        message:
+          exception?.errorResponse.message ??
+          'An internal server error occurred',
         errorType: exception.errorResponse.errorType,
       })
 
