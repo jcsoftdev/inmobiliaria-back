@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { UserManagementModule } from './user-management.module'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
-import { GlobalRpcExceptionFilter } from '@app/common/filters/rpc-validation.filter'
+import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
 
 const port = +(process.env.port ?? 3003)
 
@@ -15,7 +15,7 @@ async function bootstrap() {
       },
     },
   )
-  app.useGlobalFilters(new GlobalRpcExceptionFilter())
+  app.useGlobalFilters(new RpcErrorForwardingFilter())
   await app.listen()
 }
 bootstrap()

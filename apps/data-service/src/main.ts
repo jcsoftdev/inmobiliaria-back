@@ -1,9 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
-import { GlobalRpcExceptionFilter } from '@app/common/filters/rpc-validation.filter'
+import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
 import { DataServiceModule } from './data-service.module'
-// import { RpcValidationFilter } from '@app/common/filters/rpc-validation.filter'
-// import { PrismaExceptionFilter } from '@app/common/filters/prisma-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -15,7 +13,7 @@ async function bootstrap() {
       },
     },
   )
-  app.useGlobalFilters(new GlobalRpcExceptionFilter())
+  app.useGlobalFilters(new RpcErrorForwardingFilter())
 
   await app.listen()
 }
