@@ -11,7 +11,6 @@ export class AgenciesService {
   ) {}
 
   findAll(): Observable<Agency[]> {
-    console.log('findAll')
     return this.userManagementClient.send<Agency[]>(
       AGENCIES_PATTERNS.FIND_ALL,
       {},
@@ -23,5 +22,18 @@ export class AgenciesService {
       AGENCIES_PATTERNS.CREATE,
       data,
     )
+  }
+
+  update(id: number, data: Partial<Agency>): Observable<Agency> {
+    return this.userManagementClient.send<Agency>(AGENCIES_PATTERNS.UPDATE, {
+      id,
+      data,
+    })
+  }
+
+  delete(id: number): Observable<Agency> {
+    return this.userManagementClient.send<Agency>(AGENCIES_PATTERNS.REMOVE, {
+      id,
+    })
   }
 }

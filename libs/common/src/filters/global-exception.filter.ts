@@ -35,10 +35,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     } else {
       console.log('❌ Unknown exception type')
       const internalError = new InternalServerErrorException({
-        statusCode: exception.statusCode ?? 500,
+        status: exception.statusCode ?? 500,
         message: exception?.message ?? 'An internal server error occurred',
       })
-      response.status(internalError.getStatus()).json({
+
+      response.status(400).json({
         statusCode: internalError.getStatus(),
         message: internalError.message,
       })

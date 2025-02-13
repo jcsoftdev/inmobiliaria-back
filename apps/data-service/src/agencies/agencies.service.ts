@@ -1,6 +1,6 @@
+import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
-import { PrismaService } from '@data-service/prisma.service'
 import { CreateAgencyDto, UpdateAgencyDto } from '@app/contracts/agencies'
 
 @Injectable()
@@ -40,6 +40,8 @@ export class AgenciesService {
   }
 
   remove(id: number) {
-    return this.prismaService.agencies.delete({ where: { id } })
+    return this.prismaService.agencies.delete({
+      where: { id: Number(id) },
+    })
   }
 }

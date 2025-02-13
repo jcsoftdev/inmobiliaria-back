@@ -6,7 +6,8 @@ import { Observable } from 'rxjs'
 @Injectable()
 export class PropertiesService {
   constructor(
-    @Inject('PROPERTIES_CLIENT') private readonly propertiesClient: ClientProxy,
+    @Inject('PROPERTIES_CLIENT')
+    private readonly propertiesClient: ClientProxy,
   ) {}
 
   findAll(): Observable<Property[]> {
@@ -21,6 +22,18 @@ export class PropertiesService {
       PROPERTIES_PATTERNS.CREATE,
       data,
     )
-    // return 'create' as any as Observable<Property>
+  }
+
+  update(id: number, data: Partial<Property>): Observable<Property> {
+    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.UPDATE, {
+      id,
+      data,
+    })
+  }
+
+  delete(id: number): Observable<Property> {
+    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.REMOVE, {
+      id,
+    })
   }
 }
