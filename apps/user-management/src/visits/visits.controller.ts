@@ -1,34 +1,33 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { VisitsService } from './visits.service'
-import { CreateVisitDto } from './dto/create-visit.dto'
-import { UpdateVisitDto } from './dto/update-visit.dto'
+import { VISITS_PATTERNS, Visit } from '@app/contracts/visits'
 
 @Controller()
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
-  @MessagePattern('createVisit')
-  create(@Payload() createVisitDto: CreateVisitDto) {
+  @MessagePattern(VISITS_PATTERNS.CREATE)
+  create(@Payload() createVisitDto: Visit) {
     return this.visitsService.create(createVisitDto)
   }
 
-  @MessagePattern('findAllVisits')
+  @MessagePattern(VISITS_PATTERNS.FIND_ALL)
   findAll() {
     return this.visitsService.findAll()
   }
 
-  @MessagePattern('findOneVisit')
+  @MessagePattern(VISITS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number) {
     return this.visitsService.findOne(id)
   }
 
-  @MessagePattern('updateVisit')
-  update(@Payload() updateVisitDto: UpdateVisitDto) {
-    return this.visitsService.update(updateVisitDto.id, updateVisitDto)
+  @MessagePattern(VISITS_PATTERNS.UPDATE)
+  update(@Payload() updateVisitDto: Visit) {
+    return this.visitsService.update(updateVisitDto)
   }
 
-  @MessagePattern('removeVisit')
+  @MessagePattern(VISITS_PATTERNS.REMOVE)
   remove(@Payload() id: number) {
     return this.visitsService.remove(id)
   }

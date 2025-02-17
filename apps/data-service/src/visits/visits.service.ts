@@ -1,29 +1,46 @@
+import { CreateVisitDto, UpdateVisitDto } from '@app/contracts/visits'
+import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
-import { CreateVisitDto } from './dto/create-visit.dto'
-import { UpdateVisitDto } from './dto/update-visit.dto'
 
 @Injectable()
 export class VisitsService {
+  constructor(private readonly prismaService: PrismaService) {}
+
   create(createVisitDto: CreateVisitDto) {
-    return createVisitDto
+    return this.prismaService.visits.create({
+      data: {
+        client_id: createVisitDto.clientId,
+        property_id: createVisitDto.propertyId,
+        scheduled_at: createVisitDto.scheduledAt,
+        status: createVisitDto.status,
+        created_at: new Date(),
+      },
+    })
   }
 
   findAll() {
-    return `This action returns all visits`
+    return this.prismaService.visits.findMany()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} visit`
+    return this.prismaService.visits.findUniqueOrThrow({ where: { id } })
   }
 
   update(id: number, updateVisitDto: UpdateVisitDto) {
-    return {
-      ...updateVisitDto,
-      id,
-    }
+    return this.prismaService.visits.update({
+      where: { id },
+      data: {
+        client_id: updateVisitDto.clientId,
+        property_id: updateVisitDto.propertyId,
+        scheduled_at: updateVisitDto.scheduledAt,
+        status: updateVisitDto.status,
+      },
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} visit`
+    return this.prismaService.visits.delete({
+      where: { id: Number(id) }, // Convertimos a número por si acaso
+    })
   }
 }
