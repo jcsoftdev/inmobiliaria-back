@@ -5,9 +5,16 @@ import { PropertiesModule } from './properties/properties.module'
 import { AgenciesModule } from './agencies/agencies.module'
 import { UsersModule } from './users/users.module'
 import { ClientsModule } from './clients/clients.module'
+import { VisitsModule } from './visits/visits.module'
 
 @Module({
-  imports: [PropertiesModule, AgenciesModule, UsersModule, ClientsModule],
+  imports: [
+    PropertiesModule,
+    AgenciesModule,
+    UsersModule,
+    ClientsModule,
+    VisitsModule,
+  ],
   controllers: [RealStateGatewayController],
   providers: [RealStateGatewayService],
 })
