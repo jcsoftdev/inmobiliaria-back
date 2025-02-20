@@ -1,7 +1,17 @@
-import { CLIENTS_PATTERNS, Client } from '@app/contracts/clients'
+import {
+  CLIENTS_PATTERNS,
+  CreateClientDto,
+  UpdateClientDto,
+} from '@app/contracts/clients'
+import {
+  Client,
+  CreationClient,
+  RemoveClient,
+  UpdateClient,
+} from '@app/contracts/clients/clients.response'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class ClientsService {
@@ -10,27 +20,35 @@ export class ClientsService {
     private readonly userManagementClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Client[]> {
-    return this.userManagementClient.send<Client[]>(
-      CLIENTS_PATTERNS.FIND_ALL,
-      {},
+  findAll(): Promise<Client[]> {
+    return firstValueFrom(
+      this.userManagementClient.send<Client[]>(CLIENTS_PATTERNS.FIND_ALL, {}),
     )
   }
 
-  create(data: Client): Observable<Client> {
-    return this.userManagementClient.send<Client>(CLIENTS_PATTERNS.CREATE, data)
+  create(data: CreateClientDto): Promise<CreationClient> {
+    return firstValueFrom(
+      this.userManagementClient.send<CreationClient>(
+        CLIENTS_PATTERNS.CREATE,
+        data,
+      ),
+    )
   }
 
-  update(id: number, data: Partial<Client>): Observable<Client> {
-    return this.userManagementClient.send<Client>(CLIENTS_PATTERNS.UPDATE, {
-      id,
-      data,
-    })
+  update(id: number, data: Partial<UpdateClientDto>): Promise<UpdateClient> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateClient>(CLIENTS_PATTERNS.UPDATE, {
+        id,
+        data,
+      }),
+    )
   }
 
-  delete(id: number): Observable<Client> {
-    return this.userManagementClient.send<Client>(CLIENTS_PATTERNS.REMOVE, {
-      id,
-    })
+  delete(id: number): Promise<RemoveClient> {
+    return firstValueFrom(
+      this.userManagementClient.send<RemoveClient>(CLIENTS_PATTERNS.REMOVE, {
+        id,
+      }),
+    )
   }
 }
