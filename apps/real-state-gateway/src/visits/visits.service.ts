@@ -1,4 +1,4 @@
-import { VISITS_PATTERNS, Visit } from '@app/contracts/visits'
+import { CreateVisitDto, VISITS_PATTERNS, Visit } from '@app/contracts/visits'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
@@ -14,7 +14,7 @@ export class VisitsService {
     return this.userManagementClient.send<Visit[]>(VISITS_PATTERNS.FIND_ALL, {})
   }
 
-  create(data: Visit): Observable<Visit> {
+  create(data: CreateVisitDto): Observable<Visit> {
     return this.userManagementClient.send<Visit>(VISITS_PATTERNS.CREATE, data)
   }
 

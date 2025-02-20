@@ -1,4 +1,4 @@
-import { Visit } from '@app/contracts/visits'
+import { CreateVisitDto, Visit } from '@app/contracts/visits'
 import {
   Controller,
   Get,
@@ -21,7 +21,7 @@ export class VisitsController {
   }
 
   @Post()
-  create(@Body() data: Visit): Observable<Visit> {
+  create(@Body() data: CreateVisitDto): Observable<Visit> {
     return this.visitsService.create(data)
   }
 

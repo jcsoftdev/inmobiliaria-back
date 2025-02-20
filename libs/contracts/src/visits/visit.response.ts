@@ -1,4 +1,4 @@
-export interface Visit {
+export type Visit = {
   id: number
   clientId: number
   propertyId: number
