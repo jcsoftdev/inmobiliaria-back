@@ -17,6 +17,12 @@ export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all visits',
+    isArray: true,
+    type: Visit,
+  })
   findAll(): Observable<Visit[]> {
     return this.visitsService.findAll()
   }
