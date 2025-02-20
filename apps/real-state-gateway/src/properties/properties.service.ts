@@ -1,7 +1,12 @@
-import { PROPERTIES_PATTERNS, Property } from '@app/contracts/properties'
+import {
+  CreatePropertyDto,
+  CreatePropertyResponse,
+  PROPERTIES_PATTERNS,
+  Property,
+} from '@app/contracts/properties'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom, Observable } from 'rxjs'
 
 @Injectable()
 export class PropertiesService {
@@ -10,17 +15,18 @@ export class PropertiesService {
     private readonly propertiesClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Property[]> {
-    return this.propertiesClient.send<Property[]>(
-      PROPERTIES_PATTERNS.FIND_ALL,
-      {},
+  findAll(): Promise<Property[]> {
+    return firstValueFrom(
+      this.propertiesClient.send<Property[]>(PROPERTIES_PATTERNS.FIND_ALL, {}),
     )
   }
 
-  create(data: Property): Observable<Property> {
-    return this.propertiesClient.send<Property>(
-      PROPERTIES_PATTERNS.CREATE,
-      data,
+  create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
+    return firstValueFrom(
+      this.propertiesClient.send<CreatePropertyResponse>(
+        PROPERTIES_PATTERNS.CREATE,
+        data,
+      ),
     )
   }
 

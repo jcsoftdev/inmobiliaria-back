@@ -1,4 +1,8 @@
-import { Property } from '@app/contracts/properties'
+import {
+  CreatePropertyDto,
+  CreatePropertyResponse,
+  Property,
+} from '@app/contracts/properties'
 import { PropertiesService } from '@gateway/properties/properties.service'
 import {
   Controller,
@@ -9,6 +13,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common'
+import { ApiResponse } from '@nestjs/swagger'
 import { Observable } from 'rxjs'
 
 @Controller('properties')
@@ -16,13 +21,23 @@ export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @Get()
-  findAll(): Observable<Property[]> {
-    console.log('Hello')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all properties',
+    isArray: true,
+    type: Property,
+  })
+  findAll(): Promise<Property[]> {
     return this.propertiesService.findAll()
   }
 
   @Post()
-  create(@Body() data: Property): Observable<Property> {
+  @ApiResponse({
+    status: 201,
+    description: 'Create a property response',
+    type: CreatePropertyResponse,
+  })
+  create(@Body() data: CreatePropertyDto): Promise<CreatePropertyResponse> {
     return this.propertiesService.create(data)
   }
 

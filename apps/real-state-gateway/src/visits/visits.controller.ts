@@ -1,4 +1,4 @@
-import { Visit } from '@app/contracts/visits'
+import { CreateVisitDto, Visit, VisitCreation } from '@app/contracts/visits'
 import {
   Controller,
   Get,
@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common'
 import { VisitsService } from './visits.service'
 import { Observable } from 'rxjs'
+import { ApiResponse } from '@nestjs/swagger'
 
 @Controller('visits')
 export class VisitsController {
@@ -20,8 +21,13 @@ export class VisitsController {
     return this.visitsService.findAll()
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'The record has been successfully created.',
+    type: VisitCreation,
+  })
   @Post()
-  create(@Body() data: Visit): Observable<Visit> {
+  create(@Body() data: CreateVisitDto): Promise<VisitCreation> {
     return this.visitsService.create(data)
   }
 

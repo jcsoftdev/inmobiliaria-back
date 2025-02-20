@@ -1,5 +1,10 @@
 import { TypedRpcException } from '@app/common/exceptions/rpc.exception'
-import { PROPERTIES_PATTERNS, Property } from '@app/contracts/properties'
+import {
+  CreatePropertyDto,
+  CreatePropertyResponse,
+  PROPERTIES_PATTERNS,
+  Property,
+} from '@app/contracts/properties'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
@@ -11,17 +16,19 @@ export class PropertiesService {
     private readonly propertiesClient: ClientProxy,
   ) {}
 
-  async findAll(): Promise<Property[]> {
-    return await firstValueFrom(
+  findAll(): Promise<Property[]> {
+    return firstValueFrom(
       this.propertiesClient.send<Property[]>(PROPERTIES_PATTERNS.FIND_ALL, {}),
     )
   }
 
-  async create(data: Property): Promise<Property> {
-    console.log('Create Property')
+  async create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
     try {
       const res = firstValueFrom(
-        this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.CREATE, data),
+        this.propertiesClient.send<CreatePropertyResponse>(
+          PROPERTIES_PATTERNS.CREATE,
+          data,
+        ),
       )
 
       return res

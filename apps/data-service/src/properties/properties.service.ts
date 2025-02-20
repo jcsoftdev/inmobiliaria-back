@@ -1,7 +1,12 @@
 import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
-import { CreatePropertyDto, UpdatePropertyDto } from '@app/contracts/properties'
+import {
+  CreatePropertyDto,
+  CreatePropertyResponse,
+  Property,
+  UpdatePropertyDto,
+} from '@app/contracts/properties'
 import {
   ERROR_TYPES,
   TypedRpcException,
@@ -11,7 +16,9 @@ import {
 export class PropertiesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createPropertyDto: CreatePropertyDto) {
+  async create(
+    createPropertyDto: CreatePropertyDto,
+  ): Promise<CreatePropertyResponse> {
     if (!createPropertyDto.agencyId || !createPropertyDto.userId) {
       throw new TypedRpcException({
         errorType: ERROR_TYPES.BAD_REQUEST,
@@ -19,7 +26,7 @@ export class PropertiesService {
         message: 'Agency ID and User ID are required',
       })
     }
-    return this.prismaService.properties.create({
+    await this.prismaService.properties.create({
       data: {
         title: createPropertyDto.title,
         description: createPropertyDto.description,
@@ -33,10 +40,34 @@ export class PropertiesService {
         features: JSON.stringify(createPropertyDto.features),
       },
     })
+
+    return {
+      message: 'Property created successfully',
+    }
   }
 
-  findAll() {
-    return this.prismaService.properties.findMany()
+  async findAll(): Promise<Property[]> {
+    const data = await this.prismaService.properties.findMany()
+
+    return data.map((property) => {
+      return {
+        id: property.id,
+        title: property.title,
+        price: Number(property.price),
+        agencyId: property.agency_id,
+        userId: property.user_id,
+        createdAt: property.created_at,
+        description: property.description ?? '',
+        status: property.status as Property['status'],
+        type: property.type as Property['type'],
+        location: JSON.parse(
+          property.location as string,
+        ) as Property['location'],
+        features: JSON.parse(
+          property.features as string,
+        ) as Property['features'],
+      }
+    })
   }
 
   findOne(id: number) {

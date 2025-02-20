@@ -1,4 +1,8 @@
-import { CreateVisitDto, UpdateVisitDto } from '@app/contracts/visits'
+import {
+  CreateVisitDto,
+  UpdateVisitDto,
+  VisitCreation,
+} from '@app/contracts/visits'
 import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
@@ -6,8 +10,8 @@ import { Injectable } from '@nestjs/common'
 export class VisitsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createVisitDto: CreateVisitDto) {
-    return this.prismaService.visits.create({
+  async create(createVisitDto: CreateVisitDto): Promise<VisitCreation> {
+    await this.prismaService.visits.create({
       data: {
         client_id: createVisitDto.clientId,
         property_id: createVisitDto.propertyId,
@@ -16,6 +20,8 @@ export class VisitsService {
         created_at: new Date(),
       },
     })
+
+    return { message: 'Visit created successfully' }
   }
 
   findAll() {

@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 import { VisitsService } from './visits.service'
-import { VISITS_PATTERNS, Visit } from '@app/contracts/visits'
+import { CreateVisitDto, VISITS_PATTERNS, Visit } from '@app/contracts/visits'
 
 @Controller()
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
   @MessagePattern(VISITS_PATTERNS.CREATE)
-  create(@Payload() createVisitDto: Visit) {
+  create(@Payload() createVisitDto: CreateVisitDto) {
     return this.visitsService.create(createVisitDto)
   }
 
