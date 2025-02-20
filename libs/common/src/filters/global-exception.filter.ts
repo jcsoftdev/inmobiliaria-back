@@ -1,6 +1,10 @@
 import { Response } from 'express'
 import { CustomHttpException } from '@app/common/exceptions/http.exception'
-import { RpcExceptionSerializedWithResponse } from '@app/common/exceptions/rpc.exception'
+import {
+  ERROR_STATUS,
+  ERROR_TYPES,
+  RpcExceptionSerializedWithResponse,
+} from '@app/common/exceptions/rpc.exception'
 import {
   ArgumentsHost,
   Catch,
@@ -27,22 +31,29 @@ export class AllExceptionsFilter
       })
     } else {
       //
-      console.log(
-        '❌ Unknown exception type [Posible from another microservice]',
-        exception,
-      )
+
+      if (exception.constructor.name === 'InvalidMessageException') {
+        console.log('❌ InvalidMessageException:', exception.constructor)
+        return response.status(ERROR_STATUS.BAD_REQUEST).json({
+          statusCode: ERROR_STATUS.BAD_REQUEST,
+          message: 'Invalid body message',
+        })
+      }
+
       const internalError = new CustomHttpException({
-        statusCode: exception.errorResponse.statusCode ?? 500,
+        statusCode:
+          exception.errorResponse?.statusCode ?? ERROR_STATUS.INTERNAL_ERROR,
         message:
-          exception?.errorResponse.message ??
-          'An internal server error occurred',
-        errorType: exception.errorResponse.errorType,
+          exception?.errorResponse?.message ??
+          exception?.message ??
+          ERROR_TYPES.INTERNAL_ERROR,
+        errorType: exception.errorResponse?.errorType,
       })
 
       console.log(
         '🚨 Internal Error:',
-        internalError.message,
-        internalError.getStatus(),
+        internalError?.message,
+        internalError?.getStatus(),
       )
 
       response

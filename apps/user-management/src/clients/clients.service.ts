@@ -1,7 +1,17 @@
-import { CLIENTS_PATTERNS, Client } from '@app/contracts/clients'
+import {
+  CLIENTS_PATTERNS,
+  CreateClientDto,
+  UpdateClientDto,
+} from '@app/contracts/clients'
+import {
+  Client,
+  CreationClient,
+  RemoveClient,
+  UpdateClient,
+} from '@app/contracts/clients/clients.response'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class ClientsService {
@@ -10,23 +20,33 @@ export class ClientsService {
     private readonly clientsClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Client[]> {
-    return this.clientsClient.send<Client[]>(CLIENTS_PATTERNS.FIND_ALL, {})
+  findAll(): Promise<Client[]> {
+    return firstValueFrom(
+      this.clientsClient.send<Client[]>(CLIENTS_PATTERNS.FIND_ALL, {}),
+    )
   }
 
-  create(data: Client): Observable<Client> {
-    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.CREATE, data)
+  create(data: CreateClientDto): Promise<CreationClient> {
+    return firstValueFrom(
+      this.clientsClient.send<CreationClient>(CLIENTS_PATTERNS.CREATE, data),
+    )
   }
 
-  findOne(id: number): Observable<Client> {
-    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.FIND_ONE, id)
+  findOne(id: number): Promise<Client> {
+    return firstValueFrom(
+      this.clientsClient.send<Client>(CLIENTS_PATTERNS.FIND_ONE, id),
+    )
   }
 
-  update(id: Client): Observable<Client> {
-    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.UPDATE, id)
+  update(id: UpdateClientDto): Promise<UpdateClient> {
+    return firstValueFrom(
+      this.clientsClient.send<UpdateClient>(CLIENTS_PATTERNS.UPDATE, id),
+    )
   }
 
-  remove(id: number): Observable<Client> {
-    return this.clientsClient.send<Client>(CLIENTS_PATTERNS.REMOVE, id)
+  remove(id: number): Promise<RemoveClient> {
+    return firstValueFrom(
+      this.clientsClient.send<RemoveClient>(CLIENTS_PATTERNS.REMOVE, id),
+    )
   }
 }
