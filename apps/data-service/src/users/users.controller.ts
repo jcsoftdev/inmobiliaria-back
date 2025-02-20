@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 
+import { PaginateOptions } from '@app/common/pagination'
 import {
   USERS_PATTERNS,
   CreateUserDto,
   UpdateUserDto,
+  PaginatedUsersResponse,
 } from '@app/contracts/users'
 
 import { UsersService } from './users.service'
@@ -19,8 +21,8 @@ export class UsersController {
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.usersService.findAll()
+  findAll(props: PaginateOptions): Promise<PaginatedUsersResponse> {
+    return this.usersService.findAll(props)
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ONE)

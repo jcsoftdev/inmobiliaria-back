@@ -1,8 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
-import { USERS_PATTERNS, User } from '@app/contracts/users'
+import {
+  USERS_PATTERNS,
+  User,
+  UserProps,
+  CreateUserResponse,
+  PaginatedUsersResponse,
+  RemoveUserResponse,
+  UpdateUserResponse,
+} from '@app/contracts/users'
 
 @Injectable()
 export class UsersService {
@@ -11,23 +19,36 @@ export class UsersService {
     private readonly usersClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<User[]> {
-    return this.usersClient.send<User[]>(USERS_PATTERNS.FIND_ALL, {})
+  findAll(props: UserProps): Promise<PaginatedUsersResponse> {
+    return firstValueFrom(
+      this.usersClient.send<PaginatedUsersResponse, UserProps>(
+        USERS_PATTERNS.FIND_ALL,
+        props,
+      ),
+    )
   }
 
-  create(data: User): Observable<User> {
-    return this.usersClient.send<User>(USERS_PATTERNS.CREATE, data)
+  create(data: User): Promise<CreateUserResponse> {
+    return firstValueFrom(
+      this.usersClient.send<CreateUserResponse>(USERS_PATTERNS.CREATE, data),
+    )
   }
 
-  findOne(id: number): Observable<User> {
-    return this.usersClient.send<User>(USERS_PATTERNS.FIND_ONE, id)
+  findOne(id: number): Promise<User> {
+    return firstValueFrom(
+      this.usersClient.send<User>(USERS_PATTERNS.FIND_ONE, id),
+    )
   }
 
-  update(id: User): Observable<User> {
-    return this.usersClient.send<User>(USERS_PATTERNS.UPDATE, id)
+  update(id: User): Promise<UpdateUserResponse> {
+    return firstValueFrom(
+      this.usersClient.send<UpdateUserResponse>(USERS_PATTERNS.UPDATE, id),
+    )
   }
 
-  remove(id: number): Observable<User> {
-    return this.usersClient.send<User>(USERS_PATTERNS.REMOVE, id)
+  remove(id: number): Promise<RemoveUserResponse> {
+    return firstValueFrom(
+      this.usersClient.send<RemoveUserResponse>(USERS_PATTERNS.REMOVE, id),
+    )
   }
 }
