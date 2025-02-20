@@ -5,6 +5,7 @@ import {
   PROPERTIES_PATTERNS,
   CreatePropertyDto,
   UpdatePropertyDto,
+  PropertyProps,
 } from '@app/contracts/properties'
 
 @Controller()
@@ -17,8 +18,8 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.propertiesService.findAll()
+  findAll(props: PropertyProps) {
+    return this.propertiesService.findAll(props)
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.FIND_ONE)

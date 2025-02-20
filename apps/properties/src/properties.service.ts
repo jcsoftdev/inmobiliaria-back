@@ -1,9 +1,10 @@
-import { TypedRpcException } from '@app/common/exceptions/rpc.exception'
+import { PaginatedResult } from '@app/common/pagination'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
   PROPERTIES_PATTERNS,
   Property,
+  PropertyProps,
 } from '@app/contracts/properties'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
@@ -16,31 +17,24 @@ export class PropertiesService {
     private readonly propertiesClient: ClientProxy,
   ) {}
 
-  findAll(): Promise<Property[]> {
+  findAll(props: PropertyProps): Promise<PaginatedResult<Property>> {
     return firstValueFrom(
-      this.propertiesClient.send<Property[]>(PROPERTIES_PATTERNS.FIND_ALL, {}),
+      this.propertiesClient.send<PaginatedResult<Property>, PropertyProps>(
+        PROPERTIES_PATTERNS.FIND_ALL,
+        props,
+      ),
     )
   }
 
   async create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
-    try {
-      const res = firstValueFrom(
-        this.propertiesClient.send<CreatePropertyResponse>(
-          PROPERTIES_PATTERNS.CREATE,
-          data,
-        ),
-      )
+    const res = firstValueFrom(
+      this.propertiesClient.send<CreatePropertyResponse, CreatePropertyDto>(
+        PROPERTIES_PATTERNS.CREATE,
+        data,
+      ),
+    )
 
-      return res
-    } catch (error) {
-      console.log({ someError: error })
-      throw new TypedRpcException({
-        code: 'UNEXPECTED_ERROR',
-        message: 'Unexpected error',
-        errorType: 'UNEXPECTED_ERROR',
-        statusCode: 500,
-      })
-    }
+    return res
   }
 
   findOne(id: number): Observable<Property> {

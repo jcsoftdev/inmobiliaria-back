@@ -3,6 +3,8 @@ import {
   CreatePropertyResponse,
   PROPERTIES_PATTERNS,
   Property,
+  PropertyProps,
+  PropertySingleProps,
 } from '@app/contracts/properties'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
@@ -15,9 +17,14 @@ export class PropertiesService {
     private readonly propertiesClient: ClientProxy,
   ) {}
 
-  findAll(): Promise<Property[]> {
+  findAll(props: PropertySingleProps): Promise<Property[]> {
     return firstValueFrom(
-      this.propertiesClient.send<Property[]>(PROPERTIES_PATTERNS.FIND_ALL, {}),
+      this.propertiesClient.send<Property[], PropertyProps>(
+        PROPERTIES_PATTERNS.FIND_ALL,
+        {
+          ...props,
+        },
+      ),
     )
   }
 

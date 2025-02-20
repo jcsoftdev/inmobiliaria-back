@@ -1,7 +1,10 @@
+import { Observable } from 'rxjs'
+import { PaginatedResult } from '@app/common/pagination/paginator'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
   Property,
+  PropertySingleProps,
 } from '@app/contracts/properties'
 import { PropertiesService } from '@gateway/properties/properties.service'
 import {
@@ -12,9 +15,9 @@ import {
   Patch,
   Delete,
   Param,
+  Query,
 } from '@nestjs/common'
-import { ApiResponse } from '@nestjs/swagger'
-import { Observable } from 'rxjs'
+import { ApiQuery, ApiResponse } from '@nestjs/swagger'
 
 @Controller('properties')
 export class PropertiesController {
@@ -25,10 +28,16 @@ export class PropertiesController {
     status: 200,
     description: 'Get all properties',
     isArray: true,
-    type: Property,
+    type: PaginatedResult<Property>,
   })
-  findAll(): Promise<Property[]> {
-    return this.propertiesService.findAll()
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  findAll(@Query() { ...props }: PropertySingleProps): Promise<Property[]> {
+    console.log({ props })
+    return this.propertiesService.findAll({
+      page: props.page,
+      perPage: props.perPage,
+    })
   }
 
   @Post()
