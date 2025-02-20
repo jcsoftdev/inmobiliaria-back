@@ -1,6 +1,7 @@
 import {
   CreateVisitDto,
   UpdateVisitDto,
+  Visit,
   VisitCreation,
 } from '@app/contracts/visits'
 import { PrismaService } from '@data-service/prisma.service'
@@ -24,12 +25,34 @@ export class VisitsService {
     return { message: 'Visit created successfully' }
   }
 
-  findAll() {
-    return this.prismaService.visits.findMany()
+  async findAll(): Promise<Visit[]> {
+    const data = await this.prismaService.visits.findMany()
+
+    return data.map((visit) => {
+      return {
+        id: visit.id,
+        client_id: visit.client_id ?? 0,
+        property_id: visit.property_id ?? 0,
+        scheduled_at: visit.scheduled_at ?? new Date(),
+        status: (visit.status ?? 'pending') as Visit['status'],
+        created_at: visit.created_at ?? new Date(),
+      }
+    })
   }
 
-  findOne(id: number) {
-    return this.prismaService.visits.findUniqueOrThrow({ where: { id } })
+  async findOne(id: number): Promise<Visit> {
+    const data = await this.prismaService.visits.findUniqueOrThrow({
+      where: { id },
+    })
+
+    return {
+      id: data.id,
+      client_id: data.client_id ?? 0,
+      property_id: data.property_id ?? 0,
+      scheduled_at: data.scheduled_at ?? new Date(),
+      status: (data.status ?? 'pending') as Visit['status'],
+      created_at: data.created_at ?? new Date(),
+    }
   }
 
   update(id: number, updateVisitDto: UpdateVisitDto) {
