@@ -35,7 +35,7 @@ describe('PropertiesController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(propertiesController.findAll()).toBe('Hello World!')
+      expect(propertiesController.findAll({})).toBe('Hello World!')
     })
   })
 })

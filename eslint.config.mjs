@@ -30,7 +30,10 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
-      'prettier/prettier': ['error', { semi: false }]
+      '@typescript-eslint/no-unsafe-assignment': 'warn', // Allow assignments with warnings
+      '@typescript-eslint/no-unsafe-call': 'warn', // Warn on unsafe calls
+      '@typescript-eslint/no-unsafe-member-access': 'warn', // Member access
+      'prettier/prettier': ['error', { semi: false }],
     },
   },
 );

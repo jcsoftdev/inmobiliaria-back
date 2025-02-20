@@ -1,4 +1,7 @@
 import { ApiResponseProperty } from '@nestjs/swagger'
+import { Prisma } from '@prisma/client'
+
+import { PaginationProps } from '@app/common/pagination'
 
 export enum PropertyType {
   APARTMENT = 'apartment',
@@ -72,3 +75,10 @@ export class CreatePropertyResponse {
   @ApiResponseProperty({ type: String })
   message!: string
 }
+
+export type PropertyProps = PaginationProps<
+  Prisma.propertiesWhereInput,
+  Prisma.propertiesOrderByWithRelationInput
+>
+
+export type PropertySingleProps = Omit<PropertyProps, 'where' | 'orderBy'>

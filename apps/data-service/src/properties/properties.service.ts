@@ -5,12 +5,14 @@ import {
   CreatePropertyDto,
   CreatePropertyResponse,
   Property,
+  PropertyProps,
   UpdatePropertyDto,
 } from '@app/contracts/properties'
 import {
   ERROR_TYPES,
   TypedRpcException,
 } from '@app/common/exceptions/rpc.exception'
+import { PaginatedResult, paginator } from '@app/common/pagination'
 
 @Injectable()
 export class PropertiesService {
@@ -46,28 +48,48 @@ export class PropertiesService {
     }
   }
 
-  async findAll(): Promise<Property[]> {
-    const data = await this.prismaService.properties.findMany()
+  async findAll({
+    where,
+    page,
+    perPage,
+    orderBy,
+  }: PropertyProps): Promise<PaginatedResult<Property>> {
+    const res = await paginator.paginate(
+      this.prismaService.properties,
+      {
+        where: where ?? {},
+        orderBy: orderBy ?? { created_at: 'desc' },
+      },
+      {
+        page,
+        perPage,
+      },
+    )
 
-    return data.map((property) => {
-      return {
-        id: property.id,
-        title: property.title,
-        price: Number(property.price),
-        agencyId: property.agency_id,
-        userId: property.user_id,
-        createdAt: property.created_at,
-        description: property.description ?? '',
-        status: property.status as Property['status'],
-        type: property.type as Property['type'],
-        location: JSON.parse(
-          property.location as string,
-        ) as Property['location'],
-        features: JSON.parse(
-          property.features as string,
-        ) as Property['features'],
-      }
-    })
+    const response: PaginatedResult<Property> = {
+      data: res.data.map(
+        (property): Property => ({
+          id: property.id,
+          title: property.title,
+          price: Number(property.price),
+          agencyId: property.agency_id,
+          userId: property.user_id,
+          createdAt: property.created_at,
+          description: property.description ?? '',
+          status: property.status as Property['status'],
+          type: property.type as Property['type'],
+          location: JSON.parse(
+            property.location as string,
+          ) as Property['location'],
+          features: JSON.parse(
+            property.features as string,
+          ) as Property['features'],
+        }),
+      ),
+      meta: res.meta,
+    }
+
+    return response
   }
 
   findOne(id: number) {
