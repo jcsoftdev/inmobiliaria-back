@@ -1,14 +1,18 @@
 import { Controller } from '@nestjs/common'
 import { PropertiesService } from './properties.service'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { PROPERTIES_PATTERNS, Property } from '@app/contracts/properties'
+import {
+  CreatePropertyDto,
+  PROPERTIES_PATTERNS,
+  Property,
+} from '@app/contracts/properties'
 
 @Controller()
 export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @MessagePattern(PROPERTIES_PATTERNS.CREATE)
-  create(@Payload() CreatePropertyDto: Property) {
+  create(@Payload() CreatePropertyDto: CreatePropertyDto) {
     return this.propertiesService.create(CreatePropertyDto)
   }
 
