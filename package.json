@@ -17,7 +17,7 @@
     "dev:rs": "nest start real-state-gateway --watch",
     "dev:ps": "nest start properties --watch",
     "dev:ds": "nest start data-service --watch",
-    "dev:all": "concurrently \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
+    "dev:all": "concurrently --names \"User,Gateway,Properties,Data\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
