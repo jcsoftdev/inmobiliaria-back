@@ -1,7 +1,15 @@
-import { AGENCIES_PATTERNS, Agency } from '@app/contracts/agencies'
+import { firstValueFrom } from 'rxjs'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import {
+  AGENCIES_PATTERNS,
+  Agency,
+  AgencyProps,
+  CreateAgencyResponse,
+  PaginatedAgenciesResponse,
+  RemoveAgencyResponse,
+  UpdateAgencyResponse,
+} from '@app/contracts/agencies'
 
 @Injectable()
 export class AgenciesService {
@@ -10,23 +18,45 @@ export class AgenciesService {
     private readonly agenciesClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Agency[]> {
-    return this.agenciesClient.send<Agency[]>(AGENCIES_PATTERNS.FIND_ALL, {})
+  findAll(props: AgencyProps): Promise<PaginatedAgenciesResponse> {
+    return firstValueFrom(
+      this.agenciesClient.send<PaginatedAgenciesResponse, AgencyProps>(
+        AGENCIES_PATTERNS.FIND_ALL,
+        props,
+      ),
+    )
   }
 
-  create(data: Agency): Observable<Agency> {
-    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.CREATE, data)
+  create(data: Agency): Promise<CreateAgencyResponse> {
+    return firstValueFrom(
+      this.agenciesClient.send<CreateAgencyResponse>(
+        AGENCIES_PATTERNS.CREATE,
+        data,
+      ),
+    )
   }
 
-  findOne(id: number): Observable<Agency> {
-    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.FIND_ONE, id)
+  findOne(id: number): Promise<Agency> {
+    return firstValueFrom(
+      this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.FIND_ONE, id),
+    )
   }
 
-  update(id: Agency): Observable<Agency> {
-    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.UPDATE, id)
+  update(id: Agency): Promise<UpdateAgencyResponse> {
+    return firstValueFrom(
+      this.agenciesClient.send<UpdateAgencyResponse>(
+        AGENCIES_PATTERNS.UPDATE,
+        id,
+      ),
+    )
   }
 
-  remove(id: number): Observable<Agency> {
-    return this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.REMOVE, id)
+  remove(id: number): Promise<RemoveAgencyResponse> {
+    return firstValueFrom(
+      this.agenciesClient.send<RemoveAgencyResponse>(
+        AGENCIES_PATTERNS.REMOVE,
+        id,
+      ),
+    )
   }
 }

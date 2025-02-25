@@ -1,4 +1,3 @@
-import { ClientsService } from './clients.service'
 import {
   Controller,
   Get,
@@ -7,15 +6,26 @@ import {
   Patch,
   Delete,
   Param,
+  Query,
 } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger'
 import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
-  CreationClient,
-  RemoveClient,
-  UpdateClient,
+  ClientSingleProps,
+  PaginatedClientsResponse,
+  CreateClientResponse,
+  RemoveClientResponse,
+  UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+import { ClientsService } from './clients.service'
 
 @ApiTags('Clients')
 @Controller('clients')
@@ -23,13 +33,34 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Get()
-  findAll(): Promise<Client[]> {
-    return this.clientsService.findAll()
+  @ApiExtraModels(PaginatedClientsResponse)
+  @ApiOkResponse({
+    description: 'Get all agencies',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedClientsResponse) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(Client) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  findAll(
+    @Query() { ...props }: ClientSingleProps,
+  ): Promise<PaginatedClientsResponse> {
+    return this.clientsService.findAll(props)
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new client' })
-  create(@Body() data: CreateClientDto): Promise<CreationClient> {
+  create(@Body() data: CreateClientDto): Promise<CreateClientResponse> {
     return this.clientsService.create(data)
   }
 
@@ -37,12 +68,12 @@ export class ClientsController {
   update(
     @Param('id') id: string,
     @Body() data: UpdateClientDto,
-  ): Promise<UpdateClient> {
+  ): Promise<UpdateClientResponse> {
     return this.clientsService.update(+id, data)
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<RemoveClient> {
+  delete(@Param('id') id: string): Promise<RemoveClientResponse> {
     return this.clientsService.delete(+id)
   }
 }

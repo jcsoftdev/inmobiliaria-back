@@ -1,14 +1,28 @@
 import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
-import { CreateAgencyDto, UpdateAgencyDto } from '@app/contracts/agencies'
+import {
+  Agency,
+  CreateAgencyDto,
+  CreateAgencyResponse,
+  RemoveAgencyResponse,
+  UpdateAgencyDto,
+  UpdateAgencyResponse,
+} from '@app/contracts/agencies'
+import {
+  PaginatedResult,
+  PaginateOptions,
+  paginator,
+} from '@app/common/pagination'
 
 @Injectable()
 export class AgenciesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createAgencyDto: CreateAgencyDto) {
-    return this.prismaService.agencies.create({
+  async create(
+    createAgencyDto: CreateAgencyDto,
+  ): Promise<CreateAgencyResponse> {
+    await this.prismaService.agencies.create({
       data: {
         name: createAgencyDto.name,
         address: createAgencyDto.address,
@@ -17,18 +31,25 @@ export class AgenciesService {
         created_at: new Date(),
       },
     })
+    return {
+      message: 'Agency created successfully',
+    }
   }
 
-  findAll() {
-    return this.prismaService.agencies.findMany()
+  findAll(props: PaginateOptions): Promise<PaginatedResult<Agency>> {
+    console.log({ props, a: 'XD' })
+    return paginator.paginate(this.prismaService.agencies, {}, { ...props })
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Agency> {
     return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
   }
 
-  update(id: number, updateAgencyDto: UpdateAgencyDto) {
-    return this.prismaService.agencies.update({
+  async update(
+    id: number,
+    updateAgencyDto: UpdateAgencyDto,
+  ): Promise<UpdateAgencyResponse> {
+    await this.prismaService.agencies.update({
       where: { id },
       data: {
         name: updateAgencyDto.name,
@@ -37,11 +58,18 @@ export class AgenciesService {
         email: updateAgencyDto.email,
       },
     })
+
+    return {
+      message: 'Agency updated successfully',
+    }
   }
 
-  remove(id: number) {
-    return this.prismaService.agencies.delete({
+  async remove(id: number): Promise<RemoveAgencyResponse> {
+    await this.prismaService.agencies.delete({
       where: { id: Number(id) },
     })
+    return {
+      message: 'Agency removed successfully',
+    }
   }
 }

@@ -1,7 +1,16 @@
-import { AGENCIES_PATTERNS, Agency } from '@app/contracts/agencies'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
+
+import { PaginateOptions } from '@app/common/pagination'
+import {
+  AGENCIES_PATTERNS,
+  PaginatedAgenciesResponse,
+  Agency,
+  CreateAgencyResponse,
+  RemoveAgencyResponse,
+  UpdateAgencyResponse,
+} from '@app/contracts/agencies'
 
 @Injectable()
 export class AgenciesService {
@@ -10,30 +19,44 @@ export class AgenciesService {
     private readonly userManagementClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Agency[]> {
-    return this.userManagementClient.send<Agency[]>(
-      AGENCIES_PATTERNS.FIND_ALL,
-      {},
+  findAll(props: PaginateOptions): Promise<PaginatedAgenciesResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<
+        PaginatedAgenciesResponse,
+        PaginateOptions
+      >(AGENCIES_PATTERNS.FIND_ALL, props),
     )
   }
 
-  create(data: Agency): Observable<Agency> {
-    return this.userManagementClient.send<Agency>(
-      AGENCIES_PATTERNS.CREATE,
-      data,
+  create(data: Agency): Promise<CreateAgencyResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<CreateAgencyResponse>(
+        AGENCIES_PATTERNS.CREATE,
+        data,
+      ),
     )
   }
 
-  update(id: number, data: Partial<Agency>): Observable<Agency> {
-    return this.userManagementClient.send<Agency>(AGENCIES_PATTERNS.UPDATE, {
-      id,
-      data,
-    })
+  update(id: number, data: Partial<Agency>): Promise<UpdateAgencyResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateAgencyResponse>(
+        AGENCIES_PATTERNS.UPDATE,
+        {
+          id,
+          data,
+        },
+      ),
+    )
   }
 
-  delete(id: number): Observable<Agency> {
-    return this.userManagementClient.send<Agency>(AGENCIES_PATTERNS.REMOVE, {
-      id,
-    })
+  delete(id: number): Promise<RemoveAgencyResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<RemoveAgencyResponse>(
+        AGENCIES_PATTERNS.REMOVE,
+        {
+          id,
+        },
+      ),
+    )
   }
 }

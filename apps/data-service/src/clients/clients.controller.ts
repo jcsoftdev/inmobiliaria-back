@@ -1,11 +1,15 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { ClientsService } from './clients.service'
 import {
   CLIENTS_PATTERNS,
   CreateClientDto,
   UpdateClientDto,
 } from '@app/contracts/clients'
+import {
+  ClientProps,
+  PaginatedClientsResponse,
+} from '@app/contracts/clients/clients.response'
+import { ClientsService } from './clients.service'
 
 @Controller()
 export class ClientsController {
@@ -17,8 +21,8 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.clientsService.findAll()
+  findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
+    return this.clientsService.findAll(props)
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ONE)

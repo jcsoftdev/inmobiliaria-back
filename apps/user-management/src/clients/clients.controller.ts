@@ -1,6 +1,5 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { ClientsService } from './clients.service'
 import {
   CLIENTS_PATTERNS,
   CreateClientDto,
@@ -8,9 +7,12 @@ import {
 } from '@app/contracts/clients'
 import {
   Client,
-  RemoveClient,
-  UpdateClient,
+  ClientProps,
+  PaginatedClientsResponse,
+  RemoveClientResponse,
+  UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+import { ClientsService } from './clients.service'
 
 @Controller()
 export class ClientsController {
@@ -22,8 +24,8 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<Client[]> {
-    return this.clientsService.findAll()
+  findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
+    return this.clientsService.findAll(props)
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ONE)
@@ -32,12 +34,14 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.UPDATE)
-  update(@Payload() updateClientDto: UpdateClientDto): Promise<UpdateClient> {
+  update(
+    @Payload() updateClientDto: UpdateClientDto,
+  ): Promise<UpdateClientResponse> {
     return this.clientsService.update(updateClientDto)
   }
 
   @MessagePattern(CLIENTS_PATTERNS.REMOVE)
-  remove(@Payload() id: number): Promise<RemoveClient> {
+  remove(@Payload() id: number): Promise<RemoveClientResponse> {
     return this.clientsService.remove(id)
   }
 }

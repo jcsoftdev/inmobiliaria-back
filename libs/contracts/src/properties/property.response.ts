@@ -1,7 +1,7 @@
 import { ApiResponseProperty } from '@nestjs/swagger'
 import { Prisma } from '@prisma/client'
 
-import { PaginationProps } from '@app/common/pagination'
+import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
 export enum PropertyType {
   APARTMENT = 'apartment',
@@ -70,6 +70,8 @@ export class Property {
   @ApiResponseProperty()
   userId!: number | null
 }
+
+export class PaginatedPropertiesResponse extends PaginatedResult<Property> {}
 
 export class CreatePropertyResponse {
   @ApiResponseProperty({ type: String })

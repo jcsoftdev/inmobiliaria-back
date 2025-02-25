@@ -1,12 +1,4 @@
 import { Observable } from 'rxjs'
-import { PaginatedResult } from '@app/common/pagination/paginator'
-import {
-  CreatePropertyDto,
-  CreatePropertyResponse,
-  Property,
-  PropertySingleProps,
-} from '@app/contracts/properties'
-import { PropertiesService } from '@gateway/properties/properties.service'
 import {
   Controller,
   Get,
@@ -17,18 +9,44 @@ import {
   Param,
   Query,
 } from '@nestjs/common'
-import { ApiQuery, ApiResponse } from '@nestjs/swagger'
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  ApiResponse,
+  getSchemaPath,
+} from '@nestjs/swagger'
+
+import {
+  CreatePropertyDto,
+  CreatePropertyResponse,
+  PaginatedPropertiesResponse,
+  Property,
+  PropertySingleProps,
+} from '@app/contracts/properties'
+import { PropertiesService } from '@gateway/properties/properties.service'
 
 @Controller('properties')
 export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get all properties',
-    isArray: true,
-    type: PaginatedResult<Property>,
+  @ApiExtraModels(PaginatedPropertiesResponse)
+  @ApiOkResponse({
+    description: 'Get all agencies',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedPropertiesResponse) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(Property) },
+            },
+          },
+        },
+      ],
+    },
   })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })

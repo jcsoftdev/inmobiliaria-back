@@ -4,10 +4,11 @@ import {
   UpdateClientDto,
 } from '@app/contracts/clients'
 import {
-  Client,
-  CreationClient,
-  RemoveClient,
-  UpdateClient,
+  ClientProps,
+  PaginatedClientsResponse,
+  CreateClientResponse,
+  RemoveClientResponse,
+  UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
@@ -20,35 +21,47 @@ export class ClientsService {
     private readonly userManagementClient: ClientProxy,
   ) {}
 
-  findAll(): Promise<Client[]> {
+  findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<Client[]>(CLIENTS_PATTERNS.FIND_ALL, {}),
+      this.userManagementClient.send<PaginatedClientsResponse>(
+        CLIENTS_PATTERNS.FIND_ALL,
+        props,
+      ),
     )
   }
 
-  create(data: CreateClientDto): Promise<CreationClient> {
+  create(data: CreateClientDto): Promise<CreateClientResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<CreationClient>(
+      this.userManagementClient.send<CreateClientResponse, CreateClientDto>(
         CLIENTS_PATTERNS.CREATE,
         data,
       ),
     )
   }
 
-  update(id: number, data: Partial<UpdateClientDto>): Promise<UpdateClient> {
+  update(
+    id: number,
+    data: Partial<UpdateClientDto>,
+  ): Promise<UpdateClientResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<UpdateClient>(CLIENTS_PATTERNS.UPDATE, {
-        id,
-        data,
-      }),
+      this.userManagementClient.send<UpdateClientResponse>(
+        CLIENTS_PATTERNS.UPDATE,
+        {
+          id,
+          data,
+        },
+      ),
     )
   }
 
-  delete(id: number): Promise<RemoveClient> {
+  delete(id: number): Promise<RemoveClientResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<RemoveClient>(CLIENTS_PATTERNS.REMOVE, {
-        id,
-      }),
+      this.userManagementClient.send<RemoveClientResponse>(
+        CLIENTS_PATTERNS.REMOVE,
+        {
+          id,
+        },
+      ),
     )
   }
 }
