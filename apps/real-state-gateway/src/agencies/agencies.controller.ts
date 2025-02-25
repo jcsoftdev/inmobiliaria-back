@@ -1,13 +1,4 @@
 import {
-  PaginatedAgenciesResponse,
-  Agency,
-  CreateAgencyResponse,
-  RemoveAgencyResponse,
-  UpdateAgencyResponse,
-} from '@app/contracts/agencies'
-import { PropertySingleProps } from '@app/contracts/properties'
-import { AgenciesService } from '@gateway/agencies/agencies.service'
-import {
   Body,
   Controller,
   Delete,
@@ -23,6 +14,17 @@ import {
   ApiQuery,
   getSchemaPath,
 } from '@nestjs/swagger'
+
+import {
+  PaginatedAgenciesResponse,
+  Agency,
+  CreateAgencyResponse,
+  RemoveAgencyResponse,
+  UpdateAgencyResponse,
+} from '@app/contracts/agencies'
+import { PropertySingleProps } from '@app/contracts/properties'
+
+import { AgenciesService } from '@gateway/agencies/agencies.service'
 
 @Controller('agencies')
 export class AgenciesController {

@@ -1,8 +1,9 @@
-import { HttpValidationForRPCFilter } from '@app/common/filters/http-exception.filter'
-import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
+
+import { HttpValidationForRPCFilter } from '@app/common/filters/http-exception.filter'
+import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
 
 import { DataServiceModule } from './data-service.module'
 

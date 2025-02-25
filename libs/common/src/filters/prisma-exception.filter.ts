@@ -1,6 +1,6 @@
 import { Catch, RpcExceptionFilter } from '@nestjs/common'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { RpcException } from '@nestjs/microservices'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { throwError } from 'rxjs'
 
 @Catch(PrismaClientKnownRequestError)

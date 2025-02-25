@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { visits } from '@prisma/client'
+import { Prisma, visits } from '@prisma/client'
+
+import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
 export enum VisitStatus {
   PENDING = 'pending',
@@ -14,9 +16,6 @@ export class Visit implements visits {
   @ApiProperty()
   id!: number
 
-  @ApiProperty()
-  client_id!: number
-
   @ApiProperty({
     description: 'Visit status',
     example: VisitStatus.PENDING,
@@ -28,12 +27,27 @@ export class Visit implements visits {
 
   @ApiProperty()
   property_id!: number
+
+  @ApiProperty()
+  client_id!: number | null
 }
 
-export class VisitCreation {
+export class CreateVisitResponse {
   @ApiProperty({
-    description: 'Visit scheduled date',
-    example: '2021-08-01T00:00:00Z',
+    description: 'Visit created',
   })
   message!: string
 }
+
+export class PaginatedVisitsResponse extends PaginatedResult<Visit> {}
+
+export class UpdateVisitResponse extends CreateVisitResponse {}
+
+export class RemoveVisitResponse extends CreateVisitResponse {}
+
+export type VisitProps = PaginationProps<
+  Prisma.visitsWhereInput,
+  Prisma.visitsOrderByWithRelationInput
+>
+
+export type VisitSingleProps = Omit<VisitProps, 'where' | 'orderBy'>

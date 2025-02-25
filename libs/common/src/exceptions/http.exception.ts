@@ -1,5 +1,6 @@
-import { RpcError } from '@app/common/exceptions/rpc.exception'
 import { HttpException, HttpStatus } from '@nestjs/common'
+
+import { RpcError } from '@app/common/exceptions/rpc.exception'
 
 export class CustomHttpException extends HttpException {
   private readonly errorDetails: RpcError

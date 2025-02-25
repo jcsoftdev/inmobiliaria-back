@@ -1,10 +1,11 @@
+import { Module } from '@nestjs/common'
 import {
   ClientsModule as ClientsMSModule,
   Transport,
 } from '@nestjs/microservices'
-import { Module } from '@nestjs/common'
-import { ClientsService } from './clients.service'
+
 import { ClientsController } from './clients.controller'
+import { ClientsService } from './clients.service'
 
 @Module({
   imports: [

@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core'
-import { UserManagementModule } from './user-management.module'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
+
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+
+import { UserManagementModule } from './user-management.module'
 
 const port = +(process.env.port ?? 3003)
 

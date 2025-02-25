@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core'
-import { PropertiesModule } from './properties.module'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
+
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+
+import { PropertiesModule } from './properties.module'
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(

@@ -1,12 +1,17 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
+
 import {
   CreateVisitDto,
   VISITS_PATTERNS,
   Visit,
-  VisitCreation,
+  CreateVisitResponse,
+  RemoveVisitResponse,
+  UpdateVisitResponse,
+  PaginatedVisitsResponse,
+  VisitProps,
 } from '@app/contracts/visits'
-import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
 
 @Injectable()
 export class VisitsService {
@@ -15,27 +20,42 @@ export class VisitsService {
     private readonly userManagementClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<Visit[]> {
-    return this.userManagementClient.send<Visit[]>(VISITS_PATTERNS.FIND_ALL, {})
+  findAll(props: VisitProps): Promise<PaginatedVisitsResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<PaginatedVisitsResponse, VisitProps>(
+        VISITS_PATTERNS.FIND_ALL,
+        props,
+      ),
+    )
   }
 
-  create(data: CreateVisitDto): Promise<VisitCreation> {
+  create(data: CreateVisitDto): Promise<CreateVisitResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<VisitCreation>(
+      this.userManagementClient.send<CreateVisitResponse>(
         VISITS_PATTERNS.CREATE,
         data,
       ),
     )
   }
 
-  update(id: number, data: Partial<Visit>): Observable<Visit> {
-    return this.userManagementClient.send<Visit>(VISITS_PATTERNS.UPDATE, {
-      id,
-      data,
-    })
+  update(id: number, data: Partial<Visit>): Promise<UpdateVisitResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateVisitResponse>(
+        VISITS_PATTERNS.UPDATE,
+        {
+          id,
+          data,
+        },
+      ),
+    )
   }
 
-  delete(id: number): Observable<Visit> {
-    return this.userManagementClient.send<Visit>(VISITS_PATTERNS.REMOVE, { id })
+  delete(id: number): Promise<RemoveVisitResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<RemoveVisitResponse>(
+        VISITS_PATTERNS.REMOVE,
+        { id },
+      ),
+    )
   }
 }

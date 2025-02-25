@@ -1,16 +1,17 @@
-import { Response } from 'express'
-import { CustomHttpException } from '@app/common/exceptions/http.exception'
-import {
-  ERROR_STATUS,
-  ERROR_TYPES,
-  RpcExceptionSerializedWithResponse,
-} from '@app/common/exceptions/rpc.exception'
 import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common'
+import { Response } from 'express'
+
+import { CustomHttpException } from '@app/common/exceptions/http.exception'
+import {
+  ERROR_STATUS,
+  ERROR_TYPES,
+  RpcExceptionSerializedWithResponse,
+} from '@app/common/exceptions/rpc.exception'
 
 @Catch()
 export class AllExceptionsFilter

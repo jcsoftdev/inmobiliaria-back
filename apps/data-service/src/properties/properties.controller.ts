@@ -1,12 +1,14 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { PropertiesService } from './properties.service'
+
 import {
   PROPERTIES_PATTERNS,
   CreatePropertyDto,
   UpdatePropertyDto,
   PropertyProps,
 } from '@app/contracts/properties'
+
+import { PropertiesService } from './properties.service'
 
 @Controller()
 export class PropertiesController {

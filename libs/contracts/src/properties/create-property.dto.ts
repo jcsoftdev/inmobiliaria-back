@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import { IsEnum, IsNumber, IsString } from 'class-validator'
 
 import {
@@ -7,7 +8,6 @@ import {
   PropertyStatus,
   PropertyType,
 } from '@app/contracts/properties/property.response'
-import { ApiProperty } from '@nestjs/swagger'
 
 export class CreatePropertyDto
   implements Readonly<Omit<Property, 'id' | 'createdAt'>>

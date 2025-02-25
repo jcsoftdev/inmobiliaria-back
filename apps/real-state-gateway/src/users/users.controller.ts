@@ -1,5 +1,3 @@
-import { User } from '@app/contracts/users/user.entity'
-import { UsersService } from './users.service'
 import {
   Controller,
   Get,
@@ -10,6 +8,10 @@ import {
   Delete,
 } from '@nestjs/common'
 import { Observable } from 'rxjs'
+
+import { User } from '@app/contracts/users/user.entity'
+
+import { UsersService } from './users.service'
 
 @Controller('users')
 export class UsersController {

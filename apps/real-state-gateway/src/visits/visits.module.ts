@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
-import { VisitsService } from './visits.service'
 import { VisitsController } from './visits.controller'
+import { VisitsService } from './visits.service'
 
 @Module({
   imports: [

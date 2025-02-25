@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
+import { ClientsModule, Transport } from '@nestjs/microservices'
+
 import { PropertiesController } from './properties.controller'
 import { PropertiesService } from './properties.service'
-import { ClientsModule, Transport } from '@nestjs/microservices'
 
 @Module({
   imports: [

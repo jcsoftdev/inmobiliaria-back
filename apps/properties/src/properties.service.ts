@@ -1,3 +1,7 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom, Observable } from 'rxjs'
+
 import { PaginatedResult } from '@app/common/pagination'
 import {
   CreatePropertyDto,
@@ -6,9 +10,6 @@ import {
   Property,
   PropertyProps,
 } from '@app/contracts/properties'
-import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
 
 @Injectable()
 export class PropertiesService {

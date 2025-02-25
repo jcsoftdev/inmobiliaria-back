@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common'
+
+import { AgenciesModule } from './agencies/agencies.module'
+import { ClientsModule } from './clients/clients.module'
+import { PropertiesModule } from './properties/properties.module'
 import { RealStateGatewayController } from './real-state-gateway.controller'
 import { RealStateGatewayService } from './real-state-gateway.service'
-import { PropertiesModule } from './properties/properties.module'
-import { AgenciesModule } from './agencies/agencies.module'
 import { UsersModule } from './users/users.module'
-import { ClientsModule } from './clients/clients.module'
 import { VisitsModule } from './visits/visits.module'
 
 @Module({

@@ -1,4 +1,3 @@
-import { CreateVisitDto, Visit, VisitCreation } from '@app/contracts/visits'
 import {
   Controller,
   Get,
@@ -7,43 +6,81 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common'
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  ApiResponse,
+  getSchemaPath,
+} from '@nestjs/swagger'
+
+import { ClientSingleProps } from '@app/contracts/clients/clients.response'
+import {
+  CreateVisitDto,
+  Visit,
+  CreateVisitResponse,
+  PaginatedVisitsResponse,
+  UpdateVisitResponse,
+  RemoveVisitResponse,
+} from '@app/contracts/visits'
+
 import { VisitsService } from './visits.service'
-import { Observable } from 'rxjs'
-import { ApiResponse } from '@nestjs/swagger'
 
 @Controller('visits')
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
   @Get()
-  @ApiResponse({
-    status: 200,
+  @ApiExtraModels(PaginatedVisitsResponse)
+  @ApiOkResponse({
     description: 'Get all visits',
-    isArray: true,
-    type: Visit,
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedVisitsResponse) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(Visit) },
+            },
+          },
+        },
+      ],
+    },
   })
-  findAll(): Observable<Visit[]> {
-    return this.visitsService.findAll()
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  findAll(
+    @Query() { ...props }: ClientSingleProps,
+  ): Promise<PaginatedVisitsResponse> {
+    return this.visitsService.findAll({
+      perPage: props.perPage ? +props.perPage : undefined,
+      page: props.page ? +props.page : undefined,
+    })
   }
 
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: VisitCreation,
+    type: CreateVisitResponse,
   })
   @Post()
-  create(@Body() data: CreateVisitDto): Promise<VisitCreation> {
+  create(@Body() data: CreateVisitDto): Promise<CreateVisitResponse> {
     return this.visitsService.create(data)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Visit): Observable<Visit> {
+  update(
+    @Param('id') id: string,
+    @Body() data: Visit,
+  ): Promise<UpdateVisitResponse> {
     return this.visitsService.update(+id, data)
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Observable<Visit> {
+  delete(@Param('id') id: string): Promise<RemoveVisitResponse> {
     return this.visitsService.delete(+id)
   }
 }
