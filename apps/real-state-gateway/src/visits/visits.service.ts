@@ -5,12 +5,12 @@ import { firstValueFrom } from 'rxjs'
 import {
   CreateVisitDto,
   VISITS_PATTERNS,
-  Visit,
   CreateVisitResponse,
   RemoveVisitResponse,
   UpdateVisitResponse,
   PaginatedVisitsResponse,
   VisitProps,
+  UpdateVisitDto,
 } from '@app/contracts/visits'
 
 @Injectable()
@@ -38,7 +38,10 @@ export class VisitsService {
     )
   }
 
-  update(id: number, data: Partial<Visit>): Promise<UpdateVisitResponse> {
+  update(
+    id: number,
+    data: Partial<UpdateVisitDto>,
+  ): Promise<UpdateVisitResponse> {
     return firstValueFrom(
       this.userManagementClient.send<UpdateVisitResponse>(
         VISITS_PATTERNS.UPDATE,

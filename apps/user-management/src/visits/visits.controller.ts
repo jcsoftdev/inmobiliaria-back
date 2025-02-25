@@ -3,6 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices'
 
 import {
   CreateVisitDto,
+  CreateVisitResponse,
   PaginatedVisitsResponse,
   RemoveVisitResponse,
   UpdateVisitResponse,
@@ -18,7 +19,9 @@ export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
   @MessagePattern(VISITS_PATTERNS.CREATE)
-  create(@Payload() createVisitDto: CreateVisitDto) {
+  create(
+    @Payload() createVisitDto: CreateVisitDto,
+  ): Promise<CreateVisitResponse> {
     return this.visitsService.create(createVisitDto)
   }
 

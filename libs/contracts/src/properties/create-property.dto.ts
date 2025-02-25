@@ -17,7 +17,13 @@ import {
 } from '@app/contracts/properties/property.response'
 
 export class CreatePropertyDto
-  implements Readonly<Omit<Property, 'id' | 'createdAt'>>
+  implements
+    Readonly<
+      Omit<
+        Property,
+        'id' | 'createdAt' | 'price' | 'agency_id' | 'user_id' | 'created_at'
+      >
+    >
 {
   @ApiProperty({
     description: 'Property title',

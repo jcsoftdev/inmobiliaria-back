@@ -31,7 +31,8 @@ export class RemoveAgencyResponse extends CreateAgencyResponse {}
 
 export type AgencyProps = PaginationProps<
   Prisma.agenciesWhereInput,
-  Prisma.agenciesOrderByWithRelationInput
+  Prisma.agenciesOrderByWithRelationInput,
+  Prisma.agenciesSelect
 >
 
 export type AgencySingleProps = Omit<AgencyProps, 'where' | 'orderBy'>

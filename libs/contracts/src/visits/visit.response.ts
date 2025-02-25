@@ -2,12 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Prisma, visits } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
-
-export enum VisitStatus {
-  PENDING = 'pending',
-  CANCELLED = 'cancelled',
-  DONE = 'done',
-}
+import { VisitStatus } from '@app/contracts/visits/enums'
 
 export class Visit implements visits {
   @ApiProperty()
@@ -47,7 +42,8 @@ export class RemoveVisitResponse extends CreateVisitResponse {}
 
 export type VisitProps = PaginationProps<
   Prisma.visitsWhereInput,
-  Prisma.visitsOrderByWithRelationInput
+  Prisma.visitsOrderByWithRelationInput,
+  Prisma.visitsSelect
 >
 
 export type VisitSingleProps = Omit<VisitProps, 'where' | 'orderBy'>

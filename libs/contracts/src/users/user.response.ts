@@ -1,31 +1,33 @@
-import { ApiResponseProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { users, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
-export class User implements users {
-  @ApiResponseProperty({ type: String })
+export class User implements Readonly<Omit<users, 'password'>> {
+  @ApiProperty({ type: String, example: 'John Doe' })
   name!: string
-  @ApiResponseProperty({ type: Number })
+  @ApiProperty({ type: Number, example: 1 })
   id!: number
-  @ApiResponseProperty({ type: Number })
+  @ApiProperty({ type: Number, example: 1 })
   agency_id!: number | null
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String, example: 'mail@mail.com' })
   email!: string
-  @ApiResponseProperty({ type: Date })
+  @ApiProperty({ type: Date })
   created_at!: Date | null
-  @ApiResponseProperty({ type: String })
-  password!: string
-  @ApiResponseProperty({ type: String })
+  // @ApiProperty({ type: String, example: 'password' })
+  // password!: string
+  @ApiProperty({ type: String, example: '08123456789' })
   phone!: string | null
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String, example: 'admin' })
   role!: string | null
 }
 
-export class PaginatedUsersResponse extends PaginatedResult<User> {}
+export class PaginatedUsersResponse extends PaginatedResult<
+  Omit<User, 'password'>
+> {}
 
 export class CreateUserResponse {
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String })
   message!: string
 }
 
@@ -35,7 +37,8 @@ export class RemoveUserResponse extends CreateUserResponse {}
 
 export type UserProps = PaginationProps<
   Prisma.usersWhereInput,
-  Prisma.usersOrderByWithRelationInput
+  Prisma.usersOrderByWithRelationInput,
+  Prisma.usersSelect
 >
 
 export type UserSingleProps = Omit<UserProps, 'where' | 'orderBy'>

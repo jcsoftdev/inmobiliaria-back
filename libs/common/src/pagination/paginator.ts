@@ -74,6 +74,7 @@ class Paginator {
 
   paginate = async <
     T,
+    SelectType = Record<string, any>,
     WhereType = Record<string, any>,
     OrderType = Record<string, any>,
   >(
@@ -83,13 +84,18 @@ class Paginator {
         orderBy?: OrderType
       }) => Promise<number>
       findMany: (args: {
+        select?: SelectType
         where?: WhereType
         take?: number
         skip?: number
         orderBy?: OrderType
       }) => Promise<T[]>
     },
-    args?: { where?: WhereType; orderBy?: OrderType },
+    args?: {
+      where?: WhereType
+      orderBy?: OrderType
+      select?: SelectType
+    },
     options: PaginateOptions = {},
   ): Promise<PaginatedResult<T>> => {
     const page = options.page ?? this.defaultPage
@@ -108,6 +114,7 @@ class Paginator {
       const [total, data] = await Promise.all([
         model.count({ where: args?.where }),
         model.findMany({
+          select: args?.select,
           where: args?.where,
           take: validatedPerPage,
           skip,
@@ -139,11 +146,12 @@ class Paginator {
   }
 }
 
-export type PaginationProps<Where, OrderBy> = {
+export type PaginationProps<Where, OrderBy, Select> = {
   page?: number
   perPage?: number
   where?: Where
   orderBy?: OrderBy
+  select?: Select
 }
 
 // Usage

@@ -16,24 +16,24 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 
-import { CreateUserDto } from '@app/contracts/users'
+import { CreateUserDto, UpdateUserDto } from '@app/contracts/users'
 import {
   PaginatedUsersResponse,
   CreateUserResponse,
   UpdateUserResponse,
   User,
   RemoveUserResponse,
+  UserSingleProps,
 } from '@app/contracts/users/user.response'
-import { UserSingleProps } from '@app/contracts/users/user.response'
 
 import { UsersService } from '@gateway/users/users.service'
 
 @Controller('users')
+@ApiExtraModels(PaginatedUsersResponse, User)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiExtraModels(PaginatedUsersResponse)
   @ApiOkResponse({
     description: 'Get all users',
     schema: {
@@ -61,7 +61,7 @@ export class UsersController {
   @Post()
   @ApiResponse({
     status: 201,
-    description: 'User created  successfully',
+    description: 'Create user',
     type: CreateUserResponse,
   })
   create(@Body() data: CreateUserDto): Promise<CreateUserResponse> {
@@ -71,12 +71,12 @@ export class UsersController {
   @Patch(':id')
   @ApiResponse({
     status: 202,
-    description: 'User updated successfully',
+    description: 'Update user',
     type: UpdateUserResponse,
   })
   update(
     @Param('id') id: string,
-    @Body() data: CreateUserDto,
+    @Body() data: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
     return this.usersService.update(+id, data)
   }
@@ -84,7 +84,7 @@ export class UsersController {
   @Delete(':id')
   @ApiResponse({
     status: 203,
-    description: 'User deleted successfully',
+    description: 'Delete user',
     type: RemoveUserResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
