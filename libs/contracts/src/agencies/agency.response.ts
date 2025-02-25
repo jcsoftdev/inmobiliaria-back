@@ -1,5 +1,6 @@
 import { ApiResponseProperty } from '@nestjs/swagger'
 import { agencies, Prisma } from '@prisma/client'
+
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
 export class Agency implements agencies {

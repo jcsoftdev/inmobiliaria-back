@@ -1,3 +1,7 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom, Observable } from 'rxjs'
+
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
@@ -6,9 +10,6 @@ import {
   PropertyProps,
   PropertySingleProps,
 } from '@app/contracts/properties'
-import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
 
 @Injectable()
 export class PropertiesService {

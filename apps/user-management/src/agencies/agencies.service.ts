@@ -1,6 +1,7 @@
-import { firstValueFrom } from 'rxjs'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
+
 import {
   AGENCIES_PATTERNS,
   Agency,

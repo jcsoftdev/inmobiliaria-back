@@ -1,8 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AgenciesController } from './agencies.controller'
-import { AgenciesService } from '@gateway/agencies/agencies.service'
 import { ClientsModule, Transport } from '@nestjs/microservices'
+import { Test, TestingModule } from '@nestjs/testing'
+
 import { PrismaService } from '@data-service/prisma.service'
+
+import { AgenciesService } from '@gateway/agencies/agencies.service'
+
+import { AgenciesController } from './agencies.controller'
 
 describe('AgenciesController', () => {
   let controller: AgenciesController

@@ -16,6 +16,7 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger'
+
 import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
@@ -25,6 +26,7 @@ import {
   RemoveClientResponse,
   UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+
 import { ClientsService } from './clients.service'
 
 @ApiTags('Clients')

@@ -1,7 +1,8 @@
+import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
+
 import { ClientsController } from './clients.controller'
 import { ClientsService } from './clients.service'
-import { ClientsModule, Transport } from '@nestjs/microservices'
 
 describe('ClientsController', () => {
   let controller: ClientsController

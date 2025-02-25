@@ -1,15 +1,15 @@
-import { throwError } from 'rxjs'
-
-import {
-  ERROR_TYPES,
-  TypedRpcException,
-} from '@app/common/exceptions/rpc.exception'
 import {
   BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common'
+import { throwError } from 'rxjs'
+
+import {
+  ERROR_TYPES,
+  TypedRpcException,
+} from '@app/common/exceptions/rpc.exception'
 
 @Catch(HttpException)
 export class HttpValidationForRPCFilter implements ExceptionFilter {

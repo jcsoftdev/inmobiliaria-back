@@ -1,6 +1,7 @@
 // PaginationError class
 
 import { ApiResponseProperty } from '@nestjs/swagger'
+
 import { createPaginationError } from '@app/common/pagination/paginator.error'
 
 // Interfaces for pagination options and results
@@ -107,7 +108,7 @@ class Paginator {
       const [total, data] = await Promise.all([
         model.count({ where: args?.where }),
         model.findMany({
-          ...args,
+          where: args?.where,
           take: validatedPerPage,
           skip,
           orderBy: orderBy,

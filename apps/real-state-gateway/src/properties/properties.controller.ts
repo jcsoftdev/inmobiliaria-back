@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs'
 import {
   Controller,
   Get,
@@ -16,6 +15,7 @@ import {
   ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger'
+import { Observable } from 'rxjs'
 
 import {
   CreatePropertyDto,
@@ -24,6 +24,7 @@ import {
   Property,
   PropertySingleProps,
 } from '@app/contracts/properties'
+
 import { PropertiesService } from '@gateway/properties/properties.service'
 
 @Controller('properties')

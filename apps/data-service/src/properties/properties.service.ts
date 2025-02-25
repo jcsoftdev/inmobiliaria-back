@@ -1,6 +1,10 @@
-import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
+import {
+  ERROR_TYPES,
+  TypedRpcException,
+} from '@app/common/exceptions/rpc.exception'
+import { PaginatedResult, paginator } from '@app/common/pagination'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
@@ -8,11 +12,8 @@ import {
   PropertyProps,
   UpdatePropertyDto,
 } from '@app/contracts/properties'
-import {
-  ERROR_TYPES,
-  TypedRpcException,
-} from '@app/common/exceptions/rpc.exception'
-import { PaginatedResult, paginator } from '@app/common/pagination'
+
+import { PrismaService } from '@data-service/prisma.service'
 
 @Injectable()
 export class PropertiesService {
@@ -50,20 +51,16 @@ export class PropertiesService {
 
   async findAll({
     where,
-    page,
-    perPage,
     orderBy,
+    ...props
   }: PropertyProps): Promise<PaginatedResult<Property>> {
     const res = await paginator.paginate(
       this.prismaService.properties,
       {
-        where: where ?? {},
-        orderBy: orderBy ?? { created_at: 'desc' },
+        where,
+        orderBy,
       },
-      {
-        page,
-        perPage,
-      },
+      props,
     )
 
     const response: PaginatedResult<Property> = {

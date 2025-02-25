@@ -1,7 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { UsersController } from './users.controller'
-import { UsersService } from '@gateway/users/users.service'
 import { ClientsModule, Transport } from '@nestjs/microservices'
+import { Test, TestingModule } from '@nestjs/testing'
+
+import { UsersService } from '@gateway/users/users.service'
+
+import { UsersController } from './users.controller'
 
 describe('UsersController', () => {
   let controller: UsersController

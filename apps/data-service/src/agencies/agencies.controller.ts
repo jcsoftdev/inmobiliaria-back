@@ -1,12 +1,14 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
-import { AgenciesService } from './agencies.service'
+
+import { PaginateOptions } from '@app/common/pagination'
 import {
   AGENCIES_PATTERNS,
   CreateAgencyDto,
   UpdateAgencyDto,
 } from '@app/contracts/agencies'
-import { PaginateOptions } from '@app/common/pagination'
+
+import { AgenciesService } from './agencies.service'
 
 @Controller()
 export class AgenciesController {

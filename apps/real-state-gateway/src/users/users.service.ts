@@ -1,7 +1,8 @@
-import { USERS_PATTERNS, User } from '@app/contracts/users'
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { Observable } from 'rxjs'
+
+import { USERS_PATTERNS, User } from '@app/contracts/users'
 
 @Injectable()
 export class UsersService {

@@ -1,6 +1,8 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
+
 import { AGENCIES_PATTERNS, Agency, AgencyProps } from '@app/contracts/agencies'
+
 import { AgenciesService } from './agencies.service'
 
 @Controller()

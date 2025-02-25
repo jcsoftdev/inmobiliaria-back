@@ -1,3 +1,7 @@
+import { Inject, Injectable } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
+
 import {
   CLIENTS_PATTERNS,
   CreateClientDto,
@@ -10,9 +14,6 @@ import {
   RemoveClientResponse,
   UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
-import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom } from 'rxjs'
 
 @Injectable()
 export class ClientsService {

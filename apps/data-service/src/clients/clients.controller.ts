@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
+
 import {
   CLIENTS_PATTERNS,
   CreateClientDto,
@@ -9,6 +10,7 @@ import {
   ClientProps,
   PaginatedClientsResponse,
 } from '@app/contracts/clients/clients.response'
+
 import { ClientsService } from './clients.service'
 
 @Controller()

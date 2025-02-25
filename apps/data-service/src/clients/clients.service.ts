@@ -1,6 +1,6 @@
-import { PrismaService } from '@data-service/prisma.service'
 import { Injectable } from '@nestjs/common'
 
+import { paginator } from '@app/common/pagination'
 import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
@@ -10,7 +10,8 @@ import {
   RemoveClientResponse,
   UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
-import { paginator } from '@app/common/pagination'
+
+import { PrismaService } from '@data-service/prisma.service'
 
 @Injectable()
 export class ClientsService {
@@ -33,8 +34,19 @@ export class ClientsService {
     }
   }
 
-  findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
-    return paginator.paginate(this.prismaService.clients, {}, { ...props })
+  findAll({
+    orderBy,
+    where,
+    ...props
+  }: ClientProps): Promise<PaginatedClientsResponse> {
+    return paginator.paginate(
+      this.prismaService.clients,
+      {
+        orderBy: orderBy,
+        where: where,
+      },
+      { ...props },
+    )
   }
 
   findOne(id: number): Promise<Client> {

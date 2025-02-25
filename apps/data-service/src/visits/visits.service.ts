@@ -1,17 +1,24 @@
+import { Injectable } from '@nestjs/common'
+
+import { paginator } from '@app/common/pagination'
 import {
   CreateVisitDto,
   UpdateVisitDto,
   Visit,
-  VisitCreation,
+  CreateVisitResponse,
+  PaginatedVisitsResponse,
+  VisitProps,
+  UpdateVisitResponse,
+  RemoveVisitResponse,
 } from '@app/contracts/visits'
+
 import { PrismaService } from '@data-service/prisma.service'
-import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class VisitsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createVisitDto: CreateVisitDto): Promise<VisitCreation> {
+  async create(createVisitDto: CreateVisitDto): Promise<CreateVisitResponse> {
     await this.prismaService.visits.create({
       data: {
         client_id: createVisitDto.clientId,
@@ -25,19 +32,41 @@ export class VisitsService {
     return { message: 'Visit created successfully' }
   }
 
-  async findAll(): Promise<Visit[]> {
-    const data = await this.prismaService.visits.findMany()
+  async findAll({
+    orderBy,
+    where,
+    ...props
+  }: VisitProps): Promise<PaginatedVisitsResponse> {
+    try {
+      const data = await paginator.paginate(
+        this.prismaService.visits,
+        {
+          orderBy,
+          where,
+        },
+        {
+          page: props.page,
+          perPage: props.perPage,
+        },
+      )
 
-    return data.map((visit) => {
       return {
-        id: visit.id,
-        client_id: visit.client_id ?? 0,
-        property_id: visit.property_id ?? 0,
-        scheduled_at: visit.scheduled_at ?? new Date(),
-        status: (visit.status ?? 'pending') as Visit['status'],
-        created_at: visit.created_at ?? new Date(),
+        ...data,
+        data: data.data.map((visit): Visit => {
+          return {
+            id: visit.id,
+            client_id: visit.client_id ?? 0,
+            property_id: visit.property_id ?? 0,
+            scheduled_at: visit.scheduled_at ?? new Date(),
+            status: (visit.status ?? 'pending') as Visit['status'],
+            created_at: visit.created_at ?? new Date(),
+          }
+        }),
       }
-    })
+    } catch (error) {
+      console.log('Error:', error)
+      throw error
+    }
   }
 
   async findOne(id: number): Promise<Visit> {
@@ -55,8 +84,11 @@ export class VisitsService {
     }
   }
 
-  update(id: number, updateVisitDto: UpdateVisitDto) {
-    return this.prismaService.visits.update({
+  async update(
+    id: number,
+    updateVisitDto: UpdateVisitDto,
+  ): Promise<UpdateVisitResponse> {
+    await this.prismaService.visits.update({
       where: { id },
       data: {
         client_id: updateVisitDto.clientId,
@@ -65,11 +97,13 @@ export class VisitsService {
         status: updateVisitDto.status,
       },
     })
+    return { message: 'Visit updated successfully' }
   }
 
-  remove(id: number) {
-    return this.prismaService.visits.delete({
+  async remove(id: number): Promise<RemoveVisitResponse> {
+    await this.prismaService.visits.delete({
       where: { id: Number(id) }, // Convertimos a número por si acaso
     })
+    return { message: 'Visit removed successfully' }
   }
 }

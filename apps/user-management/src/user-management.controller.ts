@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common'
+
 import { UserManagementService } from './user-management.service'
 
 @Controller()
