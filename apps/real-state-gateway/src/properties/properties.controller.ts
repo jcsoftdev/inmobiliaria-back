@@ -15,7 +15,6 @@ import {
   ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger'
-import { Observable } from 'rxjs'
 
 import {
   CreatePropertyDto,
@@ -23,6 +22,9 @@ import {
   PaginatedPropertiesResponse,
   Property,
   PropertySingleProps,
+  RemovePropertyResponse,
+  UpdatePropertyDto,
+  UpdatePropertyResponse,
 } from '@app/contracts/properties'
 
 import { PropertiesService } from '@gateway/properties/properties.service'
@@ -32,7 +34,7 @@ export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @Get()
-  @ApiExtraModels(PaginatedPropertiesResponse)
+  @ApiExtraModels(PaginatedPropertiesResponse, Property)
   @ApiOkResponse({
     description: 'Get all properties',
     schema: {
@@ -51,8 +53,9 @@ export class PropertiesController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })
-  findAll(@Query() { ...props }: PropertySingleProps): Promise<Property[]> {
-    console.log({ props })
+  findAll(
+    @Query() { ...props }: PropertySingleProps,
+  ): Promise<PaginatedPropertiesResponse> {
     return this.propertiesService.findAll({
       page: props.page,
       perPage: props.perPage,
@@ -62,7 +65,7 @@ export class PropertiesController {
   @Post()
   @ApiResponse({
     status: 201,
-    description: 'Create a property response',
+    description: 'Create property ',
     type: CreatePropertyResponse,
   })
   create(@Body() data: CreatePropertyDto): Promise<CreatePropertyResponse> {
@@ -70,15 +73,25 @@ export class PropertiesController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: 201,
+    description: 'Update property',
+    type: UpdatePropertyResponse,
+  })
   update(
     @Param('id') id: string,
-    @Body() data: Property,
-  ): Observable<Property> {
+    @Body() data: UpdatePropertyDto,
+  ): Promise<UpdatePropertyResponse> {
     return this.propertiesService.update(+id, data)
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Observable<Property> {
+  @ApiResponse({
+    status: 201,
+    description: 'Delete property',
+    type: CreatePropertyResponse,
+  })
+  delete(@Param('id') id: string): Promise<RemovePropertyResponse> {
     return this.propertiesService.delete(+id)
   }
 }

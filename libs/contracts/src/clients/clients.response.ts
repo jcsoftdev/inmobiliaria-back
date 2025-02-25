@@ -29,7 +29,8 @@ export class RemoveClientResponse extends CreateClientResponse {}
 
 export type ClientProps = PaginationProps<
   Prisma.clientsWhereInput,
-  Prisma.clientsOrderByWithRelationInput
+  Prisma.clientsOrderByWithRelationInput,
+  Prisma.clientsSelect
 >
 
 export type ClientSingleProps = Omit<ClientProps, 'where' | 'orderBy'>

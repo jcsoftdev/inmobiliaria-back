@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsNumber } from 'class-validator'
 
-export enum Status {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+import { VisitStatus } from '@app/contracts/visits/enums'
 
 export class CreateVisitDto {
   @ApiProperty({
@@ -30,8 +26,8 @@ export class CreateVisitDto {
 
   @ApiProperty({
     description: 'Visit status',
-    example: Status.PENDING,
+    example: VisitStatus.PENDING,
   })
-  @IsEnum(Status)
-  status!: Status
+  @IsEnum(VisitStatus)
+  status!: VisitStatus
 }

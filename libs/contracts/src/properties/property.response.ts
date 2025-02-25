@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Prisma } from '@prisma/client'
+import { Prisma, properties } from '@prisma/client'
 import {
   IsArray,
   IsDefined,
@@ -24,7 +24,7 @@ export class LocationType {
   @IsIn(['Point'], { message: 'Type must be "Point"' })
   type!: 'Point'
 
-  @ApiProperty()
+  @ApiProperty({ type: [Number], default: [0, 0] })
   @IsDefined({ message: 'Coordinates are required' })
   @IsArray({ message: 'Coordinates must be an array' })
   @IsNumber({}, { each: true, message: 'Each coordinate must be a number' })
@@ -46,7 +46,7 @@ export class PropertyFeature {
   })
   name!: string
 
-  @ApiProperty()
+  @ApiProperty({ type: String, default: 'Could be string number or boolean' })
   @IsDefined({ message: 'Feature value is required' })
   value!: string | number | boolean
 }
@@ -58,16 +58,28 @@ export enum PropertyStatus {
   INACTIVE = 'inactive',
   RESERVED = 'reserved',
 }
-
-export class Property {
+export class Property
+  implements
+    Readonly<
+      Omit<
+        properties,
+        | 'location'
+        | 'features'
+        | 'price'
+        | 'agency_id'
+        | 'user_id'
+        | 'created_at'
+      >
+    >
+{
   @ApiProperty()
   id!: number
 
   @ApiProperty()
   title!: string
 
-  @ApiProperty()
-  description?: string
+  @ApiProperty({ type: String })
+  description!: string | null
 
   @ApiProperty()
   type!: PropertyType
@@ -75,7 +87,7 @@ export class Property {
   @ApiProperty({ type: Number })
   agencyId!: number | null
 
-  @ApiProperty()
+  @ApiProperty({ type: Number })
   price!: number
 
   @ApiProperty({ type: LocationType })
@@ -101,9 +113,14 @@ export class CreatePropertyResponse {
   message!: string
 }
 
+export class UpdatePropertyResponse extends CreatePropertyResponse {}
+
+export class RemovePropertyResponse extends CreatePropertyResponse {}
+
 export type PropertyProps = PaginationProps<
   Prisma.propertiesWhereInput,
-  Prisma.propertiesOrderByWithRelationInput
+  Prisma.propertiesOrderByWithRelationInput,
+  Prisma.propertiesSelect
 >
 
 export type PropertySingleProps = Omit<PropertyProps, 'where' | 'orderBy'>

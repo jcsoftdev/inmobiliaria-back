@@ -1,14 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
+  PaginatedPropertiesResponse,
   PROPERTIES_PATTERNS,
-  Property,
   PropertyProps,
   PropertySingleProps,
+  RemovePropertyResponse,
+  UpdatePropertyDto,
+  UpdatePropertyResponse,
 } from '@app/contracts/properties'
 
 @Injectable()
@@ -18,9 +21,9 @@ export class PropertiesService {
     private readonly propertiesClient: ClientProxy,
   ) {}
 
-  findAll(props: PropertySingleProps): Promise<Property[]> {
+  findAll(props: PropertySingleProps): Promise<PaginatedPropertiesResponse> {
     return firstValueFrom(
-      this.propertiesClient.send<Property[], PropertyProps>(
+      this.propertiesClient.send<PaginatedPropertiesResponse, PropertyProps>(
         PROPERTIES_PATTERNS.FIND_ALL,
         {
           ...props,
@@ -38,16 +41,29 @@ export class PropertiesService {
     )
   }
 
-  update(id: number, data: Partial<Property>): Observable<Property> {
-    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.UPDATE, {
-      id,
-      data,
-    })
+  update(
+    id: number,
+    data: Partial<UpdatePropertyDto>,
+  ): Promise<UpdatePropertyResponse> {
+    return firstValueFrom(
+      this.propertiesClient.send<UpdatePropertyResponse>(
+        PROPERTIES_PATTERNS.UPDATE,
+        {
+          id,
+          data,
+        },
+      ),
+    )
   }
 
-  delete(id: number): Observable<Property> {
-    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.REMOVE, {
-      id,
-    })
+  delete(id: number): Promise<RemovePropertyResponse> {
+    return firstValueFrom(
+      this.propertiesClient.send<RemovePropertyResponse>(
+        PROPERTIES_PATTERNS.REMOVE,
+        {
+          id,
+        },
+      ),
+    )
   }
 }

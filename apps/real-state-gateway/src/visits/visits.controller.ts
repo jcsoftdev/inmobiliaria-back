@@ -24,6 +24,7 @@ import {
   PaginatedVisitsResponse,
   UpdateVisitResponse,
   RemoveVisitResponse,
+  UpdateVisitDto,
 } from '@app/contracts/visits'
 
 import { VisitsService } from './visits.service'
@@ -74,7 +75,7 @@ export class VisitsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Visit,
+    @Body() data: UpdateVisitDto,
   ): Promise<UpdateVisitResponse> {
     return this.visitsService.update(+id, data)
   }

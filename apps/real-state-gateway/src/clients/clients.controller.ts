@@ -11,7 +11,6 @@ import {
 import {
   ApiExtraModels,
   ApiOkResponse,
-  ApiOperation,
   ApiQuery,
   ApiTags,
   getSchemaPath,
@@ -29,13 +28,13 @@ import {
 
 import { ClientsService } from './clients.service'
 
-@ApiTags('Clients')
+@ApiTags('Clientes')
+@ApiExtraModels(PaginatedClientsResponse, Client)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Get()
-  @ApiExtraModels(PaginatedClientsResponse)
   @ApiOkResponse({
     description: 'Get all clients',
     schema: {
@@ -61,12 +60,19 @@ export class ClientsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a new client' })
+  @ApiOkResponse({
+    description: 'Create a client',
+    type: CreateClientResponse,
+  })
   create(@Body() data: CreateClientDto): Promise<CreateClientResponse> {
     return this.clientsService.create(data)
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    description: 'Update a client',
+    type: UpdateClientResponse,
+  })
   update(
     @Param('id') id: string,
     @Body() data: UpdateClientDto,
@@ -75,6 +81,10 @@ export class ClientsController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    description: 'Remove a client',
+    type: RemoveClientResponse,
+  })
   delete(@Param('id') id: string): Promise<RemoveClientResponse> {
     return this.clientsService.delete(+id)
   }

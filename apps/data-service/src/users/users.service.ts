@@ -38,6 +38,7 @@ export class UsersService {
   findAll({
     orderBy,
     where,
+    select,
     ...props
   }: UserProps): Promise<PaginatedUsersResponse> {
     return paginator.paginate(
@@ -45,8 +46,18 @@ export class UsersService {
       {
         orderBy,
         where,
+        select: {
+          agency_id: true,
+          created_at: true,
+          email: true,
+          id: true,
+          name: true,
+          phone: true,
+          role: true,
+          ...select,
+        },
       },
-      { ...props },
+      props,
     )
   }
 
