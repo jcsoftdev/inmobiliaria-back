@@ -12,26 +12,29 @@ import {
   ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
+  ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger'
 
 import {
+  CreateAgencyDto,
   PaginatedAgenciesResponse,
   Agency,
   CreateAgencyResponse,
   RemoveAgencyResponse,
   UpdateAgencyResponse,
+  UpdateAgencyDto,
 } from '@app/contracts/agencies'
 import { PropertySingleProps } from '@app/contracts/properties'
 
 import { AgenciesService } from '@gateway/agencies/agencies.service'
 
 @Controller('agencies')
+@ApiExtraModels(PaginatedAgenciesResponse, Agency)
 export class AgenciesController {
   constructor(private readonly agenciesService: AgenciesService) {}
 
   @Get()
-  @ApiExtraModels(PaginatedAgenciesResponse)
   @ApiOkResponse({
     description: 'Get all agencies',
     schema: {
@@ -57,19 +60,34 @@ export class AgenciesController {
   }
 
   @Post()
-  create(@Body() data: Agency): Promise<CreateAgencyResponse> {
+  @ApiResponse({
+    status: 201,
+    description: 'Create agency',
+    type: CreateAgencyResponse,
+  })
+  create(@Body() data: CreateAgencyDto): Promise<CreateAgencyResponse> {
     return this.agenciesService.create(data)
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: 202,
+    description: 'Update agency',
+    type: UpdateAgencyResponse,
+  })
   update(
     @Param('id') id: string,
-    @Body() data: Agency,
+    @Body() data: UpdateAgencyDto,
   ): Promise<UpdateAgencyResponse> {
     return this.agenciesService.update(+id, data)
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 203,
+    description: 'Delete agency',
+    type: RemoveAgencyResponse,
+  })
   delete(@Param('id') id: string): Promise<RemoveAgencyResponse> {
     return this.agenciesService.delete(+id)
   }

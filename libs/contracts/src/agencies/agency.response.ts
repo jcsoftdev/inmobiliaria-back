@@ -1,20 +1,24 @@
-import { ApiResponseProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger'
 import { agencies, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
 export class Agency implements agencies {
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String, example: 'Agency name' })
   name!: string
-  @ApiResponseProperty({ type: Number })
+
+  @ApiProperty({ type: Number, example: 1 })
   id!: number
-  @ApiResponseProperty({ type: String })
+
+  @ApiProperty({ type: String, example: 'Av Los girasoles 397' })
   address!: string | null
-  @ApiResponseProperty({ type: String })
+
+  @ApiProperty({ type: String, example: '010230123' })
   phone!: string | null
-  @ApiResponseProperty({ type: String })
+
+  @ApiProperty({ type: String, example: 'test@gmail.com' })
   email!: string
-  @ApiResponseProperty({ type: Date })
+  @ApiProperty({ type: Date })
   created_at!: Date | null
 }
 
