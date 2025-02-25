@@ -6,34 +6,88 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common'
-import { Observable } from 'rxjs'
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiQuery,
+  ApiResponse,
+  getSchemaPath,
+} from '@nestjs/swagger'
 
-import { User } from '@app/contracts/users/user.entity'
+import { CreateUserDto } from '@app/contracts/users'
+import {
+  PaginatedUsersResponse,
+  CreateUserResponse,
+  UpdateUserResponse,
+  User,
+  RemoveUserResponse,
+} from '@app/contracts/users/user.response'
+import { UserSingleProps } from '@app/contracts/users/user.response'
 
-import { UsersService } from './users.service'
+import { UsersService } from '@gateway/users/users.service'
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(): Observable<User[]> {
-    return this.usersService.findAll()
+  @ApiExtraModels(PaginatedUsersResponse)
+  @ApiOkResponse({
+    description: 'Get all users',
+    schema: {
+      allOf: [
+        { $ref: getSchemaPath(PaginatedUsersResponse) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(User) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  findAll(
+    @Query() { ...props }: UserSingleProps,
+  ): Promise<PaginatedUsersResponse> {
+    return this.usersService.findAll(props)
   }
 
   @Post()
-  create(@Body() data: User): Observable<User> {
+  @ApiResponse({
+    status: 201,
+    description: 'User created  successfully',
+    type: CreateUserResponse,
+  })
+  create(@Body() data: CreateUserDto): Promise<CreateUserResponse> {
     return this.usersService.create(data)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: User): Observable<User> {
+  @ApiResponse({
+    status: 202,
+    description: 'User updated successfully',
+    type: UpdateUserResponse,
+  })
+  update(
+    @Param('id') id: string,
+    @Body() data: CreateUserDto,
+  ): Promise<UpdateUserResponse> {
     return this.usersService.update(+id, data)
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Observable<User> {
+  @ApiResponse({
+    status: 203,
+    description: 'User deleted successfully',
+    type: RemoveUserResponse,
+  })
+  delete(@Param('id') id: string): Promise<RemoveUserResponse> {
     return this.usersService.delete(+id)
   }
 }

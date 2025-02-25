@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 
-import { USERS_PATTERNS, User } from '@app/contracts/users'
+import { USERS_PATTERNS, User, UserProps } from '@app/contracts/users'
 
 import { UsersService } from './users.service'
 
@@ -15,8 +15,8 @@ export class UsersController {
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.usersService.findAll()
+  findAll(props: UserProps) {
+    return this.usersService.findAll(props)
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ONE)

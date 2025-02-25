@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common'
 
-import { CreateUserDto, UpdateUserDto } from '@app/contracts/users'
+import { paginator } from '@app/common/pagination'
+import {
+  User,
+  UserProps,
+  CreateUserDto,
+  CreateUserResponse,
+  PaginatedUsersResponse,
+  RemoveUserResponse,
+  UpdateUserDto,
+  UpdateUserResponse,
+} from '@app/contracts/users'
 
 import { PrismaService } from '@data-service/prisma.service'
 
@@ -8,8 +18,8 @@ import { PrismaService } from '@data-service/prisma.service'
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.prismaService.users.create({
+  async create(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
+    await this.prismaService.users.create({
       data: {
         agency_id: createUserDto.agencyId,
         name: createUserDto.name,
@@ -20,18 +30,35 @@ export class UsersService {
         created_at: new Date(),
       },
     })
+    return {
+      message: 'User created  successfully',
+    }
   }
 
-  findAll() {
-    return this.prismaService.users.findMany()
+  findAll({
+    orderBy,
+    where,
+    ...props
+  }: UserProps): Promise<PaginatedUsersResponse> {
+    return paginator.paginate(
+      this.prismaService.users,
+      {
+        orderBy,
+        where,
+      },
+      { ...props },
+    )
   }
 
-  findOne(id: number) {
-    return this.prismaService.users.findUniqueOrThrow({ where: { id } })
+  findOne(id: number): Promise<User> {
+    return this.prismaService.users.findFirstOrThrow({ where: { id } })
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prismaService.users.update({
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateUserResponse> {
+    await this.prismaService.users.update({
       where: { id },
       data: {
         agency_id: updateUserDto.agencyId,
@@ -42,11 +69,17 @@ export class UsersService {
         role: updateUserDto.role,
       },
     })
+    return {
+      message: 'User updated successfully',
+    }
   }
 
-  remove(id: number) {
-    return this.prismaService.users.delete({
-      where: { id: Number(id) }, // Convertimos a número por si acaso
+  async remove(id: number): Promise<RemoveUserResponse> {
+    await this.prismaService.users.delete({
+      where: { id: Number(id) },
     })
+    return {
+      message: 'User deleted successfully',
+    }
   }
 }

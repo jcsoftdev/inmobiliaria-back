@@ -1,8 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
-import { USERS_PATTERNS, User } from '@app/contracts/users'
+import { PaginateOptions } from '@app/common/pagination'
+import {
+  USERS_PATTERNS,
+  PaginatedUsersResponse,
+  User,
+  CreateUserResponse,
+  RemoveUserResponse,
+  UpdateUserResponse,
+  CreateUserDto,
+} from '@app/contracts/users'
 
 @Injectable()
 export class UsersService {
@@ -11,22 +20,44 @@ export class UsersService {
     private readonly userManagementClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<User[]> {
-    return this.userManagementClient.send<User[]>(USERS_PATTERNS.FIND_ALL, {})
+  findAll(props: PaginateOptions): Promise<PaginatedUsersResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<PaginatedUsersResponse, PaginateOptions>(
+        USERS_PATTERNS.FIND_ALL,
+        props,
+      ),
+    )
   }
 
-  create(data: User): Observable<User> {
-    return this.userManagementClient.send<User>(USERS_PATTERNS.CREATE, data)
+  create(data: CreateUserDto): Promise<CreateUserResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<CreateUserResponse>(
+        USERS_PATTERNS.CREATE,
+        data,
+      ),
+    )
   }
 
-  update(id: number, data: Partial<User>): Observable<User> {
-    return this.userManagementClient.send<User>(USERS_PATTERNS.UPDATE, {
-      id,
-      data,
-    })
+  update(id: number, data: Partial<User>): Promise<UpdateUserResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateUserResponse>(
+        USERS_PATTERNS.UPDATE,
+        {
+          id,
+          data,
+        },
+      ),
+    )
   }
 
-  delete(id: number): Observable<User> {
-    return this.userManagementClient.send<User>(USERS_PATTERNS.REMOVE, { id })
+  delete(id: number): Promise<RemoveUserResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<RemoveUserResponse>(
+        USERS_PATTERNS.REMOVE,
+        {
+          id,
+        },
+      ),
+    )
   }
 }
