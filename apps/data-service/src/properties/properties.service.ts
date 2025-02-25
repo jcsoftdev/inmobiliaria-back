@@ -39,8 +39,16 @@ export class PropertiesService {
         agency_id: createPropertyDto.agencyId,
         user_id: createPropertyDto.userId,
         created_at: new Date(),
-        location: JSON.stringify(createPropertyDto.location),
-        features: JSON.stringify(createPropertyDto.features),
+        location: {
+          toJSON() {
+            return createPropertyDto.location
+          },
+        },
+        features: {
+          toJSON() {
+            return createPropertyDto.features
+          },
+        },
       },
     })
 
@@ -75,12 +83,9 @@ export class PropertiesService {
           description: property.description ?? '',
           status: property.status as Property['status'],
           type: property.type as Property['type'],
-          location: JSON.parse(
-            property.location as string,
-          ) as Property['location'],
-          features: JSON.parse(
-            property.features as string,
-          ) as Property['features'],
+          location: property.location as unknown as Property['location'],
+          features:
+            property.features as string as unknown as Property['features'],
         }),
       ),
       meta: res.meta,

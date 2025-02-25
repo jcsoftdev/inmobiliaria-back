@@ -37,7 +37,7 @@ export class ClientsController {
   @Get()
   @ApiExtraModels(PaginatedClientsResponse)
   @ApiOkResponse({
-    description: 'Get all agencies',
+    description: 'Get all clients',
     schema: {
       allOf: [
         { $ref: getSchemaPath(PaginatedClientsResponse) },

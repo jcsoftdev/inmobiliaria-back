@@ -1,5 +1,13 @@
-import { ApiResponseProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { Prisma } from '@prisma/client'
+import {
+  IsArray,
+  IsDefined,
+  IsIn,
+  IsNumber,
+  IsString,
+  Length,
+} from 'class-validator'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
@@ -10,26 +18,41 @@ export enum PropertyType {
 }
 
 export class LocationType {
-  @ApiResponseProperty()
+  @ApiProperty()
+  @IsDefined({ message: 'Type is required' })
+  @IsString({ message: 'Type must be a string' })
+  @IsIn(['Point'], { message: 'Type must be "Point"' })
   type!: 'Point'
 
-  @ApiResponseProperty()
+  @ApiProperty()
+  @IsDefined({ message: 'Coordinates are required' })
+  @IsArray({ message: 'Coordinates must be an array' })
+  @IsNumber({}, { each: true, message: 'Each coordinate must be a number' })
   coordinates!: [number, number] // [latitude, longitude]
 
-  @ApiResponseProperty()
-  name!: string
+  @ApiProperty()
+  @IsDefined({ message: 'Name is required' })
+  @IsString({ message: 'Name must be a string' })
+  @Length(1, 255, { message: 'Name must be between 1 and 255 characters' })
+  address!: string
 }
 
 export class PropertyFeature {
-  @ApiResponseProperty()
+  @ApiProperty()
+  @IsDefined({ message: 'Feature name is required' })
+  @IsString({ message: 'Feature name must be a string' })
+  @Length(1, 100, {
+    message: 'Feature name must be between 1 and 100 characters',
+  })
   name!: string
 
-  @ApiResponseProperty()
-  value!: string
+  @ApiProperty()
+  @IsDefined({ message: 'Feature value is required' })
+  value!: string | number | boolean
 }
 
 export enum PropertyStatus {
-  ACTIVE = 'active',
+  AVAILABLE = 'available',
   SELL_PENDING = 'sell_pending',
   SOLD = 'sold',
   INACTIVE = 'inactive',
@@ -37,44 +60,44 @@ export enum PropertyStatus {
 }
 
 export class Property {
-  @ApiResponseProperty()
+  @ApiProperty()
   id!: number
 
-  @ApiResponseProperty()
+  @ApiProperty()
   title!: string
 
-  @ApiResponseProperty()
+  @ApiProperty()
   description?: string
 
-  @ApiResponseProperty()
+  @ApiProperty()
   type!: PropertyType
 
-  @ApiResponseProperty()
+  @ApiProperty({ type: Number })
   agencyId!: number | null
 
-  @ApiResponseProperty()
+  @ApiProperty()
   price!: number
 
-  @ApiResponseProperty({ type: LocationType })
+  @ApiProperty({ type: LocationType })
   location!: LocationType
 
-  @ApiResponseProperty({ type: [PropertyFeature] })
+  @ApiProperty({ type: [PropertyFeature] })
   features!: PropertyFeature[]
 
-  @ApiResponseProperty()
+  @ApiProperty({ type: Date })
   createdAt!: Date | null
 
-  @ApiResponseProperty({ enum: PropertyStatus })
+  @ApiProperty({ enum: PropertyStatus })
   status!: PropertyStatus
 
-  @ApiResponseProperty()
+  @ApiProperty({ type: Number })
   userId!: number | null
 }
 
 export class PaginatedPropertiesResponse extends PaginatedResult<Property> {}
 
 export class CreatePropertyResponse {
-  @ApiResponseProperty({ type: String })
+  @ApiProperty({ type: String })
   message!: string
 }
 

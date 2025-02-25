@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEnum, IsNumber, IsString } from 'class-validator'
+import { Type } from 'class-transformer'
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator'
 
 import {
   LocationType,
@@ -55,6 +62,8 @@ export class CreatePropertyDto
       name: 'Location name',
     },
   })
+  @ValidateNested()
+  @Type(() => LocationType)
   location!: LocationType
 
   @ApiProperty({
@@ -66,12 +75,16 @@ export class CreatePropertyDto
       },
     ],
   })
+  @IsArray({ message: 'Features must be an array of features' })
+  @ValidateNested({ each: true })
+  @Type(() => PropertyFeature)
   features!: PropertyFeature[]
 
   @ApiProperty({
     description: 'Property status',
-    example: PropertyStatus.ACTIVE,
+    example: PropertyStatus.AVAILABLE,
   })
+  @IsEnum(PropertyStatus)
   status!: PropertyStatus
 
   @ApiProperty({
