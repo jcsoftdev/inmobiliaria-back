@@ -6,6 +6,7 @@ import {
   CreateAgencyDto,
   UpdateAgencyDto,
 } from '@app/contracts/agencies'
+import { PaginateOptions } from '@app/common/pagination'
 
 @Controller()
 export class AgenciesController {
@@ -17,8 +18,8 @@ export class AgenciesController {
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.agenciesService.findAll()
+  findAll(props: PaginateOptions) {
+    return this.agenciesService.findAll(props)
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)

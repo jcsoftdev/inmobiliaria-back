@@ -4,16 +4,21 @@ import { Injectable } from '@nestjs/common'
 import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
-  CreationClient,
-  RemoveClient,
-  UpdateClient,
+  ClientProps,
+  PaginatedClientsResponse,
+  CreateClientResponse,
+  RemoveClientResponse,
+  UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+import { paginator } from '@app/common/pagination'
 
 @Injectable()
 export class ClientsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createClientDto: CreateClientDto): Promise<CreationClient> {
+  async create(
+    createClientDto: CreateClientDto,
+  ): Promise<CreateClientResponse> {
     await this.prismaService.clients.create({
       data: {
         name: createClientDto.name,
@@ -28,16 +33,19 @@ export class ClientsService {
     }
   }
 
-  findAll(): Promise<Client[]> {
-    return this.prismaService.clients.findMany()
+  findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
+    return paginator.paginate(this.prismaService.clients, {}, { ...props })
   }
 
   findOne(id: number): Promise<Client> {
     return this.prismaService.clients.findUniqueOrThrow({ where: { id } })
   }
 
-  update(id: number, updateClientDto: UpdateClientDto): Promise<UpdateClient> {
-    return this.prismaService.clients.update({
+  async update(
+    id: number,
+    updateClientDto: UpdateClientDto,
+  ): Promise<UpdateClientResponse> {
+    await this.prismaService.clients.update({
       where: { id },
       data: {
         name: updateClientDto.name,
@@ -45,9 +53,13 @@ export class ClientsService {
         email: updateClientDto.email,
       },
     })
+
+    return {
+      message: 'Client updated successfully',
+    }
   }
 
-  async remove(id: number): Promise<RemoveClient> {
+  async remove(id: number): Promise<RemoveClientResponse> {
     await this.prismaService.clients.delete({
       where: { id: Number(id) }, // Convertimos a número por si acaso
     })

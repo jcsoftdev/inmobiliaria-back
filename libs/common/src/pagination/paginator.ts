@@ -1,5 +1,6 @@
 // PaginationError class
 
+import { ApiResponseProperty } from '@nestjs/swagger'
 import { createPaginationError } from '@app/common/pagination/paginator.error'
 
 // Interfaces for pagination options and results
@@ -8,17 +9,30 @@ export interface PaginateOptions {
   perPage?: number
 }
 
-export interface PaginationMeta {
-  total: number
-  lastPage: number
-  currentPage: number
-  perPage: number
-  prev: number | null
-  next: number | null
+export class PaginationMeta {
+  @ApiResponseProperty({ type: Number })
+  total!: number
+
+  @ApiResponseProperty({ type: Number })
+  lastPage!: number
+
+  @ApiResponseProperty({ type: Number })
+  currentPage!: number
+
+  @ApiResponseProperty({ type: Number })
+  perPage!: number
+
+  @ApiResponseProperty({ type: Number })
+  prev!: number | null
+
+  @ApiResponseProperty({ type: Number })
+  next!: number | null
 }
 
-export class PaginatedResult<T> {
+export class PaginatedResult<T = any> {
+  @ApiResponseProperty({ type: [Object] })
   data!: T[]
+  @ApiResponseProperty({ type: PaginationMeta })
   meta!: PaginationMeta
 }
 

@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
+import { AGENCIES_PATTERNS, Agency, AgencyProps } from '@app/contracts/agencies'
 import { AgenciesService } from './agencies.service'
-import { AGENCIES_PATTERNS, Agency } from '@app/contracts/agencies'
 
 @Controller()
 export class AgenciesController {
@@ -13,8 +13,8 @@ export class AgenciesController {
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ALL)
-  findAll() {
-    return this.agenciesService.findAll()
+  findAll(props: AgencyProps) {
+    return this.agenciesService.findAll(props)
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)
