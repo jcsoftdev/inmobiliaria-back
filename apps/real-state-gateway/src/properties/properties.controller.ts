@@ -34,7 +34,7 @@ export class PropertiesController {
   @Get()
   @ApiExtraModels(PaginatedPropertiesResponse)
   @ApiOkResponse({
-    description: 'Get all agencies',
+    description: 'Get all properties',
     schema: {
       allOf: [
         { $ref: getSchemaPath(PaginatedPropertiesResponse) },
