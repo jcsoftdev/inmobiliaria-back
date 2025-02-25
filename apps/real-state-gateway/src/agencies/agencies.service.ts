@@ -10,6 +10,7 @@ import {
   CreateAgencyResponse,
   RemoveAgencyResponse,
   UpdateAgencyResponse,
+  CreateAgencyDto,
 } from '@app/contracts/agencies'
 
 @Injectable()
@@ -28,7 +29,7 @@ export class AgenciesService {
     )
   }
 
-  create(data: Agency): Promise<CreateAgencyResponse> {
+  create(data: CreateAgencyDto): Promise<CreateAgencyResponse> {
     return firstValueFrom(
       this.userManagementClient.send<CreateAgencyResponse>(
         AGENCIES_PATTERNS.CREATE,

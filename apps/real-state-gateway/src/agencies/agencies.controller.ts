@@ -12,9 +12,11 @@ import {
   ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
+  ApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger'
 
+import { CreateAgencyDto } from '@app/contracts/agencies'
 import {
   PaginatedAgenciesResponse,
   Agency,
@@ -57,19 +59,34 @@ export class AgenciesController {
   }
 
   @Post()
-  create(@Body() data: Agency): Promise<CreateAgencyResponse> {
+  @ApiResponse({
+    status: 201,
+    description: 'Agency created successfully',
+    type: CreateAgencyResponse,
+  })
+  create(@Body() data: CreateAgencyDto): Promise<CreateAgencyResponse> {
     return this.agenciesService.create(data)
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: 202,
+    description: 'Agency updated successfully',
+    type: UpdateAgencyResponse,
+  })
   update(
     @Param('id') id: string,
-    @Body() data: Agency,
+    @Body() data: CreateAgencyDto,
   ): Promise<UpdateAgencyResponse> {
     return this.agenciesService.update(+id, data)
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 203,
+    description: 'Agency deleted successfully',
+    type: RemoveAgencyResponse,
+  })
   delete(@Param('id') id: string): Promise<RemoveAgencyResponse> {
     return this.agenciesService.delete(+id)
   }

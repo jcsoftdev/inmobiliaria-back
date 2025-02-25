@@ -1,8 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
-import { PrismaService } from '@data-service/prisma.service'
-
 import { AgenciesService } from '@gateway/agencies/agencies.service'
 
 import { AgenciesController } from './agencies.controller'
@@ -24,7 +22,7 @@ describe('AgenciesController', () => {
         ]),
       ],
       controllers: [AgenciesController],
-      providers: [AgenciesService, PrismaService],
+      providers: [AgenciesService],
     }).compile()
 
     controller = module.get<AgenciesController>(AgenciesController)
