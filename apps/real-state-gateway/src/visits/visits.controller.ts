@@ -30,11 +30,11 @@ import {
 import { VisitsService } from './visits.service'
 
 @Controller('visits')
+@ApiExtraModels(PaginatedVisitsResponse, Visit)
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
   @Get()
-  @ApiExtraModels(PaginatedVisitsResponse)
   @ApiOkResponse({
     description: 'Get all visits',
     schema: {
@@ -64,7 +64,7 @@ export class VisitsController {
 
   @ApiResponse({
     status: 201,
-    description: 'The record has been successfully created.',
+    description: 'Create visit',
     type: CreateVisitResponse,
   })
   @Post()
@@ -73,6 +73,11 @@ export class VisitsController {
   }
 
   @Patch(':id')
+  @ApiResponse({
+    status: 201,
+    description: 'Update visit.',
+    type: UpdateVisitResponse,
+  })
   update(
     @Param('id') id: string,
     @Body() data: UpdateVisitDto,
@@ -81,6 +86,11 @@ export class VisitsController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 203,
+    description: 'Delete visit.',
+    type: RemoveVisitResponse,
+  })
   delete(@Param('id') id: string): Promise<RemoveVisitResponse> {
     return this.visitsService.delete(+id)
   }
