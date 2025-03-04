@@ -3,7 +3,9 @@ import { users, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
-export class User implements Readonly<Omit<users, 'password'>> {
+export class User
+  implements Readonly<Omit<users, 'password' | 'refresh_token'>>
+{
   @ApiProperty({ type: String, example: 'John Doe' })
   name!: string
   @ApiProperty({ type: Number, example: 1 })

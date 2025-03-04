@@ -3,6 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
 import { AllExceptionsFilter } from '@app/common/filters/global-exception.filter'
 
+import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
+
 import { RealStateGatewayModule } from './real-state-gateway.module'
 
 async function bootstrap() {
@@ -15,6 +17,14 @@ async function bootstrap() {
     .setTitle('API Gateway documentation')
     .setDescription('API Gateway documentation')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      ACCESS_TOKEN_SWAGGER,
+    )
     .addTag('API Gateway')
     .build()
 

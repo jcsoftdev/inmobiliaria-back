@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -141,6 +141,7 @@ model users {
   cash_flow  cash_flow[]
   properties properties[]
   sellers    sellers?
+  refresh_token String?
   agencies   agencies?    @relation(fields: [agency_id], references: [id], onUpdate: NoAction)
 }
 

@@ -35,7 +35,7 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.REMOVE)
-  delete(@Payload() playload: { id: number }) {
-    return this.propertiesService.remove(playload.id)
+  delete(@Payload() payload: { id: number }) {
+    return this.propertiesService.remove(payload.id)
   }
 }

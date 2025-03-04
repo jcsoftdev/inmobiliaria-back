@@ -31,9 +31,9 @@ export class LocationType {
   coordinates!: [number, number] // [latitude, longitude]
 
   @ApiProperty()
-  @IsDefined({ message: 'Name is required' })
-  @IsString({ message: 'Name must be a string' })
-  @Length(1, 255, { message: 'Name must be between 1 and 255 characters' })
+  @IsDefined({ message: 'Address is required' })
+  @IsString({ message: 'Address must be a string' })
+  @Length(1, 255, { message: 'Address must be between 1 and 255 characters' })
   address!: string
 }
 

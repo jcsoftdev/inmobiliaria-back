@@ -65,7 +65,7 @@ export class CreatePropertyDto
     example: {
       type: 'Point',
       coordinates: [0, 0],
-      name: 'Location name',
+      address: 'Location name',
     },
   })
   @ValidateNested()
