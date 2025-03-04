@@ -1,3 +1,4 @@
+import { AuthModule } from '@libs/auth'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
@@ -20,6 +21,7 @@ describe('PropertiesController', () => {
             },
           },
         ]),
+        AuthModule,
       ],
       controllers: [PropertiesController],
       providers: [PropertiesService],

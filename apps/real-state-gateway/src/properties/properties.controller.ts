@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from '@libs/auth'
 import {
   Controller,
   Get,
@@ -7,8 +8,10 @@ import {
   Delete,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import {
+  ApiBearerAuth,
   ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
@@ -27,9 +30,12 @@ import {
   UpdatePropertyResponse,
 } from '@app/contracts/properties'
 
+import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
 import { PropertiesService } from '@gateway/properties/properties.service'
 
 @Controller('properties')
+@ApiBearerAuth(ACCESS_TOKEN_SWAGGER)
+@UseGuards(JwtAuthGuard)
 export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 

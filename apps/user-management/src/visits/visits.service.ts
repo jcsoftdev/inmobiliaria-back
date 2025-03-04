@@ -24,7 +24,6 @@ export class VisitsService {
     const response = await firstValueFrom(
       this.visitsClient.send<CreateVisitResponse>(VISITS_PATTERNS.CREATE, data),
     )
-    console.log('USER MANAGEMENT: ', response.message.toString())
     return response
   }
 

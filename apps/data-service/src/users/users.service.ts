@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import * as bcrypt from 'bcryptjs'
 
 import { paginator } from '@app/common/pagination'
 import {
@@ -24,7 +25,7 @@ export class UsersService {
         agency_id: createUserDto.agencyId,
         name: createUserDto.name,
         email: createUserDto.email,
-        password: createUserDto.password,
+        password: await bcrypt.hash(createUserDto.password, 10),
         phone: createUserDto.phone,
         role: createUserDto.role,
         created_at: new Date(),

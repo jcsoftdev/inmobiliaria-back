@@ -1,3 +1,4 @@
+import { AuthModule } from '@libs/auth'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
@@ -15,6 +16,7 @@ import { PropertiesService } from '@gateway/properties/properties.service'
         },
       },
     ]),
+    AuthModule,
   ],
   providers: [PropertiesService],
   controllers: [PropertiesController],

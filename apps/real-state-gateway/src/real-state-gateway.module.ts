@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 
 import { AgenciesModule } from './agencies/agencies.module'
+import { AuthenticationModule } from './authentication/authentication.module'
 import { ClientsModule } from './clients/clients.module'
 import { PropertiesModule } from './properties/properties.module'
 import { RealStateGatewayController } from './real-state-gateway.controller'
@@ -15,6 +16,7 @@ import { VisitsModule } from './visits/visits.module'
     UsersModule,
     ClientsModule,
     VisitsModule,
+    AuthenticationModule,
   ],
   controllers: [RealStateGatewayController],
   providers: [RealStateGatewayService],

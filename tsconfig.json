@@ -10,7 +10,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "target": "ES2021",
@@ -23,13 +22,28 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/common": ["libs/common/src"],
-      "@app/common/*": ["libs/common/src/*"],
-      "@app/contracts": ["libs/contracts/src"],
-      "@app/contracts/*": ["libs/contracts/src/*"],
-      "@data-service/*": ["./apps/data-service/src/*"],
-      "@gateway/*": ["./apps/real-state-gateway/src/*"],
-      "@properties/*": ["./apps/properties/src/*"]
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/contracts": [
+        "libs/contracts/src"
+      ],
+      "@app/contracts/*": [
+        "libs/contracts/src/*"
+      ],
+      "@data-service/*": [
+        "./apps/data-service/src/*"
+      ],
+      "@gateway/*": [
+        "./apps/real-state-gateway/src/*"
+      ],
+      "@properties/*": [
+        "./apps/properties/src/*"
+      ],
+      "@libs/auth": ["./libs/auth/src/main.ts"]
     }
   }
 }

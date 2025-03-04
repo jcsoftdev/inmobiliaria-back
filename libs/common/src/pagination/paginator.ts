@@ -30,7 +30,7 @@ export class PaginationMeta {
   next!: number | null
 }
 
-export class PaginatedResult<T = any> {
+export class PaginatedResult<T = unknown> {
   @ApiResponseProperty({ type: [Object] })
   data!: T[]
   @ApiResponseProperty({ type: PaginationMeta })
@@ -39,8 +39,8 @@ export class PaginatedResult<T = any> {
 
 export type PaginateFunction = <
   T,
-  WhereType = Record<string, any>,
-  OrderType = Record<string, any>,
+  WhereType = Record<string, unknown>,
+  OrderType = Record<string, unknown>,
 >(
   model: {
     count: (args: { where?: WhereType; orderBy?: OrderType }) => Promise<number>
@@ -74,9 +74,9 @@ class Paginator {
 
   paginate = async <
     T,
-    SelectType = Record<string, any>,
-    WhereType = Record<string, any>,
-    OrderType = Record<string, any>,
+    SelectType = Record<string, unknown>,
+    WhereType = Record<string, unknown>,
+    OrderType = Record<string, unknown>,
   >(
     model: {
       count: (args: {

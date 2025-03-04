@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from '@libs/auth'
 import {
   Controller,
   Get,
@@ -7,8 +8,10 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import {
+  ApiBearerAuth,
   ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
@@ -26,6 +29,7 @@ import {
   UserSingleProps,
 } from '@app/contracts/users/user.response'
 
+import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
 import { UsersService } from '@gateway/users/users.service'
 
 @Controller('users')
@@ -34,6 +38,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth(ACCESS_TOKEN_SWAGGER)
   @ApiOkResponse({
     description: 'Get all users',
     schema: {
