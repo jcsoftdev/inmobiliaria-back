@@ -5,7 +5,7 @@ import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
 export class Client implements clients {
   @ApiResponseProperty({ type: Number })
-  id!: number
+  id!: string
   @ApiResponseProperty({ type: String })
   name!: string
   @ApiResponseProperty({ type: String })

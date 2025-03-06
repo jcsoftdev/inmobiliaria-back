@@ -28,17 +28,17 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.clientsService.findOne(id)
   }
 
   @MessagePattern(CLIENTS_PATTERNS.UPDATE)
-  update(@Payload() { id, data }: { id: number; data: UpdateClientDto }) {
+  update(@Payload() { id, data }: { id: string; data: UpdateClientDto }) {
     return this.clientsService.update(id, data)
   }
 
   @MessagePattern(CLIENTS_PATTERNS.REMOVE)
-  delete(@Payload() payload: { id: number }) {
+  delete(@Payload() payload: { id: string }) {
     return this.clientsService.remove(payload.id)
   }
 }

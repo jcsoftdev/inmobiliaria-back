@@ -37,7 +37,7 @@ export class AgenciesService {
     )
   }
 
-  findOne(id: number): Promise<Agency> {
+  findOne(id: string): Promise<Agency> {
     return firstValueFrom(
       this.agenciesClient.send<Agency>(AGENCIES_PATTERNS.FIND_ONE, id),
     )
@@ -52,7 +52,7 @@ export class AgenciesService {
     )
   }
 
-  remove(id: number): Promise<RemoveAgencyResponse> {
+  remove(id: string): Promise<RemoveAgencyResponse> {
     return firstValueFrom(
       this.agenciesClient.send<RemoveAgencyResponse>(
         AGENCIES_PATTERNS.REMOVE,

@@ -79,7 +79,7 @@ export class AgenciesController {
     @Param('id') id: string,
     @Body() data: UpdateAgencyDto,
   ): Promise<UpdateAgencyResponse> {
-    return this.agenciesService.update(+id, data)
+    return this.agenciesService.update(id, data)
   }
 
   @Delete(':id')
@@ -89,6 +89,6 @@ export class AgenciesController {
     type: RemoveAgencyResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveAgencyResponse> {
-    return this.agenciesService.delete(+id)
+    return this.agenciesService.delete(id)
   }
 }

@@ -32,19 +32,19 @@ export class VisitsController {
   }
 
   @MessagePattern(VISITS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number): Promise<Visit> {
+  findOne(@Payload() id: string): Promise<Visit> {
     return this.visitsService.findOne(id)
   }
 
   @MessagePattern(VISITS_PATTERNS.UPDATE)
   update(
-    @Payload() { id, data }: { id: number; data: UpdateVisitDto },
+    @Payload() { id, data }: { id: string; data: UpdateVisitDto },
   ): Promise<UpdateVisitResponse> {
     return this.visitsService.update(id, data)
   }
 
   @MessagePattern(VISITS_PATTERNS.REMOVE)
-  remove(@Payload() payload: { id: number }): Promise<RemoveVisitResponse> {
+  remove(@Payload() payload: { id: string }): Promise<RemoveVisitResponse> {
     return this.visitsService.remove(payload.id)
   }
 }

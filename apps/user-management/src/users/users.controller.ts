@@ -28,7 +28,7 @@ export class UsersController {
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number): Promise<User> {
+  findOne(@Payload() id: string): Promise<User> {
     return this.usersService.findOne(id)
   }
 
@@ -38,7 +38,7 @@ export class UsersController {
   }
 
   @MessagePattern(USERS_PATTERNS.REMOVE)
-  remove(@Payload() id: number): Promise<RemoveUserResponse> {
+  remove(@Payload() id: string): Promise<RemoveUserResponse> {
     return this.usersService.remove(id)
   }
 }

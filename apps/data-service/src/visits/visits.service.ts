@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
 import {
@@ -21,6 +22,7 @@ export class VisitsService {
   async create(createVisitDto: CreateVisitDto): Promise<CreateVisitResponse> {
     await this.prismaService.visits.create({
       data: {
+        id: uuidV7(),
         client_id: createVisitDto.clientId,
         property_id: createVisitDto.propertyId,
         scheduled_at: createVisitDto.scheduledAt,
@@ -55,8 +57,8 @@ export class VisitsService {
         data: data.data.map((visit): Visit => {
           return {
             id: visit.id,
-            client_id: visit.client_id ?? 0,
-            property_id: visit.property_id ?? 0,
+            client_id: visit.client_id,
+            property_id: visit.property_id ?? '', // change in database to be null
             scheduled_at: visit.scheduled_at ?? new Date(),
             status: (visit.status ?? 'pending') as Visit['status'],
             created_at: visit.created_at ?? new Date(),
@@ -69,15 +71,15 @@ export class VisitsService {
     }
   }
 
-  async findOne(id: number): Promise<Visit> {
+  async findOne(id: string): Promise<Visit> {
     const data = await this.prismaService.visits.findUniqueOrThrow({
       where: { id },
     })
 
     return {
       id: data.id,
-      client_id: data.client_id ?? 0,
-      property_id: data.property_id ?? 0,
+      client_id: data.client_id ?? null,
+      property_id: data.property_id ?? '', // change in database to be null
       scheduled_at: data.scheduled_at ?? new Date(),
       status: (data.status ?? 'pending') as Visit['status'],
       created_at: data.created_at ?? new Date(),
@@ -85,7 +87,7 @@ export class VisitsService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateVisitDto: UpdateVisitDto,
   ): Promise<UpdateVisitResponse> {
     await this.prismaService.visits.update({
@@ -100,9 +102,9 @@ export class VisitsService {
     return { message: 'Visit updated successfully' }
   }
 
-  async remove(id: number): Promise<RemoveVisitResponse> {
+  async remove(id: string): Promise<RemoveVisitResponse> {
     await this.prismaService.visits.delete({
-      where: { id: Number(id) }, // Convertimos a número por si acaso
+      where: { id: id }, // Convertimos a número por si acaso
     })
     return { message: 'Visit removed successfully' }
   }

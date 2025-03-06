@@ -84,7 +84,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() data: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
-    return this.usersService.update(+id, data)
+    return this.usersService.update(id, data)
   }
 
   @Delete(':id')
@@ -94,6 +94,6 @@ export class UsersController {
     type: RemoveUserResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
-    return this.usersService.delete(+id)
+    return this.usersService.delete(id)
   }
 }

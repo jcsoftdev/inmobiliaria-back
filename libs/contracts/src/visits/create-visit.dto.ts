@@ -6,16 +6,16 @@ import { VisitStatus } from '@app/contracts/visits/enums'
 export class CreateVisitDto {
   @ApiProperty({
     description: 'Client id that will be visiting the property',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsNumber()
-  clientId!: number
+  clientId!: string
 
   @ApiProperty({
     description: 'Property id that will be visited',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  propertyId!: number
+  propertyId!: string
 
   @ApiProperty({
     description: 'Visit scheduled date',

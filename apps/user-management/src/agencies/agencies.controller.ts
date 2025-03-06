@@ -20,7 +20,7 @@ export class AgenciesController {
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.agenciesService.findOne(id)
   }
 
@@ -30,7 +30,7 @@ export class AgenciesController {
   }
 
   @MessagePattern(AGENCIES_PATTERNS.REMOVE)
-  remove(@Payload() id: number) {
+  remove(@Payload() id: string) {
     return this.agenciesService.remove(id)
   }
 }

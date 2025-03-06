@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "agencies" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "address" TEXT,
     "phone" VARCHAR(20),
@@ -12,11 +12,11 @@ CREATE TABLE "agencies" (
 
 -- CreateTable
 CREATE TABLE "cash_flow" (
-    "id" SERIAL NOT NULL,
-    "agency_id" INTEGER,
-    "transaction_id" INTEGER,
-    "user_id" INTEGER,
-    "parent_cash_flow_id" INTEGER,
+    "id" UUID NOT NULL,
+    "agency_id" UUID,
+    "transaction_id" UUID,
+    "user_id" UUID,
+    "parent_cash_flow_id" UUID,
     "type" VARCHAR(20),
     "amount" DECIMAL(12,2) NOT NULL,
     "description" TEXT,
@@ -27,7 +27,7 @@ CREATE TABLE "cash_flow" (
 
 -- CreateTable
 CREATE TABLE "clients" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "email" VARCHAR(100) NOT NULL,
     "phone" VARCHAR(20),
@@ -38,9 +38,9 @@ CREATE TABLE "clients" (
 
 -- CreateTable
 CREATE TABLE "leads" (
-    "id" SERIAL NOT NULL,
-    "client_id" INTEGER,
-    "property_id" INTEGER,
+    "id" UUID NOT NULL,
+    "client_id" UUID,
+    "property_id" UUID,
     "message" TEXT,
     "status" VARCHAR(20) DEFAULT 'new',
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -50,8 +50,8 @@ CREATE TABLE "leads" (
 
 -- CreateTable
 CREATE TABLE "properties" (
-    "id" SERIAL NOT NULL,
-    "agency_id" INTEGER,
+    "id" UUID NOT NULL,
+    "agency_id" UUID,
     "title" VARCHAR(255) NOT NULL,
     "description" TEXT,
     "type" VARCHAR(20),
@@ -59,7 +59,7 @@ CREATE TABLE "properties" (
     "location" JSONB NOT NULL,
     "features" JSONB NOT NULL,
     "status" VARCHAR(20) DEFAULT 'available',
-    "user_id" INTEGER,
+    "user_id" UUID,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "properties_pkey" PRIMARY KEY ("id")
@@ -67,8 +67,8 @@ CREATE TABLE "properties" (
 
 -- CreateTable
 CREATE TABLE "property_images" (
-    "id" SERIAL NOT NULL,
-    "property_id" INTEGER,
+    "id" UUID NOT NULL,
+    "property_id" UUID,
     "image_url" TEXT NOT NULL,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
@@ -77,11 +77,11 @@ CREATE TABLE "property_images" (
 
 -- CreateTable
 CREATE TABLE "property_transactions" (
-    "id" SERIAL NOT NULL,
-    "property_id" INTEGER,
-    "buyer_id" INTEGER,
-    "seller_id" INTEGER,
-    "transaction_id" INTEGER,
+    "id" UUID NOT NULL,
+    "property_id" UUID,
+    "buyer_id" UUID,
+    "seller_id" UUID,
+    "transaction_id" UUID,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "property_transactions_pkey" PRIMARY KEY ("id")
@@ -89,9 +89,9 @@ CREATE TABLE "property_transactions" (
 
 -- CreateTable
 CREATE TABLE "sellers" (
-    "id" SERIAL NOT NULL,
-    "agency_id" INTEGER,
-    "user_id" INTEGER,
+    "id" UUID NOT NULL,
+    "agency_id" UUID,
+    "user_id" UUID,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "sellers_pkey" PRIMARY KEY ("id")
@@ -99,8 +99,8 @@ CREATE TABLE "sellers" (
 
 -- CreateTable
 CREATE TABLE "transactions" (
-    "id" SERIAL NOT NULL,
-    "agency_id" INTEGER,
+    "id" UUID NOT NULL,
+    "agency_id" UUID,
     "amount" DECIMAL(12,2) NOT NULL,
     "transaction_date" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "transaction_type" VARCHAR(20),
@@ -112,23 +112,28 @@ CREATE TABLE "transactions" (
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" SERIAL NOT NULL,
-    "agency_id" INTEGER,
+    "id" UUID NOT NULL,
+    "agency_id" UUID,
     "name" VARCHAR(100) NOT NULL,
+    "username" VARCHAR(100) NOT NULL,
     "email" VARCHAR(100) NOT NULL,
     "password" TEXT NOT NULL,
     "phone" VARCHAR(20),
     "role" VARCHAR(20),
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    "refresh_token" VARCHAR(255),
+    "status" VARCHAR(20) DEFAULT 'active',
+    "dni" VARCHAR(11),
+    "expires_at" TIMESTAMP(3),
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "visits" (
-    "id" SERIAL NOT NULL,
-    "client_id" INTEGER,
-    "property_id" INTEGER,
+    "id" UUID NOT NULL,
+    "client_id" UUID,
+    "property_id" UUID,
     "scheduled_at" TIMESTAMP(6) NOT NULL,
     "status" VARCHAR(20) DEFAULT 'pending',
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
@@ -144,6 +149,9 @@ CREATE UNIQUE INDEX "clients_email_key" ON "clients"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "sellers_user_id_key" ON "sellers"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
@@ -185,7 +193,7 @@ ALTER TABLE "property_transactions" ADD CONSTRAINT "property_transactions_proper
 ALTER TABLE "property_transactions" ADD CONSTRAINT "property_transactions_seller_id_fkey" FOREIGN KEY ("seller_id") REFERENCES "sellers"("id") ON DELETE SET NULL ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "property_transactions" ADD CONSTRAINT "property_transactions_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE SET NULL ON UPDATE NO ACTION;
+ALTER TABLE "property_transactions" ADD CONSTRAINT "property_transactions_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "sellers" ADD CONSTRAINT "sellers_agency_id_fkey" FOREIGN KEY ("agency_id") REFERENCES "agencies"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

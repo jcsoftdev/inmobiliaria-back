@@ -25,17 +25,17 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.propertiesService.findOne(id)
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.UPDATE)
-  update(@Payload() { id, data }: { id: number; data: UpdatePropertyDto }) {
+  update(@Payload() { id, data }: { id: string; data: UpdatePropertyDto }) {
     return this.propertiesService.update(id, data)
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.REMOVE)
-  delete(@Payload() payload: { id: number }) {
+  delete(@Payload() payload: { id: string }) {
     return this.propertiesService.remove(payload.id)
   }
 }

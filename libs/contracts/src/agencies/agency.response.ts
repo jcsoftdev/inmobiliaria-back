@@ -7,8 +7,11 @@ export class Agency implements agencies {
   @ApiProperty({ type: String, example: 'Agency name' })
   name!: string
 
-  @ApiProperty({ type: Number, example: 1 })
-  id!: number
+  @ApiProperty({
+    type: String,
+    example: '01956c22-9b54-7628-8304-13024295978b',
+  })
+  id!: string
 
   @ApiProperty({ type: String, example: 'Av Los girasoles 397' })
   address!: string | null

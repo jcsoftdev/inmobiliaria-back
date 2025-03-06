@@ -39,7 +39,7 @@ export class VisitsService {
   }
 
   update(
-    id: number,
+    id: string,
     data: Partial<UpdateVisitDto>,
   ): Promise<UpdateVisitResponse> {
     return firstValueFrom(
@@ -53,7 +53,7 @@ export class VisitsService {
     )
   }
 
-  delete(id: number): Promise<RemoveVisitResponse> {
+  delete(id: string): Promise<RemoveVisitResponse> {
     return firstValueFrom(
       this.userManagementClient.send<RemoveVisitResponse>(
         VISITS_PATTERNS.REMOVE,

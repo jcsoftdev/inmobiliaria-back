@@ -6,12 +6,27 @@ import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 export class User
   implements Readonly<Omit<users, 'password' | 'refresh_token'>>
 {
+  @ApiProperty({ type: String, example: 'johndoe' })
+  username!: string
+  @ApiProperty({ type: String, example: 'active' })
+  status!: string | null
+  @ApiProperty({ type: String, example: '12345678' })
+  dni!: string | null
+
+  @ApiProperty({ type: Date, example: '2021-09-01T00:00:00.000Z' })
+  expires_at!: Date | null
   @ApiProperty({ type: String, example: 'John Doe' })
   name!: string
-  @ApiProperty({ type: Number, example: 1 })
-  id!: number
-  @ApiProperty({ type: Number, example: 1 })
-  agency_id!: number | null
+  @ApiProperty({
+    type: String,
+    example: '01956c22-9b54-7628-8304-13024295978b',
+  })
+  id!: string
+  @ApiProperty({
+    type: String,
+    example: '01956c22-9b54-7628-8304-13024295978b',
+  })
+  agency_id!: string | null
   @ApiProperty({ type: String, example: 'mail@mail.com' })
   email!: string
   @ApiProperty({ type: Date })

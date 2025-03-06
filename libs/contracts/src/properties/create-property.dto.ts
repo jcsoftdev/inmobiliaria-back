@@ -4,6 +4,7 @@ import {
   IsArray,
   IsEnum,
   IsNumber,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator'
@@ -27,7 +28,7 @@ export class CreatePropertyDto
 {
   @ApiProperty({
     description: 'Property title',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsString()
   title!: string
@@ -48,10 +49,11 @@ export class CreatePropertyDto
 
   @ApiProperty({
     description: 'Agency id',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  @IsNumber()
-  agencyId!: number
+  @IsString()
+  @IsOptional()
+  agencyId!: string | null
 
   @ApiProperty({
     description: 'Property price',
@@ -95,8 +97,8 @@ export class CreatePropertyDto
 
   @ApiProperty({
     description: 'User id',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsNumber()
-  userId!: number
+  userId!: string
 }

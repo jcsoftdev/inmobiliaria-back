@@ -42,7 +42,7 @@ export class PropertiesService {
   }
 
   update(
-    id: number,
+    id: string,
     data: Partial<UpdatePropertyDto>,
   ): Promise<UpdatePropertyResponse> {
     return firstValueFrom(
@@ -56,7 +56,7 @@ export class PropertiesService {
     )
   }
 
-  delete(id: number): Promise<RemovePropertyResponse> {
+  delete(id: string): Promise<RemovePropertyResponse> {
     return firstValueFrom(
       this.propertiesClient.send<RemovePropertyResponse>(
         PROPERTIES_PATTERNS.REMOVE,

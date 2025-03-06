@@ -6,19 +6,19 @@ import { VisitStatus } from '@app/contracts/visits/enums'
 import { CreateVisitDto } from './create-visit.dto'
 
 export class UpdateVisitDto extends PartialType(CreateVisitDto) {
-  id!: number
+  id!: string
 
   @ApiPropertyOptional({
     description: 'Client id that will be visiting the property',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  clientId?: number
+  clientId?: string
 
   @ApiPropertyOptional({
     description: 'Property id that will be visited',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  propertyId?: number
+  propertyId?: string
 
   @ApiPropertyOptional({
     description: 'Visit scheduled date',

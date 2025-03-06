@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcryptjs'
+import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
 import {
@@ -22,6 +23,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     await this.prismaService.users.create({
       data: {
+        id: uuidV7(),
         agency_id: createUserDto.agencyId,
         name: createUserDto.name,
         email: createUserDto.email,
@@ -29,6 +31,9 @@ export class UsersService {
         phone: createUserDto.phone,
         role: createUserDto.role,
         created_at: new Date(),
+        username: createUserDto.username,
+        dni: createUserDto.dni,
+        expires_at: createUserDto.expiresAt,
       },
     })
     return {
@@ -62,12 +67,12 @@ export class UsersService {
     )
   }
 
-  findOne(id: number): Promise<User> {
+  findOne(id: string): Promise<User> {
     return this.prismaService.users.findFirstOrThrow({ where: { id } })
   }
 
   async update(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
     await this.prismaService.users.update({
@@ -86,9 +91,9 @@ export class UsersService {
     }
   }
 
-  async remove(id: number): Promise<RemoveUserResponse> {
+  async remove(id: string): Promise<RemoveUserResponse> {
     await this.prismaService.users.delete({
-      where: { id: Number(id) },
+      where: { id: id },
     })
     return {
       message: 'User deleted successfully',

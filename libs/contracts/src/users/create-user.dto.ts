@@ -1,7 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsNumber, IsString } from 'class-validator'
+import { users } from '@prisma/client'
+import { IsDateString, IsEmail, IsString } from 'class-validator'
 
-export class CreateUserDto {
+import { IsUUIDv7 } from '@app/common/decorators'
+
+export class CreateUserDto
+  implements
+    Omit<
+      users,
+      'id' | 'agency_id' | 'created_at' | 'refresh_token' | 'expires_at'
+    >
+{
   @ApiProperty({
     description: 'User name',
     example: 'John Doe',
@@ -18,10 +27,10 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Agency id',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  @IsNumber()
-  agencyId!: number
+  @IsUUIDv7()
+  agencyId!: string
 
   @ApiProperty({
     description: 'User password',
@@ -43,4 +52,32 @@ export class CreateUserDto {
   })
   @IsString()
   role!: string
+
+  @ApiProperty({
+    description: 'User username',
+    example: 'johndoe',
+  })
+  @IsString()
+  username!: string
+
+  @ApiProperty({
+    description: 'User status',
+    example: 'active',
+  })
+  @IsString()
+  status!: string
+
+  @ApiProperty({
+    description: 'User dni',
+    example: '123456789',
+  })
+  @IsString()
+  dni!: string
+
+  @ApiProperty({
+    description: 'User expires at',
+    example: new Date(),
+  })
+  @IsDateString()
+  expiresAt!: Date | null
 }

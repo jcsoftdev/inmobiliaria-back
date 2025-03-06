@@ -38,7 +38,7 @@ export class AgenciesService {
     )
   }
 
-  update(id: number, data: Partial<Agency>): Promise<UpdateAgencyResponse> {
+  update(id: string, data: Partial<Agency>): Promise<UpdateAgencyResponse> {
     return firstValueFrom(
       this.userManagementClient.send<UpdateAgencyResponse>(
         AGENCIES_PATTERNS.UPDATE,
@@ -50,7 +50,7 @@ export class AgenciesService {
     )
   }
 
-  delete(id: number): Promise<RemoveAgencyResponse> {
+  delete(id: string): Promise<RemoveAgencyResponse> {
     return firstValueFrom(
       this.userManagementClient.send<RemoveAgencyResponse>(
         AGENCIES_PATTERNS.REMOVE,

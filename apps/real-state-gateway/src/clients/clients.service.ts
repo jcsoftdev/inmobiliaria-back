@@ -41,7 +41,7 @@ export class ClientsService {
   }
 
   update(
-    id: number,
+    id: string,
     data: Partial<UpdateClientDto>,
   ): Promise<UpdateClientResponse> {
     return firstValueFrom(
@@ -55,7 +55,7 @@ export class ClientsService {
     )
   }
 
-  delete(id: number): Promise<RemoveClientResponse> {
+  delete(id: string): Promise<RemoveClientResponse> {
     return firstValueFrom(
       this.userManagementClient.send<RemoveClientResponse>(
         CLIENTS_PATTERNS.REMOVE,

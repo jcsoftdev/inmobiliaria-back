@@ -42,7 +42,7 @@ export class ClientsService {
     )
   }
 
-  findOne(id: number): Promise<Client> {
+  findOne(id: string): Promise<Client> {
     return firstValueFrom(
       this.clientsClient.send<Client>(CLIENTS_PATTERNS.FIND_ONE, id),
     )
@@ -57,7 +57,7 @@ export class ClientsService {
     )
   }
 
-  remove(id: number): Promise<RemoveClientResponse> {
+  remove(id: string): Promise<RemoveClientResponse> {
     return firstValueFrom(
       this.clientsClient.send<RemoveClientResponse>(
         CLIENTS_PATTERNS.REMOVE,

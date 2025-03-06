@@ -25,7 +25,7 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.propertiesService.findOne(id)
   }
 
@@ -35,7 +35,7 @@ export class PropertiesController {
   }
 
   @MessagePattern(PROPERTIES_PATTERNS.REMOVE)
-  remove(@Payload() id: number) {
+  remove(@Payload() id: string) {
     return this.propertiesService.remove(id)
   }
 }
