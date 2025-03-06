@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { IsDateString, IsEnum, IsNumber } from 'class-validator'
 
+import { IsUUIDv7 } from '@app/common/decorators'
 import { VisitStatus } from '@app/contracts/visits/enums'
 
 export class CreateVisitDto {
@@ -8,6 +9,7 @@ export class CreateVisitDto {
     description: 'Client id that will be visiting the property',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   @IsNumber()
   clientId!: string
 
@@ -15,6 +17,7 @@ export class CreateVisitDto {
     description: 'Property id that will be visited',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   propertyId!: string
 
   @ApiProperty({

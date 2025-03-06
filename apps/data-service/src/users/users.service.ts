@@ -73,15 +73,17 @@ export class UsersService {
     )
     return {
       ...results,
-      data: results.data.map((user) => {
-        return {
-          ...user,
-          agencyId: user.agency_id,
-          createdAt: user.created_at,
-          expiresAt: user.expires_at,
-          lastName: user.last_name,
-        }
-      }),
+      data: results.data.map(
+        ({ created_at, agency_id, expires_at, last_name, ...user }) => {
+          return {
+            ...user,
+            agencyId: agency_id,
+            createdAt: created_at,
+            expiresAt: expires_at,
+            lastName: last_name,
+          }
+        },
+      ),
     }
   }
 

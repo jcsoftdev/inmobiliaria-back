@@ -53,7 +53,6 @@ export class CreatePropertyDto
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsUUIDv7()
-  @IsString()
   @IsOptional()
   agencyId!: string | null
 
@@ -102,6 +101,5 @@ export class CreatePropertyDto
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsUUIDv7()
-  @IsNumber()
   userId!: string
 }
