@@ -8,7 +8,12 @@ export class CreateUserDto
   implements
     Omit<
       users,
-      'id' | 'agency_id' | 'created_at' | 'refresh_token' | 'expires_at'
+      | 'id'
+      | 'agency_id'
+      | 'created_at'
+      | 'refresh_token'
+      | 'expires_at'
+      | 'last_name'
     >
 {
   @ApiProperty({
@@ -17,6 +22,13 @@ export class CreateUserDto
   })
   @IsString()
   name!: string
+
+  @ApiProperty({
+    description: 'User last name',
+    example: 'García Rodríguez',
+  })
+  @IsString()
+  lastName!: string
 
   @ApiProperty({
     description: 'User email',

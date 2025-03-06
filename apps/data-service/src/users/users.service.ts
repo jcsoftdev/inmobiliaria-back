@@ -26,6 +26,7 @@ export class UsersService {
         id: uuidV7(),
         agency_id: createUserDto.agencyId,
         name: createUserDto.name,
+        last_name: createUserDto.lastName,
         email: createUserDto.email,
         password: await bcrypt.hash(createUserDto.password, 10),
         phone: createUserDto.phone,
@@ -41,34 +42,74 @@ export class UsersService {
     }
   }
 
-  findAll({
+  async findAll({
     orderBy,
     where,
     select,
     ...props
   }: UserProps): Promise<PaginatedUsersResponse> {
-    return paginator.paginate(
+    const results = await paginator.paginate(
       this.prismaService.users,
       {
         orderBy,
         where,
         select: {
+          username: true,
+          dni: true,
+          status: true,
+          id: true,
           agency_id: true,
           created_at: true,
           email: true,
-          id: true,
           name: true,
+          last_name: true,
           phone: true,
           role: true,
+          expires_at: true,
           ...select,
         },
       },
       props,
     )
+    return {
+      ...results,
+      data: results.data.map((user) => {
+        return {
+          ...user,
+          agencyId: user.agency_id,
+          createdAt: user.created_at,
+          expiresAt: user.expires_at,
+          lastName: user.last_name,
+        }
+      }),
+    }
   }
 
-  findOne(id: string): Promise<User> {
-    return this.prismaService.users.findFirstOrThrow({ where: { id } })
+  async findOne(id: string): Promise<User> {
+    const result = await this.prismaService.users.findFirstOrThrow({
+      where: { id },
+      select: {
+        username: true,
+        dni: true,
+        status: true,
+        id: true,
+        agency_id: true,
+        created_at: true,
+        email: true,
+        name: true,
+        last_name: true,
+        phone: true,
+        role: true,
+        expires_at: true,
+      },
+    })
+    return {
+      ...result,
+      agencyId: result.agency_id,
+      createdAt: result.created_at,
+      expiresAt: result.expires_at,
+      lastName: result.last_name,
+    }
   }
 
   async update(
