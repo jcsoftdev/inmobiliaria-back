@@ -73,7 +73,7 @@ export class Property
     >
 {
   @ApiProperty()
-  id!: number
+  id!: string
 
   @ApiProperty()
   title!: string
@@ -84,8 +84,8 @@ export class Property
   @ApiProperty()
   type!: PropertyType
 
-  @ApiProperty({ type: Number })
-  agencyId!: number | null
+  @ApiProperty({ type: String })
+  agencyId!: string | null
 
   @ApiProperty({ type: Number })
   price!: number
@@ -103,7 +103,7 @@ export class Property
   status!: PropertyStatus
 
   @ApiProperty({ type: Number })
-  userId!: number | null
+  userId!: string | null
 }
 
 export class PaginatedPropertiesResponse extends PaginatedResult<Property> {}

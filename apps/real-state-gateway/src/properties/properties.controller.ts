@@ -88,7 +88,7 @@ export class PropertiesController {
     @Param('id') id: string,
     @Body() data: UpdatePropertyDto,
   ): Promise<UpdatePropertyResponse> {
-    return this.propertiesService.update(+id, data)
+    return this.propertiesService.update(id, data)
   }
 
   @Delete(':id')
@@ -98,6 +98,6 @@ export class PropertiesController {
     type: CreatePropertyResponse,
   })
   delete(@Param('id') id: string): Promise<RemovePropertyResponse> {
-    return this.propertiesService.delete(+id)
+    return this.propertiesService.delete(id)
   }
 }

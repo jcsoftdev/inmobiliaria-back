@@ -11,7 +11,7 @@ import {
 import { CreatePropertyDto } from './create-property.dto'
 
 export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
-  id!: number
+  id!: string
   @ApiPropertyOptional({
     description: 'Property title',
     example: 'Property title',
@@ -20,9 +20,9 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
 
   @ApiPropertyOptional({
     description: 'Agency id',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  agencyId?: number
+  agencyId?: string
 
   @ApiPropertyOptional({
     description: 'Property description',
@@ -71,7 +71,7 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
 
   @ApiPropertyOptional({
     description: 'User id',
-    example: 1,
+    example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  userId?: number
+  userId?: string
 }

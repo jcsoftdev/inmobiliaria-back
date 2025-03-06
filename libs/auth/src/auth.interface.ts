@@ -18,6 +18,6 @@ export interface UserPayload {
 }
 
 export type UpdateRefreshTokenFn = (
-  userId: string | number,
+  userId: string,
   refreshToken: string,
 ) => Promise<void>

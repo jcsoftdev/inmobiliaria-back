@@ -26,17 +26,17 @@ export class UsersController {
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.usersService.findOne(id)
   }
 
   @MessagePattern(USERS_PATTERNS.UPDATE)
-  update(@Payload() { id, data }: { id: number; data: UpdateUserDto }) {
+  update(@Payload() { id, data }: { id: string; data: UpdateUserDto }) {
     return this.usersService.update(id, data)
   }
 
   @MessagePattern(USERS_PATTERNS.REMOVE)
-  delete(@Payload() payload: { id: number }) {
+  delete(@Payload() payload: { id: string }) {
     return this.usersService.remove(payload.id)
   }
 }

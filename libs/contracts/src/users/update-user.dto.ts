@@ -4,7 +4,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger'
 import { CreateUserDto } from './create-user.dto'
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  id!: number
+  id!: string
 
   @ApiPropertyOptional({ description: 'User name', example: 'John Doe' })
   name?: string

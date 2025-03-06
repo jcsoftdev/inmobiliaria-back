@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { v7 as uuidV7 } from 'uuid'
 
 import {
   ERROR_TYPES,
@@ -31,6 +32,7 @@ export class PropertiesService {
     }
     await this.prismaService.properties.create({
       data: {
+        id: uuidV7(),
         title: createPropertyDto.title,
         description: createPropertyDto.description,
         price: createPropertyDto.price,
@@ -94,11 +96,11 @@ export class PropertiesService {
     return response
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prismaService.properties.findUniqueOrThrow({ where: { id } })
   }
 
-  update(id: number, updatePropertyDto: UpdatePropertyDto) {
+  update(id: string, updatePropertyDto: UpdatePropertyDto) {
     return this.prismaService.properties.update({
       where: { id },
       data: {
@@ -115,9 +117,9 @@ export class PropertiesService {
     })
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prismaService.properties.delete({
-      where: { id: Number(id) }, // Convertimos a número por si acaso
+      where: { id }, // Convertimos a número por si acaso
     })
   }
 }

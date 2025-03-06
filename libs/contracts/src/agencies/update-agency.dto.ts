@@ -4,7 +4,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger'
 import { CreateAgencyDto } from './create-agency.dto'
 
 export class UpdateAgencyDto extends PartialType(CreateAgencyDto) {
-  id!: number
+  id!: string
   @ApiPropertyOptional({
     description: 'Agency address',
     example: '123 Main St, New York, NY 10001',

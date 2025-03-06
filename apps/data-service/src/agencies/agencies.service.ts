@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
 import {
@@ -23,6 +24,7 @@ export class AgenciesService {
   ): Promise<CreateAgencyResponse> {
     await this.prismaService.agencies.create({
       data: {
+        id: uuidV7(),
         name: createAgencyDto.name,
         address: createAgencyDto.address,
         phone: createAgencyDto.phone,
@@ -50,12 +52,12 @@ export class AgenciesService {
     )
   }
 
-  findOne(id: number): Promise<Agency> {
+  findOne(id: string): Promise<Agency> {
     return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
   }
 
   async update(
-    id: number,
+    id: string,
     updateAgencyDto: UpdateAgencyDto,
   ): Promise<UpdateAgencyResponse> {
     await this.prismaService.agencies.update({
@@ -73,9 +75,9 @@ export class AgenciesService {
     }
   }
 
-  async remove(id: number): Promise<RemoveAgencyResponse> {
+  async remove(id: string): Promise<RemoveAgencyResponse> {
     await this.prismaService.agencies.delete({
-      where: { id: Number(id) },
+      where: { id },
     })
     return {
       message: 'Agency removed successfully',

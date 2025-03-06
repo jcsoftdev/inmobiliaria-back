@@ -36,7 +36,7 @@ export class VisitsService {
     )
   }
 
-  findOne(id: number): Promise<Visit> {
+  findOne(id: string): Promise<Visit> {
     return firstValueFrom(
       this.visitsClient.send<Visit>(VISITS_PATTERNS.FIND_ONE, id),
     )
@@ -48,7 +48,7 @@ export class VisitsService {
     )
   }
 
-  remove(id: number): Promise<RemoveVisitResponse> {
+  remove(id: string): Promise<RemoveVisitResponse> {
     return firstValueFrom(
       this.visitsClient.send<RemoveVisitResponse>(VISITS_PATTERNS.REMOVE, id),
     )

@@ -9,7 +9,7 @@ export class Visit implements visits {
   scheduled_at!: Date
 
   @ApiProperty()
-  id!: number
+  id!: string
 
   @ApiProperty({
     description: 'Visit status',
@@ -21,10 +21,10 @@ export class Visit implements visits {
   created_at!: Date
 
   @ApiProperty()
-  property_id!: number
+  property_id!: string
 
   @ApiProperty()
-  client_id!: number | null
+  client_id!: string | null
 }
 
 export class CreateVisitResponse {

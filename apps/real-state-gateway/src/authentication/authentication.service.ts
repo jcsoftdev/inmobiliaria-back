@@ -46,13 +46,10 @@ export class AuthenticationService {
     return user
   }
 
-  private async updateRefreshToken(
-    userId: string | number,
-    refreshToken: string,
-  ) {
+  private async updateRefreshToken(userId: string, refreshToken: string) {
     await this.prismaService.users.update({
       where: {
-        id: +userId,
+        id: userId,
       },
       data: {
         refresh_token: refreshToken,

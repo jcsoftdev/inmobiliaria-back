@@ -38,7 +38,7 @@ export class PropertiesService {
     return res
   }
 
-  findOne(id: number): Observable<Property> {
+  findOne(id: string): Observable<Property> {
     return this.propertiesClient.send<Property>(
       PROPERTIES_PATTERNS.FIND_ONE,
       id,
@@ -49,7 +49,7 @@ export class PropertiesService {
     return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.UPDATE, id)
   }
 
-  remove(id: number): Observable<Property> {
+  remove(id: string): Observable<Property> {
     return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.REMOVE, id)
   }
 }

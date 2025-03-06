@@ -26,17 +26,17 @@ export class AgenciesController {
   }
 
   @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.agenciesService.findOne(id)
   }
 
   @MessagePattern(AGENCIES_PATTERNS.UPDATE)
-  update(@Payload() { id, data }: { id: number; data: UpdateAgencyDto }) {
+  update(@Payload() { id, data }: { id: string; data: UpdateAgencyDto }) {
     return this.agenciesService.update(id, data)
   }
 
   @MessagePattern(AGENCIES_PATTERNS.REMOVE)
-  delete(@Payload() payload: { id: number }) {
+  delete(@Payload() payload: { id: string }) {
     return this.agenciesService.remove(payload.id)
   }
 }

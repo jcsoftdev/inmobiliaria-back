@@ -31,7 +31,7 @@ export class VisitsController {
   }
 
   @MessagePattern(VISITS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number): Promise<Visit> {
+  findOne(@Payload() id: string): Promise<Visit> {
     return this.visitsService.findOne(id)
   }
 
@@ -41,7 +41,7 @@ export class VisitsController {
   }
 
   @MessagePattern(VISITS_PATTERNS.REMOVE)
-  remove(@Payload() id: number): Promise<RemoveVisitResponse> {
+  remove(@Payload() id: string): Promise<RemoveVisitResponse> {
     return this.visitsService.remove(id)
   }
 }

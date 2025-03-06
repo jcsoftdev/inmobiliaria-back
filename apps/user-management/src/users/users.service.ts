@@ -34,7 +34,7 @@ export class UsersService {
     )
   }
 
-  findOne(id: number): Promise<User> {
+  findOne(id: string): Promise<User> {
     return firstValueFrom(
       this.usersClient.send<User>(USERS_PATTERNS.FIND_ONE, id),
     )
@@ -46,7 +46,7 @@ export class UsersService {
     )
   }
 
-  remove(id: number): Promise<RemoveUserResponse> {
+  remove(id: string): Promise<RemoveUserResponse> {
     return firstValueFrom(
       this.usersClient.send<RemoveUserResponse>(USERS_PATTERNS.REMOVE, id),
     )

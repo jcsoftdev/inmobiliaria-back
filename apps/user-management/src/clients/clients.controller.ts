@@ -31,7 +31,7 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: number): Promise<Client> {
+  findOne(@Payload() id: string): Promise<Client> {
     return this.clientsService.findOne(id)
   }
 
@@ -43,7 +43,7 @@ export class ClientsController {
   }
 
   @MessagePattern(CLIENTS_PATTERNS.REMOVE)
-  remove(@Payload() id: number): Promise<RemoveClientResponse> {
+  remove(@Payload() id: string): Promise<RemoveClientResponse> {
     return this.clientsService.remove(id)
   }
 }

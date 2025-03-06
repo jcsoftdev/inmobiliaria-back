@@ -77,7 +77,7 @@ export class ClientsController {
     @Param('id') id: string,
     @Body() data: UpdateClientDto,
   ): Promise<UpdateClientResponse> {
-    return this.clientsService.update(+id, data)
+    return this.clientsService.update(id, data)
   }
 
   @Delete(':id')
@@ -86,6 +86,6 @@ export class ClientsController {
     type: RemoveClientResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveClientResponse> {
-    return this.clientsService.delete(+id)
+    return this.clientsService.delete(id)
   }
 }
