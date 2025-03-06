@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 
+import { IsUUIDv7 } from '@app/common/decorators'
 import {
   LocationType,
   PropertyFeature,
@@ -22,6 +23,7 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
     description: 'Agency id',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   agencyId?: string
 
   @ApiPropertyOptional({
@@ -73,5 +75,6 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
     description: 'User id',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   userId?: string
 }
