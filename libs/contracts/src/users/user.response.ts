@@ -3,18 +3,23 @@ import { users, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
+type OmittedFields = 'password' | 'refresh_token'
+
+type RewritedFields = 'created_at' | 'expires_at' | 'last_name' | 'agency_id'
+
 export class User
-  implements Readonly<Omit<users, 'password' | 'refresh_token'>>
+  implements Readonly<Omit<users, OmittedFields | RewritedFields>>
 {
   @ApiProperty({ type: String, example: 'johndoe' })
   username!: string
+  @ApiProperty({ type: String, example: 'johndoe' })
+  lastName!: string
   @ApiProperty({ type: String, example: 'active' })
-  status!: string | null
+  status!: string
   @ApiProperty({ type: String, example: '12345678' })
-  dni!: string | null
-
+  dni!: string
   @ApiProperty({ type: Date, example: '2021-09-01T00:00:00.000Z' })
-  expires_at!: Date | null
+  expiresAt!: Date | null
   @ApiProperty({ type: String, example: 'John Doe' })
   name!: string
   @ApiProperty({
@@ -26,13 +31,11 @@ export class User
     type: String,
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
-  agency_id!: string | null
+  agencyId!: string | null
   @ApiProperty({ type: String, example: 'mail@mail.com' })
   email!: string
   @ApiProperty({ type: Date })
-  created_at!: Date | null
-  // @ApiProperty({ type: String, example: 'password' })
-  // password!: string
+  createdAt!: Date | null
   @ApiProperty({ type: String, example: '08123456789' })
   phone!: string | null
   @ApiProperty({ type: String, example: 'admin' })

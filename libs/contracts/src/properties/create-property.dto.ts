@@ -9,6 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator'
 
+import { IsUUIDv7 } from '@app/common/decorators'
 import {
   LocationType,
   Property,
@@ -51,6 +52,7 @@ export class CreatePropertyDto
     description: 'Agency id',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   @IsString()
   @IsOptional()
   agencyId!: string | null
@@ -99,6 +101,7 @@ export class CreatePropertyDto
     description: 'User id',
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
+  @IsUUIDv7()
   @IsNumber()
   userId!: string
 }
