@@ -28,6 +28,9 @@ export class ClientsService {
         email: createClientDto.email,
         phone: createClientDto.phone,
         created_at: new Date(),
+        address: createClientDto.address,
+        dni: createClientDto.dni,
+        last_name: createClientDto.lastName,
       },
     })
 
@@ -36,12 +39,12 @@ export class ClientsService {
     }
   }
 
-  findAll({
+  async findAll({
     orderBy,
     where,
     ...props
   }: ClientProps): Promise<PaginatedClientsResponse> {
-    return paginator.paginate(
+    const results = await paginator.paginate(
       this.prismaService.clients,
       {
         orderBy: orderBy,
@@ -49,10 +52,29 @@ export class ClientsService {
       },
       { ...props },
     )
+
+    return {
+      ...results,
+      data: results.data.map(({ last_name, created_at, ...client }) => {
+        return {
+          ...client,
+          lastName: last_name,
+          createdAt: created_at,
+        }
+      }),
+    }
   }
 
-  findOne(id: string): Promise<Client> {
-    return this.prismaService.clients.findUniqueOrThrow({ where: { id } })
+  async findOne(id: string): Promise<Client> {
+    const result = await this.prismaService.clients.findUniqueOrThrow({
+      where: { id },
+    })
+
+    return {
+      ...result,
+      lastName: result.last_name,
+      createdAt: result.created_at,
+    }
   }
 
   async update(
@@ -64,6 +86,7 @@ export class ClientsService {
       data: {
         name: updateClientDto.name,
         phone: updateClientDto.phone,
+
         email: updateClientDto.email,
       },
     })
