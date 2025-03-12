@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { users } from '@prisma/client'
-import { IsDateString, IsEmail, IsString } from 'class-validator'
+import { IsDateString, IsEmail, IsOptional, IsString } from 'class-validator'
 
 import { IsUUIDv7 } from '@app/common/decorators'
 
@@ -42,6 +42,7 @@ export class CreateUserDto
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsUUIDv7()
+  @IsOptional()
   agencyId!: string
 
   @ApiProperty({

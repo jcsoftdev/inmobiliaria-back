@@ -21,6 +21,20 @@ export class RpcErrorForwardingFilter
       return throwError(() => exception) // ✅ Return existing RpcException
     }
 
+    if (exception.constructor.name === 'PrismaClientValidationError') {
+      console.log(
+        '❌ PrismaClientValidationError:',
+        exception.message.toString(),
+      )
+      return throwError(() =>
+        deserializeRpcException({
+          errorType: ERROR_TYPES.BAD_REQUEST,
+          statusCode: ERROR_STATUS.BAD_REQUEST,
+          message: ERROR_TYPES_MESSAGE.BAD_REQUEST,
+        }),
+      )
+    }
+
     if (exception.constructor.name === 'PrismaClientKnownRequestError') {
       console.log(
         '❌ PrismaClientKnownRequestError:',

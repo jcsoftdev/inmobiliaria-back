@@ -1,7 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { clients } from '@prisma/client'
 import { IsEmail, IsString } from 'class-validator'
 
-export class CreateClientDto {
+type OmittedFields = 'id' | 'created_at'
+
+type OverwriteFields = 'last_name'
+export class CreateClientDto
+  implements Omit<clients, OmittedFields | OverwriteFields>
+{
+  @ApiProperty({
+    description: 'Client dni',
+    example: '12345678',
+  })
+  @IsString()
+  dni!: string
+
+  @ApiProperty({
+    description: 'Client last name',
+    example: 'John',
+  })
+  @IsString()
+  lastName!: string
+
+  @ApiProperty({
+    description: 'Client address',
+    example: 'Av del Ejercito 123',
+  })
+  @IsString()
+  address!: string
+
   @ApiProperty({
     description: 'Client name',
     example: 'John Doe',

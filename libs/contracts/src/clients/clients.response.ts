@@ -3,7 +3,13 @@ import { clients, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
-export class Client implements clients {
+export class Client implements Omit<clients, 'created_at' | 'last_name'> {
+  @ApiResponseProperty({ type: String })
+  dni!: string
+  @ApiResponseProperty({ type: String })
+  lastName!: string
+  @ApiResponseProperty({ type: String })
+  address!: string
   @ApiResponseProperty({ type: Number })
   id!: string
   @ApiResponseProperty({ type: String })
@@ -13,7 +19,7 @@ export class Client implements clients {
   @ApiResponseProperty({ type: String })
   phone!: string | null
   @ApiResponseProperty({ type: Date })
-  created_at!: Date | null
+  createdAt!: Date | null
 }
 
 export class PaginatedClientsResponse extends PaginatedResult<Client> {}
