@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
-import { paginator } from '@app/common/pagination'
+import { convertFieldsToArray, paginator } from '@app/common/pagination'
 import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
@@ -44,11 +45,32 @@ export class ClientsService {
     where,
     ...props
   }: ClientProps): Promise<PaginatedClientsResponse> {
+    let selectQuery: Prisma.clientsSelect = {
+      address: true,
+      dni: true,
+      created_at: true,
+      email: true,
+      id: true,
+      last_name: true,
+      name: true,
+      phone: true,
+    } as const
+    const fields = convertFieldsToArray(props.fields)
+
+    if (fields.length) {
+      selectQuery = {}
+      fields.forEach((field) => {
+        console.log('field', field)
+        selectQuery[field] = true
+      })
+    }
+
     const results = await paginator.paginate(
       this.prismaService.clients,
       {
         orderBy: orderBy,
         where: where,
+        select: selectQuery,
       },
       { ...props },
     )
@@ -86,8 +108,10 @@ export class ClientsService {
       data: {
         name: updateClientDto.name,
         phone: updateClientDto.phone,
-
         email: updateClientDto.email,
+        address: updateClientDto.address,
+        dni: updateClientDto.dni,
+        last_name: updateClientDto.lastName,
       },
     })
 

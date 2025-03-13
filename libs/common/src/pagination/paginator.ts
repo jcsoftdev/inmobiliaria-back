@@ -102,6 +102,7 @@ class Paginator {
         },
       }
     } catch (error: unknown) {
+      console.log({ error })
       throw createPaginationError(this.getErrorMessage(error))
     }
   }
@@ -111,12 +112,18 @@ class Paginator {
   }
 }
 
-export type PaginationProps<Where, OrderBy, Select> = {
+export const convertFieldsToArray = <T extends string>(fields?: T): T[] => {
+  if (!fields) return []
+
+  return fields.split(',').map((field) => field.trim() as T)
+}
+
+export type PaginationProps<Where, OrderBy, Fields> = {
   page?: number
   perPage?: number
   where?: Where
   orderBy?: OrderBy
-  select?: Select
+  fields?: Fields
 }
 
 export const paginator = new Paginator({ page: 1, perPage: 10 })

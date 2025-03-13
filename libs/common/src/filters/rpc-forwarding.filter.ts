@@ -15,7 +15,11 @@ export class RpcErrorForwardingFilter
   implements RpcExceptionFilter<RpcExceptionSerializedWithResponse>
 {
   catch(exception: RpcExceptionSerializedWithResponse) {
-    console.error('🚨 RPC Forwarding errors:', exception.constructor)
+    console.error(
+      '🚨 RPC Forwarding errors:',
+      exception.constructor,
+      exception.error,
+    )
 
     if (exception instanceof RpcException) {
       return throwError(() => exception) // ✅ Return existing RpcException

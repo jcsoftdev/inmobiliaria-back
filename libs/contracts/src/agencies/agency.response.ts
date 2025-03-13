@@ -35,11 +35,11 @@ export class CreateAgencyResponse {
 export class UpdateAgencyResponse extends CreateAgencyResponse {}
 
 export class RemoveAgencyResponse extends CreateAgencyResponse {}
-
+export type AgencyFields = 'name' | 'address' | 'phone' | 'email' | 'created_at'
 export type AgencyProps = PaginationProps<
   Prisma.agenciesWhereInput,
   Prisma.agenciesOrderByWithRelationInput,
-  Prisma.agenciesSelect
+  AgencyFields
 >
 
 export type AgencySingleProps = Omit<AgencyProps, 'where' | 'orderBy'>

@@ -117,10 +117,11 @@ export class UpdatePropertyResponse extends CreatePropertyResponse {}
 
 export class RemovePropertyResponse extends CreatePropertyResponse {}
 
+export type Fields = 'title' | 'description' | 'type' | 'price' | 'status'
 export type PropertyProps = PaginationProps<
   Prisma.propertiesWhereInput,
   Prisma.propertiesOrderByWithRelationInput,
-  Prisma.propertiesSelect
+  Fields
 >
 
 export type PropertySingleProps = Omit<PropertyProps, 'where' | 'orderBy'>

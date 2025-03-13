@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
 import {
   ERROR_TYPES,
   TypedRpcException,
 } from '@app/common/exceptions/rpc.exception'
-import { PaginatedResult, paginator } from '@app/common/pagination'
+import {
+  convertFieldsToArray,
+  PaginatedResult,
+  paginator,
+} from '@app/common/pagination'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
@@ -64,9 +69,32 @@ export class PropertiesService {
     orderBy,
     ...props
   }: PropertyProps): Promise<PaginatedResult<Property>> {
+    let selectQuery: Prisma.propertiesSelect = {
+      description: true,
+      id: true,
+      price: true,
+      status: true,
+      title: true,
+      type: true,
+      location: true,
+      features: true,
+      created_at: true,
+      agency_id: true,
+      user_id: true,
+    }
+    const fields = convertFieldsToArray(props.fields)
+
+    if (fields.length) {
+      selectQuery = {}
+      fields.forEach((field) => {
+        selectQuery[field] = true
+      })
+    }
+
     const res = await paginator.paginate(
       this.prismaService.properties,
       {
+        select: selectQuery,
         where,
         orderBy,
       },
@@ -75,13 +103,12 @@ export class PropertiesService {
 
     const response: PaginatedResult<Property> = {
       data: res.data.map(
-        (property): Property => ({
-          id: property.id,
-          title: property.title,
+        ({ agency_id, user_id, created_at, ...property }): Property => ({
+          ...property,
           price: Number(property.price),
-          agencyId: property.agency_id,
-          userId: property.user_id,
-          createdAt: property.created_at,
+          agencyId: agency_id,
+          userId: user_id,
+          createdAt: created_at,
           description: property.description ?? '',
           status: property.status as Property['status'],
           type: property.type as Property['type'],
