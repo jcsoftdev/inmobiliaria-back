@@ -19,7 +19,11 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 
-import { CreateUserDto, UpdateUserDto } from '@app/contracts/users'
+import {
+  CreateUserDto,
+  UpdateUserAgencyDto,
+  UpdateUserDto,
+} from '@app/contracts/users'
 import {
   PaginatedUsersResponse,
   CreateUserResponse,
@@ -95,5 +99,31 @@ export class UsersController {
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
     return this.usersService.delete(id)
+  }
+
+  @Post(':id/add-agencies')
+  @ApiResponse({
+    status: 202,
+    description: 'Add agency to user',
+    type: UpdateUserResponse,
+  })
+  addAgency(
+    @Param('id') userId: string,
+    @Body() data: UpdateUserAgencyDto,
+  ): Promise<UpdateUserResponse> {
+    return this.usersService.addAgencyToUser(userId, data.agencyIds ?? [])
+  }
+
+  @Post(':id/remove-agencies')
+  @ApiResponse({
+    status: 202,
+    description: 'Remove agency from user',
+    type: UpdateUserResponse,
+  })
+  removeAgency(
+    @Param('id') userId: string,
+    @Body() data: UpdateUserAgencyDto,
+  ): Promise<UpdateUserResponse> {
+    return this.usersService.removeAgencyFromUser(userId, data.agencyIds ?? [])
   }
 }

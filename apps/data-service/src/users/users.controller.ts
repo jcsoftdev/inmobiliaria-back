@@ -7,6 +7,7 @@ import {
   CreateUserDto,
   UpdateUserDto,
   PaginatedUsersResponse,
+  UpdateUserResponse,
 } from '@app/contracts/users'
 
 import { UsersService } from './users.service'
@@ -38,5 +39,23 @@ export class UsersController {
   @MessagePattern(USERS_PATTERNS.REMOVE)
   delete(@Payload() payload: { id: string }) {
     return this.usersService.remove(payload.id)
+  }
+
+  @MessagePattern(USERS_PATTERNS.ADD_AGENCY)
+  async addAgency(
+    @Payload()
+    { userId, agencyIds }: { userId: string; agencyIds: string[] },
+  ): Promise<UpdateUserResponse> {
+    await this.usersService.addAgencyToUser(userId, agencyIds)
+    return { message: 'Agency added to user successfully' }
+  }
+
+  @MessagePattern(USERS_PATTERNS.REMOVE_AGENCY)
+  async removeAgency(
+    @Payload()
+    { userId, agencyIds }: { userId: string; agencyIds: string[] },
+  ): Promise<UpdateUserResponse> {
+    await this.usersService.removeAgencyFromUser(userId, agencyIds)
+    return { message: 'Agency removed from user successfully' }
   }
 }

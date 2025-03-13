@@ -37,7 +37,6 @@ export class UsersService {
       },
     })
 
-    // Asignar agencias al usuario si `agencyIds` está presente
     if (createUserDto.agencyIds?.length) {
       await this.prismaService.users_agencies.createMany({
         data: createUserDto.agencyIds.map((agencyId) => ({
@@ -132,7 +131,7 @@ export class UsersService {
 
   async update(
     id: string,
-    { expiresAt, lastName, agencyIds, ...updateUserDto }: UpdateUserDto,
+    { expiresAt, lastName, ...updateUserDto }: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
     try {
       await this.prismaService.users.update({
@@ -143,22 +142,6 @@ export class UsersService {
           last_name: lastName,
         },
       })
-
-      if (agencyIds) {
-        // Eliminar todas las agencias actuales del usuario
-        await this.prismaService.users_agencies.deleteMany({
-          where: { user_id: id },
-        })
-
-        if (agencyIds.length > 0) {
-          await this.prismaService.users_agencies.createMany({
-            data: agencyIds.map((agencyId) => ({
-              user_id: id,
-              agency_id: agencyId,
-            })),
-          })
-        }
-      }
 
       return {
         message: 'User updated successfully',
@@ -180,20 +163,35 @@ export class UsersService {
     }
   }
 
-  async addAgenciesToUser(
+  async addAgencyToUser(userId: string, agencyIds: string[]) {
+    try {
+      await this.prismaService.users_agencies.createMany({
+        data: agencyIds.map((agencyId) => ({
+          id: uuidV7(),
+          user_id: userId,
+          agency_id: agencyId,
+        })),
+      })
+    } catch (error) {
+      console.error('Error en addAgencyToUser:', error)
+    }
+  }
+
+  async removeAgencyFromUser(
     userId: string,
     agencyIds: string[],
   ): Promise<UpdateUserResponse> {
-    await this.prismaService.users.update({
-      where: { id: userId },
-      data: {
-        agencies: {
-          connect: agencyIds.map((id) => ({ id })),
+    await this.prismaService.users_agencies.deleteMany({
+      where: {
+        user_id: userId,
+        agency_id: {
+          in: agencyIds,
         },
       },
     })
+
     return {
-      message: 'Agencies added to user successfully',
+      message: 'Agency removed from user successfully',
     }
   }
 }

@@ -4,4 +4,6 @@ export const USERS_PATTERNS = {
   CREATE: 'users.create',
   UPDATE: 'users.update',
   REMOVE: 'users.remove',
+  ADD_AGENCY: 'users.addAgency',
+  REMOVE_AGENCY: 'users.removeAgency',
 }

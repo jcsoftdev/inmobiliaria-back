@@ -11,6 +11,7 @@ import {
   RemoveUserResponse,
   UpdateUserResponse,
   CreateUserDto,
+  UpdateUserAgencyDto,
 } from '@app/contracts/users'
 
 @Injectable()
@@ -57,6 +58,30 @@ export class UsersService {
         {
           id,
         },
+      ),
+    )
+  }
+
+  addAgencyToUser(
+    userId: string,
+    agencyId: string[],
+  ): Promise<UpdateUserResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateUserResponse, UpdateUserAgencyDto>(
+        USERS_PATTERNS.ADD_AGENCY,
+        { userId, agencyIds: agencyId },
+      ),
+    )
+  }
+
+  removeAgencyFromUser(
+    userId: string,
+    agencyIds: string[],
+  ): Promise<UpdateUserResponse> {
+    return firstValueFrom(
+      this.userManagementClient.send<UpdateUserResponse, UpdateUserAgencyDto>(
+        USERS_PATTERNS.REMOVE_AGENCY,
+        { userId, agencyIds },
       ),
     )
   }

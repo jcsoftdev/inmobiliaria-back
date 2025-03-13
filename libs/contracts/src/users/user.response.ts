@@ -57,6 +57,22 @@ export class UpdateUserResponse extends CreateUserResponse {}
 
 export class RemoveUserResponse extends CreateUserResponse {}
 
+export class AddAgenciesResponse extends CreateUserResponse {
+  @ApiProperty({
+    type: [String],
+    example: ['01956c22-9b54-7628-8304-13024295978b'],
+  })
+  addedAgencies!: string[]
+}
+
+export class RemoveAgenciesResponse extends CreateUserResponse {
+  @ApiProperty({
+    type: [String],
+    example: ['01956c22-9b54-7628-8304-13024295978b'],
+  })
+  removedAgencies!: string[]
+}
+
 export type UserFields =
   | 'username'
   | 'dni'
