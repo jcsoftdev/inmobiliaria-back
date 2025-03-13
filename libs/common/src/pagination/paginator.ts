@@ -1,10 +1,8 @@
-// PaginationError class
-
 import { ApiResponseProperty } from '@nestjs/swagger'
+import { Prisma } from '@prisma/client'
 
 import { createPaginationError } from '@app/common/pagination/paginator.error'
 
-// Interfaces for pagination options and results
 export interface PaginateOptions {
   page?: number
   perPage?: number
@@ -37,25 +35,8 @@ export class PaginatedResult<T = unknown> {
   meta!: PaginationMeta
 }
 
-export type PaginateFunction = <
-  T,
-  WhereType = Record<string, unknown>,
-  OrderType = Record<string, unknown>,
->(
-  model: {
-    count: (args: { where?: WhereType; orderBy?: OrderType }) => Promise<number>
-    findMany: (args: {
-      where?: WhereType
-      take?: number
-      skip?: number
-      orderBy?: OrderType
-    }) => Promise<T[]>
-  },
-  args?: { where?: WhereType; orderBy?: OrderType },
-  options?: PaginateOptions,
-) => Promise<PaginatedResult<T>>
+type InferData<T, A> = Prisma.Result<T, A, 'findMany'>
 
-// Pagination class to encapsulate the behavior
 class Paginator {
   private readonly defaultPage: number
   private readonly defaultPerPage: number
@@ -72,32 +53,19 @@ class Paginator {
     }
   }
 
-  paginate = async <
-    T,
-    SelectType = Record<string, unknown>,
-    WhereType = Record<string, unknown>,
-    OrderType = Record<string, unknown>,
-  >(
-    model: {
+  async paginate<
+    T extends {
+      findMany: (args: P) => Promise<InferData<T, P>>
       count: (args: {
-        where?: WhereType
-        orderBy?: OrderType
+        where?: P extends { where?: infer W } ? W : never
       }) => Promise<number>
-      findMany: (args: {
-        select?: SelectType
-        where?: WhereType
-        take?: number
-        skip?: number
-        orderBy?: OrderType
-      }) => Promise<T[]>
     },
-    args?: {
-      where?: WhereType
-      orderBy?: OrderType
-      select?: SelectType
-    },
+    P extends Prisma.Args<T, 'findMany'>,
+  >(
+    model: T,
+    args: P,
     options: PaginateOptions = {},
-  ): Promise<PaginatedResult<T>> => {
+  ): Promise<PaginatedResult<InferData<T, P>[number]>> {
     const page = options.page ?? this.defaultPage
     const perPage = options.perPage ?? this.defaultPerPage
     const { page: validatedPage, perPage: validatedPerPage } =
@@ -105,24 +73,22 @@ class Paginator {
 
     const skip = (validatedPage - 1) * validatedPerPage
 
-    const orderBy: OrderType | undefined =
-      typeof args?.orderBy === 'string'
-        ? (JSON.parse(args.orderBy) as OrderType)
-        : args?.orderBy
-
     try {
+      const where =
+        'where' in args
+          ? (args.where as P extends { where?: infer W } ? W : never)
+          : undefined
+
       const [total, data] = await Promise.all([
-        model.count({ where: args?.where }),
+        model.count({ where }),
         model.findMany({
-          select: args?.select,
-          where: args?.where,
-          take: validatedPerPage,
+          ...(args as Record<string, unknown>),
           skip,
-          orderBy: orderBy,
-        }),
+          take: validatedPerPage,
+        } as P),
       ])
 
-      const lastPage = Math.ceil(total / validatedPerPage)
+      const lastPage = Math.max(1, Math.ceil(total / validatedPerPage))
 
       return {
         data,
@@ -136,8 +102,7 @@ class Paginator {
         },
       }
     } catch (error: unknown) {
-      const message = this.getErrorMessage(error)
-      throw createPaginationError(message)
+      throw createPaginationError(this.getErrorMessage(error))
     }
   }
 
@@ -154,5 +119,4 @@ export type PaginationProps<Where, OrderBy, Select> = {
   select?: Select
 }
 
-// Usage
 export const paginator = new Paginator({ page: 1, perPage: 10 })
