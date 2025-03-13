@@ -45,7 +45,6 @@ export class UsersService {
   async findAll({
     orderBy,
     where,
-    select,
     ...props
   }: UserProps): Promise<PaginatedUsersResponse> {
     const results = await paginator.paginate(
@@ -66,7 +65,6 @@ export class UsersService {
           phone: true,
           role: true,
           expires_at: true,
-          ...select,
         },
       },
       props,

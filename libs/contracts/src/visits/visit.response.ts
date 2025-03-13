@@ -40,10 +40,12 @@ export class UpdateVisitResponse extends CreateVisitResponse {}
 
 export class RemoveVisitResponse extends CreateVisitResponse {}
 
+export type VisitFields = 'scheduled_at' | 'status' | 'created_at'
+
 export type VisitProps = PaginationProps<
   Prisma.visitsWhereInput,
   Prisma.visitsOrderByWithRelationInput,
-  Prisma.visitsSelect
+  VisitFields
 >
 
 export type VisitSingleProps = Omit<VisitProps, 'where' | 'orderBy'>

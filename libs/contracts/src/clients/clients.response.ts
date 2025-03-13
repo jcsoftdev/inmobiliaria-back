@@ -33,10 +33,20 @@ export class UpdateClientResponse extends CreateClientResponse {}
 
 export class RemoveClientResponse extends CreateClientResponse {}
 
+export type ClientFields =
+  | 'dni'
+  | 'last_name'
+  | 'address'
+  | 'id'
+  | 'name'
+  | 'email'
+  | 'phone'
+  | 'created_at'
+
 export type ClientProps = PaginationProps<
   Prisma.clientsWhereInput,
   Prisma.clientsOrderByWithRelationInput,
-  Prisma.clientsSelect
+  ClientFields
 >
 
 export type ClientSingleProps = Omit<ClientProps, 'where' | 'orderBy'>

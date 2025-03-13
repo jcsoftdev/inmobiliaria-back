@@ -53,10 +53,19 @@ export class ClientsController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiQuery({
+    name: 'fields',
+    required: false,
+    type: String,
+    description: `Fields to select. Example: 'id,name, last_name'`,
+  })
   findAll(
     @Query() { ...props }: ClientSingleProps,
   ): Promise<PaginatedClientsResponse> {
-    return this.clientsService.findAll(props)
+    console.log({ ...props })
+    return this.clientsService.findAll({
+      ...props,
+    })
   }
 
   @Post()

@@ -55,10 +55,18 @@ export class UpdateUserResponse extends CreateUserResponse {}
 
 export class RemoveUserResponse extends CreateUserResponse {}
 
+export type UserFields =
+  | 'username'
+  | 'dni'
+  | 'status'
+  | 'id'
+  | 'agency_id'
+  | 'created_at'
+  | 'email'
 export type UserProps = PaginationProps<
   Prisma.usersWhereInput,
   Prisma.usersOrderByWithRelationInput,
-  Prisma.usersSelect
+  UserFields
 >
 
 export type UserSingleProps = Omit<UserProps, 'where' | 'orderBy'>
