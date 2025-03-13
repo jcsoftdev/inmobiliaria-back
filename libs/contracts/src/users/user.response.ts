@@ -3,6 +3,8 @@ import { users, Prisma } from '@prisma/client'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
+import { Agency } from '../agencies'
+
 type OmittedFields = 'password' | 'refresh_token'
 
 type RewritedFields = 'created_at' | 'expires_at' | 'last_name' | 'agency_id'
@@ -12,7 +14,7 @@ export class User
 {
   @ApiProperty({ type: String, example: 'johndoe' })
   username!: string
-  @ApiProperty({ type: String, example: 'johndoe' })
+  @ApiProperty({ type: String, example: 'García López' })
   lastName!: string
   @ApiProperty({ type: String, example: 'active' })
   status!: string
@@ -28,10 +30,10 @@ export class User
   })
   id!: string
   @ApiProperty({
-    type: String,
-    example: '01956c22-9b54-7628-8304-13024295978b',
+    type: [Agency],
+    description: 'Agencies associated with the user',
   })
-  agencyId!: string | null
+  agencies!: Agency[]
   @ApiProperty({ type: String, example: 'mail@mail.com' })
   email!: string
   @ApiProperty({ type: Date })

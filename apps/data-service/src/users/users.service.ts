@@ -21,10 +21,9 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
-    await this.prismaService.users.create({
+    const result = await this.prismaService.users.create({
       data: {
         id: uuidV7(),
-        agency_id: createUserDto.agencyId,
         name: createUserDto.name,
         last_name: createUserDto.lastName,
         email: createUserDto.email,
@@ -37,6 +36,17 @@ export class UsersService {
         expires_at: createUserDto.expiresAt,
       },
     })
+
+    // Asignar agencias al usuario si `agencyIds` está presente
+    if (createUserDto.agencyIds?.length) {
+      await this.prismaService.users_agencies.createMany({
+        data: createUserDto.agencyIds.map((agencyId) => ({
+          id: uuidV7(),
+          user_id: result.id,
+          agency_id: agencyId,
+        })),
+      })
+    }
     return {
       message: 'User created  successfully',
     }
@@ -57,7 +67,11 @@ export class UsersService {
           dni: true,
           status: true,
           id: true,
-          agency_id: true,
+          agencies: {
+            select: {
+              agency: true,
+            },
+          },
           created_at: true,
           email: true,
           name: true,
@@ -72,13 +86,13 @@ export class UsersService {
     return {
       ...results,
       data: results.data.map(
-        ({ created_at, agency_id, expires_at, last_name, ...user }) => {
+        ({ created_at, expires_at, last_name, agencies, ...user }) => {
           return {
             ...user,
-            agencyId: agency_id,
             createdAt: created_at,
             expiresAt: expires_at,
             lastName: last_name,
+            agencies: agencies?.map((a) => a.agency) || [],
           }
         },
       ),
@@ -93,7 +107,6 @@ export class UsersService {
         dni: true,
         status: true,
         id: true,
-        agency_id: true,
         created_at: true,
         email: true,
         name: true,
@@ -101,34 +114,60 @@ export class UsersService {
         phone: true,
         role: true,
         expires_at: true,
+        agencies: {
+          select: {
+            agency: true,
+          },
+        },
       },
     })
     return {
       ...result,
-      agencyId: result.agency_id,
       createdAt: result.created_at,
       expiresAt: result.expires_at,
       lastName: result.last_name,
+      agencies: result.agencies?.map((a) => a.agency) || [],
     }
   }
 
   async update(
     id: string,
-    updateUserDto: UpdateUserDto,
+    { expiresAt, lastName, agencyIds, ...updateUserDto }: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
-    await this.prismaService.users.update({
-      where: { id },
-      data: {
-        agency_id: updateUserDto.agencyId,
-        name: updateUserDto.name,
-        email: updateUserDto.email,
-        password: updateUserDto.password,
-        phone: updateUserDto.phone,
-        role: updateUserDto.role,
-      },
-    })
-    return {
-      message: 'User updated successfully',
+    try {
+      await this.prismaService.users.update({
+        where: { id },
+        data: {
+          ...updateUserDto,
+          expires_at: expiresAt ? new Date(expiresAt) : undefined,
+          last_name: lastName,
+        },
+      })
+
+      if (agencyIds) {
+        // Eliminar todas las agencias actuales del usuario
+        await this.prismaService.users_agencies.deleteMany({
+          where: { user_id: id },
+        })
+
+        if (agencyIds.length > 0) {
+          await this.prismaService.users_agencies.createMany({
+            data: agencyIds.map((agencyId) => ({
+              user_id: id,
+              agency_id: agencyId,
+            })),
+          })
+        }
+      }
+
+      return {
+        message: 'User updated successfully',
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        message: 'Error updating user',
+      }
     }
   }
 
@@ -138,6 +177,23 @@ export class UsersService {
     })
     return {
       message: 'User deleted successfully',
+    }
+  }
+
+  async addAgenciesToUser(
+    userId: string,
+    agencyIds: string[],
+  ): Promise<UpdateUserResponse> {
+    await this.prismaService.users.update({
+      where: { id: userId },
+      data: {
+        agencies: {
+          connect: agencyIds.map((id) => ({ id })),
+        },
+      },
+    })
+    return {
+      message: 'Agencies added to user successfully',
     }
   }
 }

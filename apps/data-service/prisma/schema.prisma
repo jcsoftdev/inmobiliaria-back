@@ -18,7 +18,7 @@ model agencies {
   properties   properties[]
   sellers      sellers[]
   transactions transactions[]
-  users        users[]
+  users        users_agencies[]
 }
 
 model cash_flow {
@@ -129,7 +129,6 @@ model transactions {
 
 model users {
   id            String         @id @default(uuid()) @db.Uuid
-  agency_id     String?         @db.Uuid
   name          String          @db.VarChar(100)
   last_name     String          @db.VarChar(100)
   username      String          @unique @db.VarChar(100)
@@ -142,10 +141,20 @@ model users {
   properties    properties[]
   sellers       sellers?
   refresh_token String?         @db.VarChar(255)
-  agencies      agencies?       @relation(fields: [agency_id], references: [id], onUpdate: NoAction)
+  agencies      users_agencies[]    
   status        String         @default("active") @db.VarChar(20)
   dni           String         @db.VarChar(11)
   expires_at    DateTime?
+  
+}
+
+model users_agencies {
+  id                    String                @id @default(uuid()) @db.Uuid
+  agency_id              String                @db.Uuid
+  user_id               String                @db.Uuid
+
+  user      users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  agency    agencies @relation(fields: [agency_id], references: [id], onDelete: Cascade)
 }
 
 model visits {
