@@ -12,6 +12,8 @@ import {
   RemoveUserResponse,
   UpdateUserDto,
   UpdateUserResponse,
+  UserRoles,
+  UserStatus,
 } from '@app/contracts/users'
 
 import { PrismaService } from '@data-service/prisma.service'
@@ -68,7 +70,7 @@ export class UsersService {
           id: true,
           agencies: {
             select: {
-              agency: true,
+              agencies: true,
             },
           },
           created_at: true,
@@ -85,13 +87,23 @@ export class UsersService {
     return {
       ...results,
       data: results.data.map(
-        ({ created_at, expires_at, last_name, agencies, ...user }) => {
+        ({
+          created_at,
+          expires_at,
+          last_name,
+          role,
+          status,
+          agencies,
+          ...user
+        }) => {
           return {
             ...user,
             createdAt: created_at,
             expiresAt: expires_at,
             lastName: last_name,
-            agencies: agencies?.map((a) => a.agency) || [],
+            role: role as UserRoles,
+            status: status as UserStatus,
+            agencies: agencies?.map((a) => a.agencies) || [],
           }
         },
       ),
@@ -115,7 +127,7 @@ export class UsersService {
         expires_at: true,
         agencies: {
           select: {
-            agency: true,
+            agencies: true,
           },
         },
       },
@@ -125,7 +137,9 @@ export class UsersService {
       createdAt: result.created_at,
       expiresAt: result.expires_at,
       lastName: result.last_name,
-      agencies: result.agencies?.map((a) => a.agency) || [],
+      role: result.status as UserRoles,
+      status: result.status as UserStatus,
+      agencies: result.agencies?.map((a) => a.agencies) || [],
     }
   }
 

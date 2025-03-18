@@ -9,6 +9,16 @@ type OmittedFields = 'password' | 'refresh_token'
 
 type RewritedFields = 'created_at' | 'expires_at' | 'last_name' | 'agency_id'
 
+export enum UserRoles {
+  ADMINISTRATOR = 'administrator',
+  SELLER = 'seller',
+}
+
+export enum UserStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
 export class User
   implements Readonly<Omit<users, OmittedFields | RewritedFields>>
 {
@@ -17,7 +27,7 @@ export class User
   @ApiProperty({ type: String, example: 'García López' })
   lastName!: string
   @ApiProperty({ type: String, example: 'active' })
-  status!: string
+  status!: UserStatus
   @ApiProperty({ type: String, example: '12345678' })
   dni!: string
   @ApiProperty({ type: Date, example: '2021-09-01T00:00:00.000Z' })
@@ -41,7 +51,7 @@ export class User
   @ApiProperty({ type: String, example: '08123456789' })
   phone!: string | null
   @ApiProperty({ type: String, example: 'admin' })
-  role!: string | null
+  role!: UserRoles
 }
 
 export class PaginatedUsersResponse extends PaginatedResult<

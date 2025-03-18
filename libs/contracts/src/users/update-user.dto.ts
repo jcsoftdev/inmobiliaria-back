@@ -5,6 +5,7 @@ import { IsDateString, IsOptional, IsArray } from 'class-validator'
 import { IsUUIDv7 } from '@app/common/decorators'
 
 import { CreateUserDto } from './create-user.dto'
+import { UserRoles } from './user.response'
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   id!: string
@@ -32,7 +33,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   expiresAt?: Date
 
   @ApiPropertyOptional({ description: 'User role', example: 'admin' })
-  role?: string
+  role?: UserRoles
 }
 
 export class UpdateUserAgencyDto {
