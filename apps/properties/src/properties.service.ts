@@ -47,7 +47,7 @@ export class PropertiesService {
     return firstValueFrom(this.propertiesService.update(data))
   }
 
-  remove(id: string): Promise<RemovePropertyResponse> {
-    return firstValueFrom(this.propertiesService.remove(id))
+  delete(id: string): Promise<RemovePropertyResponse> {
+    return firstValueFrom(this.propertiesService.delete(id))
   }
 }

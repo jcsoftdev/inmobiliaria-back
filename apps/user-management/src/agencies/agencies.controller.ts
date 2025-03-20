@@ -31,8 +31,8 @@ export class AgenciesController {
     return this.agenciesService.update(updateAgencyDto)
   }
 
-  @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.REMOVE)
-  remove(@Payload() id: string) {
-    return this.agenciesService.remove(id)
+  @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.DELETE)
+  delete(@Payload() id: string) {
+    return this.agenciesService.delete(id)
   }
 }

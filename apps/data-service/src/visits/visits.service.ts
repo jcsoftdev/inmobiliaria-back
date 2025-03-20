@@ -97,7 +97,7 @@ export class VisitsService {
     return { message: 'Visit updated successfully' }
   }
 
-  async remove(id: string): Promise<RemoveVisitResponse> {
+  async delete(id: string): Promise<RemoveVisitResponse> {
     await this.prismaService.visits.delete({
       where: { id: id },
     })

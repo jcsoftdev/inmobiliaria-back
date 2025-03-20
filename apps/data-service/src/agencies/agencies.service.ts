@@ -76,7 +76,7 @@ export class AgenciesService {
     }
   }
 
-  async remove(id: string): Promise<RemoveAgencyResponse> {
+  async delete(id: string): Promise<RemoveAgencyResponse> {
     await this.prismaService.agencies.delete({
       where: { id },
     })

@@ -37,9 +37,9 @@ export class UsersController {
     return this.usersService.update(data)
   }
 
-  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.DELETE)
   delete(@Payload() payload: { id: string }) {
-    return this.usersService.remove(payload.id)
+    return this.usersService.delete(payload.id)
   }
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.ADD_AGENCY)

@@ -101,7 +101,7 @@ export class UsersController {
     type: RemoveUserResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
-    return this.usersService.remove(id)
+    return this.usersService.delete(id)
   }
 
   @Post(':id/add-agencies')
@@ -117,7 +117,7 @@ export class UsersController {
     return this.usersService.addAgencyToUser(userId, data.agencyIds ?? [])
   }
 
-  @Post(':id/remove-agencies')
+  @Post(':id/delete-agencies')
   @ApiResponse({
     status: 202,
     description: 'Remove agency from user',

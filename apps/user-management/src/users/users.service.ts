@@ -48,8 +48,8 @@ export class UsersService {
     return firstValueFrom(this.usersService.update(data))
   }
 
-  remove(id: string): Promise<RemoveUserResponse> {
-    return firstValueFrom(this.usersService.remove(id))
+  delete(id: string): Promise<RemoveUserResponse> {
+    return firstValueFrom(this.usersService.delete(id))
   }
 
   addAgencies(

@@ -18,7 +18,7 @@ export const USERS_PATTERNS = {
   FIND_ONE: 'findOne',
   CREATE: 'create',
   UPDATE: 'update',
-  REMOVE: 'remove',
+  DELETE: 'delete',
   ADD_AGENCY: 'addAgency',
   REMOVE_AGENCY: 'removeAgency',
 }
@@ -27,7 +27,7 @@ export interface UsersGrpcService {
   findAll(props: UserSingleProps): Observable<PaginatedUsersResponse>
   create(data: CreateUserDto): Observable<CreateUserResponse>
   update(data: UpdateUserDto): Observable<UpdateUserResponse>
-  remove(id: string): Observable<RemoveUserResponse>
+  delete(id: string): Observable<RemoveUserResponse>
   findOne(id: string): Observable<User>
   addAgency(request: {
     userId: string

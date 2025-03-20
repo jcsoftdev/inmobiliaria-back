@@ -41,8 +41,8 @@ export class ClientsController {
     return this.clientsService.update(updateClientDto)
   }
 
-  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.REMOVE)
-  remove(@Payload() id: string): Promise<RemoveClientResponse> {
-    return this.clientsService.remove(id)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.DELETE)
+  delete(@Payload() id: string): Promise<RemoveClientResponse> {
+    return this.clientsService.delete(id)
   }
 }

@@ -144,7 +144,7 @@ export class PropertiesService {
     })
   }
 
-  remove(id: string) {
+  delete(id: string) {
     return this.prismaService.properties.delete({
       where: { id },
     })

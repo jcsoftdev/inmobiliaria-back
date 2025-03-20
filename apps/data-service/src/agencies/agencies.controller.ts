@@ -38,8 +38,8 @@ export class AgenciesController {
     return this.agenciesService.update(data)
   }
 
-  @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.DELETE)
   async delete(@Payload() payload: { id: string }) {
-    return this.agenciesService.remove(payload.id)
+    return this.agenciesService.delete(payload.id)
   }
 }

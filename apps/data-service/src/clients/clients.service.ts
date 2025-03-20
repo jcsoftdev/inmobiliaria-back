@@ -120,7 +120,7 @@ export class ClientsService {
     }
   }
 
-  async remove(id: string): Promise<RemoveClientResponse> {
+  async delete(id: string): Promise<RemoveClientResponse> {
     await this.prismaService.clients.delete({
       where: { id: id },
     })

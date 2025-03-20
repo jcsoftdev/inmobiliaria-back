@@ -16,13 +16,13 @@ export const PROPERTIES_PATTERNS = {
   FIND_ONE: 'findOne',
   CREATE: 'create',
   UPDATE: 'update',
-  REMOVE: 'remove',
+  DELETE: 'delete',
 }
 
 export interface PropertiesGrpcService {
   findAll(props: PropertySingleProps): Observable<PaginatedPropertiesResponse>
   create(data: CreatePropertyDto): Observable<CreatePropertyResponse>
   update(data: UpdatePropertyDto): Observable<UpdatePropertyResponse>
-  remove(id: string): Observable<RemovePropertyResponse>
+  delete(id: string): Observable<RemovePropertyResponse>
   findOne(id: string): Observable<Property>
 }
