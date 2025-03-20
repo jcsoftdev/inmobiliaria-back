@@ -10,6 +10,8 @@ import {
   PaginatedUsersResponse,
   RemoveUserResponse,
   UpdateUserResponse,
+  AddAgenciesResponse,
+  RemoveAgenciesResponse,
 } from '@app/contracts/users'
 
 @Injectable()
@@ -49,6 +51,33 @@ export class UsersService {
   remove(id: string): Promise<RemoveUserResponse> {
     return firstValueFrom(
       this.usersClient.send<RemoveUserResponse>(USERS_PATTERNS.REMOVE, id),
+    )
+  }
+
+  addAgencies(
+    userId: string,
+    agencyIds: string[],
+  ): Promise<AddAgenciesResponse> {
+    return firstValueFrom(
+      this.usersClient.send<AddAgenciesResponse>(USERS_PATTERNS.ADD_AGENCY, {
+        userId,
+        agencyIds,
+      }),
+    )
+  }
+
+  removeAgencies(
+    userId: string,
+    agencyIds: string[],
+  ): Promise<RemoveAgenciesResponse> {
+    return firstValueFrom(
+      this.usersClient.send<RemoveAgenciesResponse>(
+        USERS_PATTERNS.REMOVE_AGENCY,
+        {
+          userId,
+          agencyIds,
+        },
+      ),
     )
   }
 }

@@ -102,7 +102,6 @@ class Paginator {
         },
       }
     } catch (error: unknown) {
-      console.log({ error })
       throw createPaginationError(this.getErrorMessage(error))
     }
   }

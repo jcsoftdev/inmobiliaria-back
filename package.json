@@ -22,7 +22,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "prepare": "husky"
+    "prepare": "husky",
+    "p:gen": "cd apps/data-service & prisma generate & cd ../..",
+    "p:migrate": "cd apps/data-service & prisma migrate dev & cd ../.."
   },
   "dependencies": {
     "@nestjs/common": "11.0.11",

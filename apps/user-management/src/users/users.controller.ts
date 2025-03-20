@@ -9,6 +9,9 @@ import {
   UpdateUserResponse,
   User,
   UserProps,
+  UpdateUserAgencyDto,
+  AddAgenciesResponse,
+  RemoveAgenciesResponse,
 } from '@app/contracts/users'
 
 import { UsersService } from './users.service'
@@ -40,5 +43,30 @@ export class UsersController {
   @MessagePattern(USERS_PATTERNS.REMOVE)
   remove(@Payload() id: string): Promise<RemoveUserResponse> {
     return this.usersService.remove(id)
+  }
+
+  @MessagePattern(USERS_PATTERNS.ADD_AGENCY)
+  async addAgencies(
+    @Payload() payload: UpdateUserAgencyDto,
+  ): Promise<AddAgenciesResponse> {
+    if (
+      !payload.userId ||
+      !payload.agencyIds ||
+      payload.agencyIds.length === 0
+    ) {
+      throw new Error('userId y agencyIds son requeridos')
+    }
+
+    return this.usersService.addAgencies(payload.userId, payload.agencyIds)
+  }
+
+  @MessagePattern(USERS_PATTERNS.REMOVE_AGENCY)
+  async removeAgencies(
+    @Payload() payload: UpdateUserAgencyDto,
+  ): Promise<RemoveAgenciesResponse> {
+    return this.usersService.removeAgencies(
+      payload.userId,
+      payload.agencyIds ?? [],
+    )
   }
 }
