@@ -15,9 +15,9 @@ import { MICRO_SERVICES, SERVICES } from '@app/shared'
 interface AgenciesGrpcService {
   findAll(props: AgencyProps): Observable<PaginatedAgenciesResponse>
   create(data: Agency): Observable<CreateAgencyResponse>
-  findOne(id: string): Observable<Agency>
+  findOne(data: { id: string }): Observable<Agency>
   update(updateAgencyDto: Agency): Observable<UpdateAgencyResponse>
-  delete(id: string): Observable<RemoveAgencyResponse>
+  delete(data: { id: string }): Observable<RemoveAgencyResponse>
 }
 
 @Injectable()
@@ -43,15 +43,15 @@ export class AgenciesService implements OnModuleInit {
     return lastValueFrom(this.agenciesService.create(data))
   }
 
-  async findOne(id: string): Promise<Agency> {
-    return lastValueFrom(this.agenciesService.findOne(id))
+  async findOne({ id }: { id: string }): Promise<Agency> {
+    return lastValueFrom(this.agenciesService.findOne({ id }))
   }
 
   async update(updateAgencyDto: Agency): Promise<UpdateAgencyResponse> {
     return lastValueFrom(this.agenciesService.update(updateAgencyDto))
   }
 
-  async delete(id: string): Promise<RemoveAgencyResponse> {
-    return lastValueFrom(this.agenciesService.delete(id))
+  async delete({ id }: { id: string }): Promise<RemoveAgencyResponse> {
+    return lastValueFrom(this.agenciesService.delete({ id }))
   }
 }

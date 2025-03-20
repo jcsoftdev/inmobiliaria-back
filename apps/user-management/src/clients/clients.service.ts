@@ -17,9 +17,9 @@ import { MICRO_SERVICES, SERVICES } from '@app/shared'
 interface ClientsGrpcService {
   findAll(props: ClientProps): Observable<PaginatedClientsResponse>
   create(data: CreateClientDto): Observable<CreateClientResponse>
-  findOne(id: string): Observable<Client>
+  findOne(data: { id: string }): Observable<Client>
   update(updateClientDto: UpdateClientDto): Observable<UpdateClientResponse>
-  delete(id: string): Observable<RemoveClientResponse>
+  delete(data: { id: string }): Observable<RemoveClientResponse>
 }
 
 @Injectable()
@@ -45,15 +45,15 @@ export class ClientsService {
     return firstValueFrom(this.clientsService.create(data))
   }
 
-  findOne(id: string): Promise<Client> {
-    return firstValueFrom(this.clientsService.findOne(id))
+  findOne({ id }: { id: string }): Promise<Client> {
+    return firstValueFrom(this.clientsService.findOne({ id }))
   }
 
   update(data: UpdateClientDto): Promise<UpdateClientResponse> {
     return firstValueFrom(this.clientsService.update(data))
   }
 
-  delete(id: string): Promise<RemoveClientResponse> {
-    return firstValueFrom(this.clientsService.delete(id))
+  delete({ id }: { id: string }): Promise<RemoveClientResponse> {
+    return firstValueFrom(this.clientsService.delete({ id }))
   }
 }

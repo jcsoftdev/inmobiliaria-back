@@ -53,7 +53,7 @@ export class AgenciesService {
     return res
   }
 
-  findOne(id: string): Promise<Agency> {
+  findOne({ id }: { id: string }): Promise<Agency> {
     return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
   }
 
@@ -76,7 +76,7 @@ export class AgenciesService {
     }
   }
 
-  async delete(id: string): Promise<RemoveAgencyResponse> {
+  async delete({ id }: { id: string }): Promise<RemoveAgencyResponse> {
     await this.prismaService.agencies.delete({
       where: { id },
     })

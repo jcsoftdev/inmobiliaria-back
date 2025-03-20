@@ -29,8 +29,8 @@ export class AgenciesController {
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.FIND_ONE)
-  async findOne(@Payload() id: string) {
-    return this.agenciesService.findOne(id)
+  async findOne(@Payload() param: { id: string }) {
+    return this.agenciesService.findOne(param)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.UPDATE)
@@ -40,6 +40,6 @@ export class AgenciesController {
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.DELETE)
   async delete(@Payload() payload: { id: string }) {
-    return this.agenciesService.delete(payload.id)
+    return this.agenciesService.delete(payload)
   }
 }

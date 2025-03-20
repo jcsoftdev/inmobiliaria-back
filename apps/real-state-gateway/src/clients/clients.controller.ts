@@ -95,6 +95,6 @@ export class ClientsController {
     type: RemoveClientResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveClientResponse> {
-    return this.clientsService.delete(id)
+    return this.clientsService.delete({ id })
   }
 }

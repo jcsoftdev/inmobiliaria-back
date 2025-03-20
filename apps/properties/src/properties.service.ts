@@ -39,15 +39,15 @@ export class PropertiesService {
     return res
   }
 
-  findOne(id: string): Promise<Property> {
-    return firstValueFrom(this.propertiesService.findOne(id))
+  findOne({ id }: { id: string }): Promise<Property> {
+    return firstValueFrom(this.propertiesService.findOne({ id }))
   }
 
   update(data: UpdatePropertyDto): Promise<UpdatePropertyResponse> {
     return firstValueFrom(this.propertiesService.update(data))
   }
 
-  delete(id: string): Promise<RemovePropertyResponse> {
-    return firstValueFrom(this.propertiesService.delete(id))
+  delete(payload: { id: string }): Promise<RemovePropertyResponse> {
+    return firstValueFrom(this.propertiesService.delete(payload))
   }
 }

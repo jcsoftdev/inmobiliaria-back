@@ -98,6 +98,6 @@ export class PropertiesController {
     type: CreatePropertyResponse,
   })
   delete(@Param('id') id: string): Promise<RemovePropertyResponse> {
-    return this.propertiesService.delete(id)
+    return this.propertiesService.delete({ id })
   }
 }

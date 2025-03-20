@@ -27,8 +27,8 @@ export class PropertiesController {
   }
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: string) {
-    return this.propertiesService.findOne(id)
+  findOne(@Payload() payload: { id: string }) {
+    return this.propertiesService.findOne(payload)
   }
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.UPDATE)
@@ -37,7 +37,7 @@ export class PropertiesController {
   }
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.DELETE)
-  delete(@Payload() id: string) {
-    return this.propertiesService.delete(id)
+  delete(@Payload() payload: { id: string }) {
+    return this.propertiesService.delete(payload)
   }
 }

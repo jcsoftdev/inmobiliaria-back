@@ -95,6 +95,6 @@ export class VisitsController {
     type: RemoveVisitResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveVisitResponse> {
-    return this.visitsService.delete(id)
+    return this.visitsService.delete({ id })
   }
 }

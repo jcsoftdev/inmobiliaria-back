@@ -30,8 +30,8 @@ export class ClientsController {
   }
 
   @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: string): Promise<Client> {
-    return this.clientsService.findOne(id)
+  findOne(@Payload() payload: { id: string }): Promise<Client> {
+    return this.clientsService.findOne(payload)
   }
 
   @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.UPDATE)
@@ -42,7 +42,7 @@ export class ClientsController {
   }
 
   @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.DELETE)
-  delete(@Payload() id: string): Promise<RemoveClientResponse> {
-    return this.clientsService.delete(id)
+  delete(@Payload() payload: { id: string }): Promise<RemoveClientResponse> {
+    return this.clientsService.delete(payload)
   }
 }

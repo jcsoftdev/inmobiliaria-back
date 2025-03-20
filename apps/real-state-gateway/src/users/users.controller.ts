@@ -101,7 +101,7 @@ export class UsersController {
     type: RemoveUserResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
-    return this.usersService.delete(id)
+    return this.usersService.delete({ id })
   }
 
   @Post(':id/add-agencies')

@@ -27,8 +27,8 @@ export interface UsersGrpcService {
   findAll(props: UserSingleProps): Observable<PaginatedUsersResponse>
   create(data: CreateUserDto): Observable<CreateUserResponse>
   update(data: UpdateUserDto): Observable<UpdateUserResponse>
-  delete(id: string): Observable<RemoveUserResponse>
-  findOne(id: string): Observable<User>
+  delete({ id }: { id: string }): Observable<RemoveUserResponse>
+  findOne({ id }: { id: string }): Observable<User>
   addAgency(request: {
     userId: string
     agencyIds: string[]

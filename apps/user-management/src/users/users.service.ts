@@ -40,16 +40,16 @@ export class UsersService {
     return firstValueFrom(this.usersService.create(data))
   }
 
-  findOne(id: string): Promise<User> {
-    return firstValueFrom(this.usersService.findOne(id))
+  findOne({ id }: { id: string }): Promise<User> {
+    return firstValueFrom(this.usersService.findOne({ id }))
   }
 
   update(data: UpdateUserDto): Promise<UpdateUserResponse> {
     return firstValueFrom(this.usersService.update(data))
   }
 
-  delete(id: string): Promise<RemoveUserResponse> {
-    return firstValueFrom(this.usersService.delete(id))
+  delete({ id }: { id: string }): Promise<RemoveUserResponse> {
+    return firstValueFrom(this.usersService.delete({ id }))
   }
 
   addAgencies(

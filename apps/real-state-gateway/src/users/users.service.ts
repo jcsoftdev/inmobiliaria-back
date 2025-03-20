@@ -41,8 +41,8 @@ export class UsersService {
     return firstValueFrom(this.usersService.update(data))
   }
 
-  delete(id: string): Promise<RemoveUserResponse> {
-    return firstValueFrom(this.usersService.delete(id))
+  delete({ id }: { id: string }): Promise<RemoveUserResponse> {
+    return firstValueFrom(this.usersService.delete({ id }))
   }
 
   addAgencyToUser(

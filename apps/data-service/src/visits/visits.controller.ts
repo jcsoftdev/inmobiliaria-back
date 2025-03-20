@@ -33,8 +33,8 @@ export class VisitsController {
   }
 
   @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: string): Promise<Visit> {
-    return this.visitsService.findOne(id)
+  findOne(@Payload() payload: { id: string }): Promise<Visit> {
+    return this.visitsService.findOne(payload)
   }
 
   @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.UPDATE)
@@ -46,6 +46,6 @@ export class VisitsController {
 
   @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.DELETE)
   delete(@Payload() payload: { id: string }): Promise<RemoveVisitResponse> {
-    return this.visitsService.delete(payload.id)
+    return this.visitsService.delete(payload)
   }
 }

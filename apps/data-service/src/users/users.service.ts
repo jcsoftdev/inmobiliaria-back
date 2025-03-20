@@ -101,7 +101,7 @@ export class UsersService {
     }
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne({ id }: { id: string }): Promise<User> {
     const result = await this.prismaService.users.findFirstOrThrow({
       where: { id },
       select: {
@@ -161,7 +161,7 @@ export class UsersService {
     }
   }
 
-  async delete(id: string): Promise<RemoveUserResponse> {
+  async delete({ id }: { id: string }): Promise<RemoveUserResponse> {
     await this.prismaService.users.delete({
       where: { id: id },
     })
