@@ -2,12 +2,7 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
 
-import { PaginateOptions } from '@app/common/pagination'
-import {
-  CLIENTS_PATTERNS,
-  CreateClientDto,
-  UpdateClientDto,
-} from '@app/contracts/clients'
+import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   Client,
   ClientProps,
@@ -20,9 +15,9 @@ import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface ClientsGrpcService {
   findAll(props: ClientProps): Observable<PaginatedClientsResponse>
-  create(data: Client): Observable<CreateClientResponse>
+  create(data: CreateClientDto): Observable<CreateClientResponse>
   findOne(id: string): Observable<Client>
-  update(updateClientDto: Client): Observable<UpdateClientResponse>
+  update(updateClientDto: UpdateClientDto): Observable<UpdateClientResponse>
   remove(id: string): Observable<RemoveClientResponse>
 }
 
@@ -42,44 +37,22 @@ export class ClientsService {
   }
 
   findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
-    return firstValueFrom(
-      this.clientsClient.send<PaginatedClientsResponse, PaginateOptions>(
-        CLIENTS_PATTERNS.FIND_ALL,
-        props,
-      ),
-    )
+    return firstValueFrom(this.clientsService.findAll(props))
   }
 
   create(data: CreateClientDto): Promise<CreateClientResponse> {
-    return firstValueFrom(
-      this.clientsClient.send<CreateClientResponse>(
-        CLIENTS_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    return firstValueFrom(this.clientsService.create(data))
   }
 
   findOne(id: string): Promise<Client> {
-    return firstValueFrom(
-      this.clientsClient.send<Client>(CLIENTS_PATTERNS.FIND_ONE, id),
-    )
+    return firstValueFrom(this.clientsService.findOne(id))
   }
 
-  update(id: UpdateClientDto): Promise<UpdateClientResponse> {
-    return firstValueFrom(
-      this.clientsClient.send<UpdateClientResponse>(
-        CLIENTS_PATTERNS.UPDATE,
-        id,
-      ),
-    )
+  update(data: UpdateClientDto): Promise<UpdateClientResponse> {
+    return firstValueFrom(this.clientsService.update(data))
   }
 
   remove(id: string): Promise<RemoveClientResponse> {
-    return firstValueFrom(
-      this.clientsClient.send<RemoveClientResponse>(
-        CLIENTS_PATTERNS.REMOVE,
-        id,
-      ),
-    )
+    return firstValueFrom(this.clientsService.remove(id))
   }
 }

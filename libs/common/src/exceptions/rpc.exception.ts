@@ -10,6 +10,11 @@ export enum ERROR_TYPES {
   RPC_ERROR = 'RPC_ERROR',
 }
 
+export enum ERROR_PROVIDERS {
+  PRISMA = 'Prisma',
+  GRPC = 'Grpc',
+}
+
 export const ERROR_TYPES_MESSAGE: Record<ERROR_TYPES, string> = {
   [ERROR_TYPES.INTERNAL_ERROR]: 'An unexpected error occurred',
   [ERROR_TYPES.VALIDATION_ERROR]: 'We found some validation errors',
@@ -31,6 +36,7 @@ export const ERROR_STATUS: Record<ERROR_TYPES, number> = {
 } as const
 
 export interface RpcError {
+  errorProvider?: string
   errorType?: string
   statusCode?: number
   message?: string | object
@@ -40,29 +46,21 @@ export class RpcExceptionSerializedWithResponse {
   error!: RpcException
   message!: string
   errorResponse!: RpcError
+  details!: string
 }
 
 export class TypedRpcException<
   T extends RpcError = RpcError,
-  E extends string = 'INTERNAL_ERROR',
 > extends RpcException {
   private readonly errorResponse: RpcError
 
-  constructor(
-    error:
-      | { errorType: E; statusCode: number; message: string }
-      | (T & { errorType: E }),
-  ) {
-    if (error && 'errorType' in error) {
-      // This handles both local exceptions and deserialized exceptions from other microservices
-      super(error)
-      this.errorResponse = error
-    } else {
-      throw new Error('Invalid error format')
-    }
+  constructor(error: T) {
+    super(error)
+    this.message = JSON.stringify(error)
+    this.name = error.errorProvider ?? 'RpcException'
+    this.errorResponse = error
   }
 
-  // Ensure the getError method returns the entire error object
   getError(): RpcError {
     return this.errorResponse
   }
@@ -71,7 +69,6 @@ export class TypedRpcException<
 export function deserializeRpcException(
   exception: RpcError,
 ): TypedRpcException<RpcError> {
-  console.log({ exception })
   return new TypedRpcException({
     errorType: exception.errorType ?? 'INTERNAL_ERROR',
     statusCode: exception.statusCode ?? 400,

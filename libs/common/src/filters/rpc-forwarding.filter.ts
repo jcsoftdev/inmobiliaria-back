@@ -5,9 +5,11 @@ import { throwError } from 'rxjs'
 
 import {
   deserializeRpcException,
+  ERROR_PROVIDERS,
   ERROR_STATUS,
   ERROR_TYPES,
   ERROR_TYPES_MESSAGE,
+  RpcError,
   RpcExceptionSerializedWithResponse,
 } from '@app/common/exceptions/rpc.exception'
 import { SharedConfigService } from '@app/config'
@@ -16,39 +18,44 @@ import { SharedConfigService } from '@app/config'
 export class RpcErrorForwardingFilter
   implements RpcExceptionFilter<RpcExceptionSerializedWithResponse>
 {
-  private readonly isDev: boolean
-
-  constructor(private readonly configService: SharedConfigService) {
-    this.isDev = configService.getMode() === 'development'
-  }
+  constructor(private readonly configService: SharedConfigService) {}
   catch(exception: RpcExceptionSerializedWithResponse) {
-    console.error(
-      '🚨 RPC Forwarding errors:',
-      exception.constructor,
-      exception.error,
-    )
-
     if (exception instanceof RpcException) {
-      return throwError(() => exception) // ✅ Return existing RpcException
+      return throwError(() => exception)
+    }
+
+    try {
+      const error = JSON.parse(exception.details) as RpcError
+      if (typeof error === 'object') {
+        return throwError(() => deserializeRpcException(error))
+      }
+    } catch {
+      console.log('')
     }
 
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       console.log(
         '❌ PrismaClientKnownRequestError:',
-        exception.message.toString(),
+        exception.message.split('\n')?.slice?.(-1)?.[0] ||
+          exception.details ||
+          exception.message,
       )
-      const message = exception.message.split('\n').slice(-1)[0]
+      let message = ''
 
-      console.log({
-        code: exception.code,
-        meta: exception.message.split('\n').slice(-1)[0],
-      })
+      try {
+        message = exception.message.split('\n').slice(-1)[0]
+      } catch {
+        message = exception.message
+      }
 
       return throwError(() =>
         deserializeRpcException({
+          errorProvider: ERROR_PROVIDERS.PRISMA,
           errorType: ERROR_TYPES.BAD_REQUEST,
           statusCode: ERROR_STATUS.BAD_REQUEST,
-          message: this.isDev ? message : ERROR_TYPES_MESSAGE.BAD_REQUEST,
+          message: this.configService.isDev()
+            ? message
+            : ERROR_TYPES_MESSAGE.BAD_REQUEST,
         }),
       )
     }
@@ -56,15 +63,17 @@ export class RpcErrorForwardingFilter
     const errorResponse = exception?.errorResponse
 
     if (errorResponse) {
-      return throwError(() => deserializeRpcException(errorResponse))
+      const deserializedError = deserializeRpcException(errorResponse)
+      return throwError(() => deserializedError)
     }
+    const deserializedError = deserializeRpcException({
+      errorType: ERROR_TYPES.INTERNAL_ERROR,
+      statusCode: ERROR_STATUS.INTERNAL_ERROR,
+      message: this.configService.isDev()
+        ? exception.message
+        : 'An unexpected error occurred while processing the request',
+    })
 
-    return throwError(() =>
-      deserializeRpcException({
-        errorType: ERROR_TYPES.INTERNAL_ERROR,
-        statusCode: ERROR_STATUS.INTERNAL_ERROR,
-        message: 'An unexpected error occurred while processing the request',
-      }),
-    )
+    return throwError(() => deserializedError)
   }
 }

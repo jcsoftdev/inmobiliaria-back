@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
 import {
@@ -11,42 +11,40 @@ import {
   PaginatedVisitsResponse,
   UpdateVisitResponse,
   RemoveVisitResponse,
+  VisitsGrpcService,
+  UpdateVisitDto,
 } from '@app/contracts/visits'
-import { MICRO_SERVICES } from '@app/shared'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class VisitsService {
+  private visitsService!: VisitsGrpcService
+
   constructor(
     @Inject(MICRO_SERVICES.DATABASE_CLIENT)
-    private readonly visitsClient: ClientProxy,
+    private readonly visitsClient: ClientGrpcProxy,
   ) {}
 
-  async create(data: CreateVisitDto): Promise<CreateVisitResponse> {
-    const response = await firstValueFrom(
-      this.visitsClient.send<CreateVisitResponse>(VISITS_PATTERNS.CREATE, data),
+  onModuleInit() {
+    this.visitsService = this.visitsClient.getService<VisitsGrpcService>(
+      SERVICES.VISIT,
     )
-    return response
+  }
+
+  create(data: CreateVisitDto): Promise<CreateVisitResponse> {
+    return firstValueFrom(this.visitsService.create(data))
   }
 
   findAll(props: VisitProps): Promise<PaginatedVisitsResponse> {
-    return firstValueFrom(
-      this.visitsClient.send<PaginatedVisitsResponse, VisitProps>(
-        VISITS_PATTERNS.FIND_ALL,
-        props,
-      ),
-    )
+    return firstValueFrom(this.visitsService.findAll(props))
   }
 
   findOne(id: string): Promise<Visit> {
-    return firstValueFrom(
-      this.visitsClient.send<Visit>(VISITS_PATTERNS.FIND_ONE, id),
-    )
+    return firstValueFrom(this.visitsService.findOne(id))
   }
 
-  update(id: Visit): Promise<UpdateVisitResponse> {
-    return firstValueFrom(
-      this.visitsClient.send<UpdateVisitResponse>(VISITS_PATTERNS.UPDATE, id),
-    )
+  update(data: UpdateVisitDto): Promise<UpdateVisitResponse> {
+    return firstValueFrom(this.visitsService.update(data))
   }
 
   remove(id: string): Promise<RemoveVisitResponse> {

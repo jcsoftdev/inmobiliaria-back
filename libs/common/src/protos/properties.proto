@@ -68,11 +68,11 @@ message Meta {
 }
 
 service PropertyService {
-  rpc CreateProperty (CreatePropertyRequest) returns (ActionResponse);
-  rpc UpdateProperty (UpdatePropertyRequest) returns (ActionResponse);
-  rpc DeleteProperty (DeletePropertyRequest) returns (ActionResponse);
-  rpc GetPropertyById (GetPropertyByIdRequest) returns (PropertyResponse);
-  rpc ListProperties (Empty) returns (PropertyList);
+  rpc create (CreatePropertyRequest) returns (ActionResponse);
+  rpc update (UpdatePropertyRequest) returns (ActionResponse);
+  rpc delete (DeletePropertyRequest) returns (ActionResponse);
+  rpc findOne (GetPropertyByIdRequest) returns (PropertyResponse);
+  rpc findAll (Empty) returns (PropertyList);
 }
 
 message Empty {}

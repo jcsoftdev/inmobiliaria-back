@@ -36,10 +36,6 @@ export class AgenciesService implements OnModuleInit {
   }
 
   async findAll(props: AgencyProps): Promise<PaginatedAgenciesResponse> {
-    console.log({
-      props,
-      agenciesService: this.agenciesService,
-    })
     return lastValueFrom(this.agenciesService.findAll(props))
   }
 

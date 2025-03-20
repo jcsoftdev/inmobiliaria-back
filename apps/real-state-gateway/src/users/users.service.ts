@@ -3,7 +3,6 @@ import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
 import { PaginateOptions } from '@app/common/pagination'
-import { UsersGrpcService } from '@app/contracts/agencies'
 import {
   PaginatedUsersResponse,
   CreateUserResponse,
@@ -11,6 +10,7 @@ import {
   UpdateUserResponse,
   CreateUserDto,
   UpdateUserDto,
+  UsersGrpcService,
 } from '@app/contracts/users'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
@@ -34,7 +34,6 @@ export class UsersService {
   }
 
   create(data: CreateUserDto): Promise<CreateUserResponse> {
-    console.log({ data, usersService: this.usersService })
     return firstValueFrom(this.usersService.create(data))
   }
 

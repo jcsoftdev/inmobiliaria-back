@@ -10,6 +10,7 @@ import { CustomHttpException } from '@app/common/exceptions/http.exception'
 import {
   ERROR_STATUS,
   ERROR_TYPES,
+  RpcError,
   RpcExceptionSerializedWithResponse,
 } from '@app/common/exceptions/rpc.exception'
 
@@ -20,8 +21,19 @@ export class AllExceptionsFilter
   catch(exception: RpcExceptionSerializedWithResponse, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
+    console.error('🚨 Exception Type RPC:', exception)
 
-    console.error('🚨 Exception Type RPC:', exception?.constructor?.name)
+    try {
+      const error = JSON.parse(exception.details) as RpcError
+      if (typeof error === 'object') {
+        return response.status(ERROR_STATUS.BAD_REQUEST).json({
+          statusCode: ERROR_STATUS.BAD_REQUEST,
+          message: error.message,
+        })
+      }
+    } catch {
+      console.error('')
+    }
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
@@ -50,12 +62,6 @@ export class AllExceptionsFilter
           ERROR_TYPES.INTERNAL_ERROR,
         errorType: exception.errorResponse?.errorType,
       })
-
-      console.log(
-        '🚨 Internal Error:',
-        internalError?.message,
-        internalError?.getStatus(),
-      )
 
       response
         .status(internalError.getStatus())

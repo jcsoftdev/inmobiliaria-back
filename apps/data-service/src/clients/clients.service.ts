@@ -60,7 +60,6 @@ export class ClientsService {
     if (fields.length) {
       selectQuery = {}
       fields.forEach((field) => {
-        console.log('field', field)
         selectQuery[field] = true
       })
     }

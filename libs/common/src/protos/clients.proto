@@ -84,9 +84,9 @@ message PaginatedClientsResponse {
 
 // Servicio de clientes
 service ClientsService {
-  rpc CreateClient(CreateClientRequest) returns (CreateClientResponse);
-  rpc FindAllClients(FindOneClientRequest) returns (PaginatedClientsResponse);
-  rpc FindOneClient(FindOneClientRequest) returns (FindOneClientResponse);
-  rpc UpdateClient(UpdateClientRequest) returns (UpdateClientResponse);
-  rpc DeleteClient(DeleteClientRequest) returns (DeleteClientResponse);
+  rpc create(CreateClientRequest) returns (CreateClientResponse);
+  rpc findAll(FindOneClientRequest) returns (PaginatedClientsResponse);
+  rpc findOne(FindOneClientRequest) returns (FindOneClientResponse);
+  rpc update(UpdateClientRequest) returns (UpdateClientResponse);
+  rpc delete(DeleteClientRequest) returns (DeleteClientResponse);
 }

@@ -82,7 +82,10 @@ export class VisitsController {
     @Param('id') id: string,
     @Body() data: UpdateVisitDto,
   ): Promise<UpdateVisitResponse> {
-    return this.visitsService.update(id, data)
+    return this.visitsService.update({
+      ...data,
+      id,
+    })
   }
 
   @Delete(':id')

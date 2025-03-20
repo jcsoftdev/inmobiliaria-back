@@ -6,6 +6,7 @@ import {
   CreateVisitResponse,
   PaginatedVisitsResponse,
   RemoveVisitResponse,
+  UpdateVisitDto,
   UpdateVisitResponse,
   VISITS_PATTERNS,
   Visit,
@@ -37,7 +38,9 @@ export class VisitsController {
   }
 
   @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.UPDATE)
-  update(@Payload() updateVisitDto: Visit): Promise<UpdateVisitResponse> {
+  update(
+    @Payload() updateVisitDto: UpdateVisitDto,
+  ): Promise<UpdateVisitResponse> {
     return this.visitsService.update(updateVisitDto)
   }
 

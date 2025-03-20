@@ -57,11 +57,11 @@ message Meta {
 }
 
 service VisitService {
-  rpc CreateVisit (CreateVisitRequest) returns (ActionResponse);
-  rpc UpdateVisit (UpdateVisitRequest) returns (ActionResponse);
-  rpc DeleteVisit (DeleteVisitRequest) returns (ActionResponse);
-  rpc GetVisitById (GetVisitByIdRequest) returns (VisitResponse);
-  rpc ListVisits (Empty) returns (VisitList);
+  rpc create (CreateVisitRequest) returns (ActionResponse);
+  rpc update (UpdateVisitRequest) returns (ActionResponse);
+  rpc delete (DeleteVisitRequest) returns (ActionResponse);
+  rpc findOne (GetVisitByIdRequest) returns (VisitResponse);
+  rpc listAll (Empty) returns (VisitList);
 }
 
 message Empty {}

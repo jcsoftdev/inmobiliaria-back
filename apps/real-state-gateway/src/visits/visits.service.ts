@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 import {
   CreateVisitDto,
@@ -10,19 +10,9 @@ import {
   PaginatedVisitsResponse,
   VisitProps,
   UpdateVisitDto,
-  VisitSingleProps,
+  VisitsGrpcService,
 } from '@app/contracts/visits'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
-
-interface VisitsGrpcService {
-  findAll(props: VisitSingleProps): Observable<PaginatedVisitsResponse>
-  create(data: CreateVisitDto): Observable<CreateVisitResponse>
-  update(request: {
-    id: string
-    data: Partial<UpdateVisitDto>
-  }): Observable<UpdateVisitResponse>
-  delete(request: { id: string }): Observable<RemoveVisitResponse>
-}
 
 @Injectable()
 export class VisitsService {
@@ -57,29 +47,11 @@ export class VisitsService {
     )
   }
 
-  update(
-    id: string,
-    data: Partial<UpdateVisitDto>,
-  ): Promise<UpdateVisitResponse> {
-    return firstValueFrom(
-      // this.userManagementClient.send<UpdateVisitResponse>(
-      //   VISITS_PATTERNS.UPDATE,
-      //   {
-      //     id,
-      //     data,
-      //   },
-      // ),
-      this.visitsService.update({ id, data }),
-    )
+  update(data: UpdateVisitDto): Promise<UpdateVisitResponse> {
+    return firstValueFrom(this.visitsService.update(data))
   }
 
   delete(id: string): Promise<RemoveVisitResponse> {
-    return firstValueFrom(
-      // this.userManagementClient.send<RemoveVisitResponse>(
-      //   VISITS_PATTERNS.REMOVE,
-      //   { id },
-      // ),
-      this.visitsService.delete({ id }),
-    )
+    return firstValueFrom(this.visitsService.remove(id))
   }
 }

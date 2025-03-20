@@ -4,6 +4,8 @@ import { AuthModule } from '@libs/auth'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { PropertiesController } from '@gateway/properties/properties.controller'
 import { PropertiesService } from '@gateway/properties/properties.service'
 
@@ -15,7 +17,7 @@ const protoPath = join(
   imports: [
     ClientsModule.register([
       {
-        name: 'PROPERTIES_CLIENT',
+        name: MICRO_SERVICES.PROPERTY_CLIENT,
         transport: Transport.GRPC,
         options: {
           package: 'properties',

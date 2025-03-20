@@ -75,7 +75,7 @@ service UserService {
   rpc create (CreateUserRequest) returns (ActionResponse);
   rpc update (UpdateUserRequest) returns (ActionResponse);
   rpc delete (DeleteUserRequest) returns (ActionResponse);
-  rpc getUserById (GetUserByIdRequest) returns (UserResponse);
+  rpc findOne (GetUserByIdRequest) returns (UserResponse);
   rpc getAll (Empty) returns (UserList);
 }
 

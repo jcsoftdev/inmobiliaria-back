@@ -5,6 +5,10 @@ import { ConfigService } from '@nestjs/config'
 export class SharedConfigService {
   constructor(private readonly configService: ConfigService) {}
 
+  isDev(): boolean {
+    return this.getMode() === 'dev' || this.getMode() === 'development'
+  }
+
   getMode(): string {
     return this.configService.get<string>('mode') ?? ''
   }

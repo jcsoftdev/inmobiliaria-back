@@ -1,17 +1,15 @@
 import { Observable } from 'rxjs'
 
 import {
-  AddAgenciesResponse,
-  CreateUserDto,
-  CreateUserResponse,
-  PaginatedUsersResponse,
-  RemoveAgenciesResponse,
-  RemoveUserResponse,
-  UpdateUserDto,
-  UpdateUserResponse,
-  User,
-  UserSingleProps,
-} from '@app/contracts/users'
+  Agency,
+  AgencySingleProps,
+  CreateAgencyResponse,
+  PaginatedAgenciesResponse,
+  RemoveAgencyResponse,
+  UpdateAgencyResponse,
+} from '@app/contracts/agencies/agency.response'
+import { CreateAgencyDto } from '@app/contracts/agencies/create-agency.dto'
+import { UpdateAgencyDto } from '@app/contracts/agencies/update-agency.dto'
 
 export const AGENCIES_PATTERNS = {
   FIND_ALL: 'findAll',
@@ -21,18 +19,10 @@ export const AGENCIES_PATTERNS = {
   REMOVE: 'remove',
 }
 
-export interface UsersGrpcService {
-  findAll(props: UserSingleProps): Observable<PaginatedUsersResponse>
-  create(data: CreateUserDto): Observable<CreateUserResponse>
-  update(data: UpdateUserDto): Observable<UpdateUserResponse>
-  remove(id: string): Observable<RemoveUserResponse>
-  findOne(id: string): Observable<User>
-  addAgency(request: {
-    userId: string
-    agencyIds: string[]
-  }): Observable<AddAgenciesResponse>
-  removeAgency(request: {
-    userId: string
-    agencyIds: string[]
-  }): Observable<RemoveAgenciesResponse>
+export interface AgenciesGrpcService {
+  findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
+  create(data: CreateAgencyDto): Observable<CreateAgencyResponse>
+  update(data: UpdateAgencyDto): Observable<UpdateAgencyResponse>
+  remove(id: string): Observable<RemoveAgencyResponse>
+  findOne(id: string): Observable<Agency>
 }

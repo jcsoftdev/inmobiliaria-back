@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
-import { UsersGrpcService } from '@app/contracts/agencies'
 import {
   User,
   UserProps,
@@ -14,6 +13,7 @@ import {
   RemoveAgenciesResponse,
   CreateUserDto,
   UpdateUserDto,
+  UsersGrpcService,
 } from '@app/contracts/users'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
@@ -37,7 +37,6 @@ export class UsersService {
   }
 
   create(data: CreateUserDto): Promise<CreateUserResponse> {
-    console.log({ data, usersClient: this.usersClient })
     return firstValueFrom(this.usersService.create(data))
   }
 

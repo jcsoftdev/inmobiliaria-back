@@ -11,6 +11,7 @@ import {
   UpdatePropertyDto,
   UpdatePropertyResponse,
 } from '@app/contracts/properties'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface PropertiesGrpcService {
   findAll(props: PropertySingleProps): Observable<PaginatedPropertiesResponse>
@@ -26,13 +27,13 @@ interface PropertiesGrpcService {
 export class PropertiesService {
   private propertiesService!: PropertiesGrpcService
   constructor(
-    @Inject('PROPERTIES_CLIENT')
+    @Inject(MICRO_SERVICES.PROPERTY_CLIENT)
     private readonly propertiesClient: ClientGrpcProxy,
   ) {}
 
   onModuleInit() {
     this.propertiesService =
-      this.propertiesClient.getService<PropertiesGrpcService>('PropertyService')
+      this.propertiesClient.getService<PropertiesGrpcService>(SERVICES.PROPERTY)
   }
 
   findAll(props: PropertySingleProps): Promise<PaginatedPropertiesResponse> {
