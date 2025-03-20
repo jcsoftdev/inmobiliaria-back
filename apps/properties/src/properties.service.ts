@@ -1,55 +1,53 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { ClientGrpcProxy } from '@nestjs/microservices'
+import { firstValueFrom } from 'rxjs'
 
 import { PaginatedResult } from '@app/common/pagination'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
-  PROPERTIES_PATTERNS,
+  PropertiesGrpcService,
   Property,
   PropertyProps,
+  RemovePropertyResponse,
+  UpdatePropertyDto,
+  UpdatePropertyResponse,
 } from '@app/contracts/properties'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class PropertiesService {
+  private propertiesService!: PropertiesGrpcService
+
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
-    private readonly propertiesClient: ClientProxy,
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
+    private readonly propertiesClient: ClientGrpcProxy,
   ) {}
 
+  onModuleInit() {
+    this.propertiesService =
+      this.propertiesClient.getService<PropertiesGrpcService>(SERVICES.PROPERTY)
+  }
+
   findAll(props: PropertyProps): Promise<PaginatedResult<Property>> {
-    return firstValueFrom(
-      this.propertiesClient.send<PaginatedResult<Property>, PropertyProps>(
-        PROPERTIES_PATTERNS.FIND_ALL,
-        props,
-      ),
-    )
+    return firstValueFrom(this.propertiesService.findAll(props))
   }
 
   async create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
-    const res = firstValueFrom(
-      this.propertiesClient.send<CreatePropertyResponse, CreatePropertyDto>(
-        PROPERTIES_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    const res = firstValueFrom(this.propertiesService.create(data))
 
     return res
   }
 
-  findOne(id: string): Observable<Property> {
-    return this.propertiesClient.send<Property>(
-      PROPERTIES_PATTERNS.FIND_ONE,
-      id,
-    )
+  findOne(id: string): Promise<Property> {
+    return firstValueFrom(this.propertiesService.findOne(id))
   }
 
-  update(id: Property): Observable<Property> {
-    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.UPDATE, id)
+  update(data: UpdatePropertyDto): Promise<UpdatePropertyResponse> {
+    return firstValueFrom(this.propertiesService.update(data))
   }
 
-  remove(id: string): Observable<Property> {
-    return this.propertiesClient.send<Property>(PROPERTIES_PATTERNS.REMOVE, id)
+  remove(id: string): Promise<RemovePropertyResponse> {
+    return firstValueFrom(this.propertiesService.remove(id))
   }
 }

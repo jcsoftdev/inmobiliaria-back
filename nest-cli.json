@@ -28,6 +28,15 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
+    "config": {
+      "type": "library",
+      "root": "libs/config",
+      "entryFile": "index",
+      "sourceRoot": "libs/config/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config/tsconfig.lib.json"
+      }
+    },
     "contracts": {
       "type": "library",
       "root": "libs/contracts",
@@ -46,6 +55,15 @@
         "tsConfigPath": "apps/data-service/tsconfig.app.json"
       }
     },
+    "kafka-service": {
+      "type": "application",
+      "root": "apps/kafka-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/kafka-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/kafka-service/tsconfig.app.json"
+      }
+    },
     "properties": {
       "type": "application",
       "root": "apps/properties",
@@ -62,6 +80,15 @@
       "sourceRoot": "apps/real-state-gateway/src",
       "compilerOptions": {
         "tsConfigPath": "apps/real-state-gateway/tsconfig.app.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
     },
     "user-management": {

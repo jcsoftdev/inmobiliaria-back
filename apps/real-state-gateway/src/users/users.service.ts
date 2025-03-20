@@ -1,65 +1,48 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
 import { PaginateOptions } from '@app/common/pagination'
 import {
-  USERS_PATTERNS,
   PaginatedUsersResponse,
-  User,
   CreateUserResponse,
   RemoveUserResponse,
   UpdateUserResponse,
   CreateUserDto,
-  UpdateUserAgencyDto,
+  UpdateUserDto,
+  UsersGrpcService,
 } from '@app/contracts/users'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class UsersService {
+  private usersService!: UsersGrpcService
+
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
-    private readonly userManagementClient: ClientProxy,
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
+    private readonly userManagementClient: ClientGrpcProxy,
   ) {}
 
-  findAll(props: PaginateOptions): Promise<PaginatedUsersResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<PaginatedUsersResponse, PaginateOptions>(
-        USERS_PATTERNS.FIND_ALL,
-        props,
-      ),
+  onModuleInit() {
+    this.usersService = this.userManagementClient.getService<UsersGrpcService>(
+      SERVICES.USER,
     )
+  }
+
+  findAll(props: PaginateOptions): Promise<PaginatedUsersResponse> {
+    return firstValueFrom(this.usersService.findAll(props))
   }
 
   create(data: CreateUserDto): Promise<CreateUserResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<CreateUserResponse>(
-        USERS_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    return firstValueFrom(this.usersService.create(data))
   }
 
-  update(id: string, data: Partial<User>): Promise<UpdateUserResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<UpdateUserResponse>(
-        USERS_PATTERNS.UPDATE,
-        {
-          id,
-          data,
-        },
-      ),
-    )
+  update(data: UpdateUserDto): Promise<UpdateUserResponse> {
+    return firstValueFrom(this.usersService.update(data))
   }
 
-  delete(id: string): Promise<RemoveUserResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<RemoveUserResponse>(
-        USERS_PATTERNS.REMOVE,
-        {
-          id,
-        },
-      ),
-    )
+  remove(id: string): Promise<RemoveUserResponse> {
+    return firstValueFrom(this.usersService.remove(id))
   }
 
   addAgencyToUser(
@@ -67,10 +50,7 @@ export class UsersService {
     agencyId: string[],
   ): Promise<UpdateUserResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<UpdateUserResponse, UpdateUserAgencyDto>(
-        USERS_PATTERNS.ADD_AGENCY,
-        { userId, agencyIds: agencyId },
-      ),
+      this.usersService.addAgency({ userId, agencyIds: agencyId }),
     )
   }
 
@@ -78,11 +58,6 @@ export class UsersService {
     userId: string,
     agencyIds: string[],
   ): Promise<UpdateUserResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<UpdateUserResponse, UpdateUserAgencyDto>(
-        USERS_PATTERNS.REMOVE_AGENCY,
-        { userId, agencyIds },
-      ),
-    )
+    return firstValueFrom(this.usersService.removeAgency({ userId, agencyIds }))
   }
 }

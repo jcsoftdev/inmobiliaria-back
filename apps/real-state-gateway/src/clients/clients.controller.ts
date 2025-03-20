@@ -62,7 +62,6 @@ export class ClientsController {
   findAll(
     @Query() { ...props }: ClientSingleProps,
   ): Promise<PaginatedClientsResponse> {
-    console.log({ ...props })
     return this.clientsService.findAll({
       ...props,
     })

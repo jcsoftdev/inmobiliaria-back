@@ -16,7 +16,6 @@ export function IsUUIDv7(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: string) {
-          console.log({ value, test: UUID_V7_REGEX.test(value) })
           return typeof value === 'string' && UUID_V7_REGEX.test(value)
         },
         defaultMessage(args: ValidationArguments) {

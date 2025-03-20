@@ -39,35 +39,30 @@ export class VisitsService {
     where,
     ...props
   }: VisitProps): Promise<PaginatedVisitsResponse> {
-    try {
-      const data = await paginator.paginate(
-        this.prismaService.visits,
-        {
-          orderBy,
-          where,
-        },
-        {
-          page: props.page,
-          perPage: props.perPage,
-        },
-      )
+    const data = await paginator.paginate(
+      this.prismaService.visits,
+      {
+        orderBy,
+        where,
+      },
+      {
+        page: props.page,
+        perPage: props.perPage,
+      },
+    )
 
-      return {
-        ...data,
-        data: data.data.map((visit): Visit => {
-          return {
-            id: visit.id,
-            client_id: visit.client_id,
-            property_id: visit.property_id ?? '', // change in database to be null
-            scheduled_at: visit.scheduled_at ?? new Date(),
-            status: (visit.status ?? 'pending') as Visit['status'],
-            created_at: visit.created_at ?? new Date(),
-          }
-        }),
-      }
-    } catch (error) {
-      console.log('Error:', error)
-      throw error
+    return {
+      ...data,
+      data: data.data.map((visit): Visit => {
+        return {
+          id: visit.id,
+          client_id: visit.client_id,
+          property_id: visit.property_id ?? '', // change in database to be null
+          scheduled_at: visit.scheduled_at ?? new Date(),
+          status: (visit.status ?? 'pending') as Visit['status'],
+          created_at: visit.created_at ?? new Date(),
+        }
+      }),
     }
   }
 

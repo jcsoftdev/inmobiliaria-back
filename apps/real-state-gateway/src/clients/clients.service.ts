@@ -1,43 +1,49 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom } from 'rxjs'
+import { ClientGrpc } from '@nestjs/microservices'
+import { firstValueFrom, Observable } from 'rxjs'
 
-import {
-  CLIENTS_PATTERNS,
-  CreateClientDto,
-  UpdateClientDto,
-} from '@app/contracts/clients'
+import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
   ClientProps,
   PaginatedClientsResponse,
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
+  ClientSingleProps,
 } from '@app/contracts/clients/clients.response'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
+
+interface ClientsGrpcService {
+  findAll(props: ClientSingleProps): Observable<PaginatedClientsResponse>
+  create(data: CreateClientDto): Observable<CreateClientResponse>
+  update(request: {
+    id: string
+    data: Partial<UpdateClientDto>
+  }): Observable<UpdateClientResponse>
+  delete(request: { id: string }): Observable<RemoveClientResponse>
+}
 
 @Injectable()
 export class ClientsService {
+  private clientsService!: ClientsGrpcService
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
-    private readonly userManagementClient: ClientProxy,
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
+    private readonly clientManagementClient: ClientGrpc,
   ) {}
 
+  onModuleInit() {
+    this.clientsService =
+      this.clientManagementClient.getService<ClientsGrpcService>(
+        SERVICES.CLIENT,
+      )
+  }
+
   findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<PaginatedClientsResponse>(
-        CLIENTS_PATTERNS.FIND_ALL,
-        props,
-      ),
-    )
+    return firstValueFrom(this.clientsService.findAll(props))
   }
 
   create(data: CreateClientDto): Promise<CreateClientResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<CreateClientResponse, CreateClientDto>(
-        CLIENTS_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    return firstValueFrom(this.clientsService.create(data))
   }
 
   update(
@@ -45,24 +51,12 @@ export class ClientsService {
     data: Partial<UpdateClientDto>,
   ): Promise<UpdateClientResponse> {
     return firstValueFrom(
-      this.userManagementClient.send<UpdateClientResponse>(
-        CLIENTS_PATTERNS.UPDATE,
-        {
-          id,
-          data,
-        },
-      ),
+      // ),
+      this.clientsService.update({ id, data }),
     )
   }
 
   delete(id: string): Promise<RemoveClientResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<RemoveClientResponse>(
-        CLIENTS_PATTERNS.REMOVE,
-        {
-          id,
-        },
-      ),
-    )
+    return firstValueFrom(this.clientsService.delete({ id }))
   }
 }

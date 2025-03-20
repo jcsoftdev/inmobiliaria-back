@@ -1,16 +1,18 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { GrpcMethod, Payload } from '@nestjs/microservices'
 
 import {
   CreateVisitDto,
   CreateVisitResponse,
   PaginatedVisitsResponse,
   RemoveVisitResponse,
+  UpdateVisitDto,
   UpdateVisitResponse,
   VISITS_PATTERNS,
   Visit,
   VisitProps,
 } from '@app/contracts/visits'
+import { SERVICES } from '@app/shared'
 
 import { VisitsService } from './visits.service'
 
@@ -18,29 +20,31 @@ import { VisitsService } from './visits.service'
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) {}
 
-  @MessagePattern(VISITS_PATTERNS.CREATE)
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.CREATE)
   create(
     @Payload() createVisitDto: CreateVisitDto,
   ): Promise<CreateVisitResponse> {
     return this.visitsService.create(createVisitDto)
   }
 
-  @MessagePattern(VISITS_PATTERNS.FIND_ALL)
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.FIND_ALL)
   findAll(props: VisitProps): Promise<PaginatedVisitsResponse> {
     return this.visitsService.findAll(props)
   }
 
-  @MessagePattern(VISITS_PATTERNS.FIND_ONE)
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: string): Promise<Visit> {
     return this.visitsService.findOne(id)
   }
 
-  @MessagePattern(VISITS_PATTERNS.UPDATE)
-  update(@Payload() updateVisitDto: Visit): Promise<UpdateVisitResponse> {
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.UPDATE)
+  update(
+    @Payload() updateVisitDto: UpdateVisitDto,
+  ): Promise<UpdateVisitResponse> {
     return this.visitsService.update(updateVisitDto)
   }
 
-  @MessagePattern(VISITS_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.REMOVE)
   remove(@Payload() id: string): Promise<RemoveVisitResponse> {
     return this.visitsService.remove(id)
   }

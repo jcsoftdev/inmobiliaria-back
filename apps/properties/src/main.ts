@@ -1,21 +1,33 @@
+import path from 'node:path'
+
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+import { SharedConfigService } from '@app/config'
 
 import { PropertiesModule } from './properties.module'
+
+const protoPath = path.join(
+  __dirname,
+  '../../../libs/common/src/protos/properties.proto',
+)
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     PropertiesModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.GRPC,
       options: {
-        port: +(process.env.port ?? 3001),
+        package: ['properties'],
+        protoPath,
+        url: '0.0.0.0:50052',
       },
     },
   )
-  app.useGlobalFilters(new RpcErrorForwardingFilter())
+
+  const configService = app.get(SharedConfigService)
+  app.useGlobalFilters(new RpcErrorForwardingFilter(configService))
 
   await app.listen()
 }

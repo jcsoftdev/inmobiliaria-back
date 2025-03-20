@@ -1,63 +1,55 @@
-import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom } from 'rxjs'
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
+import { ClientGrpc } from '@nestjs/microservices'
+import { lastValueFrom, Observable } from 'rxjs'
 
-import { PaginateOptions } from '@app/common/pagination'
 import {
-  AGENCIES_PATTERNS,
   PaginatedAgenciesResponse,
-  Agency,
   CreateAgencyResponse,
   RemoveAgencyResponse,
   UpdateAgencyResponse,
   CreateAgencyDto,
+  UpdateAgencyDto,
+  AgencySingleProps,
 } from '@app/contracts/agencies'
+import { MICRO_SERVICES } from '@app/shared'
+
+interface AgenciesGrpcService {
+  findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
+  create(data: CreateAgencyDto): Observable<CreateAgencyResponse>
+  update(request: {
+    id: string
+    data: UpdateAgencyDto
+  }): Observable<UpdateAgencyResponse>
+  delete(request: { id: string }): Observable<RemoveAgencyResponse>
+}
 
 @Injectable()
-export class AgenciesService {
+export class AgenciesService implements OnModuleInit {
+  private agenciesService!: AgenciesGrpcService
+
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
-    private readonly userManagementClient: ClientProxy,
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
+    private readonly userManagementClient: ClientGrpc,
   ) {}
 
-  findAll(props: PaginateOptions): Promise<PaginatedAgenciesResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<
-        PaginatedAgenciesResponse,
-        PaginateOptions
-      >(AGENCIES_PATTERNS.FIND_ALL, props),
-    )
+  onModuleInit() {
+    this.agenciesService =
+      this.userManagementClient.getService<AgenciesGrpcService>('AgencyService')
+  }
+
+  findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
+    return lastValueFrom(this.agenciesService.findAll(props))
   }
 
   create(data: CreateAgencyDto): Promise<CreateAgencyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<CreateAgencyResponse>(
-        AGENCIES_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    return lastValueFrom(this.agenciesService.create(data))
   }
 
-  update(id: string, data: Partial<Agency>): Promise<UpdateAgencyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<UpdateAgencyResponse>(
-        AGENCIES_PATTERNS.UPDATE,
-        {
-          id,
-          data,
-        },
-      ),
-    )
+  update(id: string, data: UpdateAgencyDto): Promise<UpdateAgencyResponse> {
+    return lastValueFrom(this.agenciesService.update({ id, data }))
   }
 
   delete(id: string): Promise<RemoveAgencyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<RemoveAgencyResponse>(
-        AGENCIES_PATTERNS.REMOVE,
-        {
-          id,
-        },
-      ),
-    )
+    return lastValueFrom(this.agenciesService.delete({ id }))
   }
 }

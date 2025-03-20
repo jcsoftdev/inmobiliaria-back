@@ -23,7 +23,7 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
-    const result = await this.prismaService.users.create({
+    await this.prismaService.users.create({
       data: {
         id: uuidV7(),
         name: createUserDto.name,
@@ -39,15 +39,6 @@ export class UsersService {
       },
     })
 
-    if (createUserDto.agencyIds?.length) {
-      await this.prismaService.users_agencies.createMany({
-        data: createUserDto.agencyIds.map((agencyId) => ({
-          id: uuidV7(),
-          user_id: result.id,
-          agency_id: agencyId,
-        })),
-      })
-    }
     return {
       message: 'User created  successfully',
     }
@@ -143,10 +134,12 @@ export class UsersService {
     }
   }
 
-  async update(
-    id: string,
-    { expiresAt, lastName, ...updateUserDto }: UpdateUserDto,
-  ): Promise<UpdateUserResponse> {
+  async update({
+    id,
+    expiresAt,
+    lastName,
+    ...updateUserDto
+  }: UpdateUserDto): Promise<UpdateUserResponse> {
     try {
       await this.prismaService.users.update({
         where: { id },
@@ -186,8 +179,11 @@ export class UsersService {
           agency_id: agencyId,
         })),
       })
+
+      return { message: 'Agency added to user successfully' }
     } catch (error) {
       console.error('Error en addAgencyToUser:', error)
+      throw new Error('Error adding agency to user')
     }
   }
 

@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package agencies;
+
+message Agency {
+  string id = 1;
+  string name = 2;
+  optional string address = 3;
+  optional string phone = 4;
+  string email = 5;
+  optional string created_at = 6;
+}
+
+message AgencyList {
+  repeated Agency data = 1;
+  Meta meta = 2;
+}
+
+message CreateAgencyRequest {
+  string name = 1;
+  optional string address = 2;
+  optional string phone = 3;
+  string email = 4;
+}
+
+message UpdateAgencyRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string address = 3;
+  optional string phone = 4;
+  optional string email = 5;
+}
+
+message DeleteAgencyRequest {
+  string id = 1;
+}
+
+message GetAgencyByIdRequest {
+  string id = 1;
+}
+
+message AgencyResponse {
+  Agency agency = 1;
+}
+
+message ActionResponse {
+  string message = 1;
+}
+
+message Meta {
+  int32 total = 1;
+  int32 lastPage = 2;
+  int32 currentPage = 3;
+  int32 perPage = 4;
+  int32 prev = 5;
+  int32 next = 6;
+}
+
+service AgencyService {
+  rpc create (CreateAgencyRequest) returns (ActionResponse);
+  rpc update (UpdateAgencyRequest) returns (ActionResponse);
+  rpc delete (DeleteAgencyRequest) returns (ActionResponse);
+  rpc GetAgencyById (GetAgencyByIdRequest) returns (AgencyResponse);
+  rpc findAll (Empty) returns (AgencyList);
+}
+
+message Empty {}

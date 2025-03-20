@@ -29,8 +29,7 @@ export class MicroserviceAuthGuard implements CanActivate {
       const payload = this.jwtService.verify<JwtPayload>(token)
       data.user = payload // ✅ Add user directly into the payload (safe)
       return true
-    } catch (e) {
-      console.log({ e })
+    } catch {
       throw new RpcException(new UnauthorizedException('Invalid token'))
     }
   }

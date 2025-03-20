@@ -23,16 +23,31 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@app/common": [
-        "libs/common/src"
+        "libs/common/src/index.ts"
       ],
       "@app/common/*": [
         "libs/common/src/*"
       ],
+      "@app/config": [
+        "libs/config/src/index"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
       "@app/contracts": [
-        "libs/contracts/src"
+        "libs/contracts/src/index.ts"
       ],
       "@app/contracts/*": [
         "libs/contracts/src/*"
+      ],
+      "@app/protos/*": [
+        "libs/common/src/protos/*"
+      ],
+      "@app/shared": [
+        "libs/shared/src/index.ts"
+      ],
+      "@app/shared/*": [
+        "libs/shared/src/*"
       ],
       "@data-service/*": [
         "./apps/data-service/src/*"
@@ -40,10 +55,12 @@
       "@gateway/*": [
         "./apps/real-state-gateway/src/*"
       ],
+      "@libs/auth": [
+        "./libs/auth/src/main.ts"
+      ],
       "@properties/*": [
         "./apps/properties/src/*"
-      ],
-      "@libs/auth": ["./libs/auth/src/main.ts"]
+      ]
     }
   }
 }

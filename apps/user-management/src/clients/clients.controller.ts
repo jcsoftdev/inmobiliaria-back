@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { GrpcMethod, Payload } from '@nestjs/microservices'
 
 import {
   CLIENTS_PATTERNS,
@@ -13,6 +13,7 @@ import {
   RemoveClientResponse,
   UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+import { SERVICES } from '@app/shared'
 
 import { ClientsService } from './clients.service'
 
@@ -20,29 +21,29 @@ import { ClientsService } from './clients.service'
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
-  @MessagePattern(CLIENTS_PATTERNS.CREATE)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.CREATE)
   create(@Payload() createClientDto: CreateClientDto) {
     return this.clientsService.create(createClientDto)
   }
 
-  @MessagePattern(CLIENTS_PATTERNS.FIND_ALL)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.FIND_ALL)
   findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
     return this.clientsService.findAll(props)
   }
 
-  @MessagePattern(CLIENTS_PATTERNS.FIND_ONE)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: string): Promise<Client> {
     return this.clientsService.findOne(id)
   }
 
-  @MessagePattern(CLIENTS_PATTERNS.UPDATE)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.UPDATE)
   update(
     @Payload() updateClientDto: UpdateClientDto,
   ): Promise<UpdateClientResponse> {
     return this.clientsService.update(updateClientDto)
   }
 
-  @MessagePattern(CLIENTS_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.REMOVE)
   remove(@Payload() id: string): Promise<RemoveClientResponse> {
     return this.clientsService.remove(id)
   }

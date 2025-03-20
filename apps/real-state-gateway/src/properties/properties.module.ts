@@ -1,18 +1,28 @@
+import { join } from 'path'
+
 import { AuthModule } from '@libs/auth'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { PropertiesController } from '@gateway/properties/properties.controller'
 import { PropertiesService } from '@gateway/properties/properties.service'
 
+const protoPath = join(
+  __dirname,
+  '../../../libs/common/src/protos/properties.proto',
+)
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'PROPERTIES_CLIENT',
-        transport: Transport.TCP,
+        name: MICRO_SERVICES.PROPERTY_CLIENT,
+        transport: Transport.GRPC,
         options: {
-          port: +(process.env.PROPERTIES_SERVICE_PORT ?? 3001),
+          package: 'properties',
+          protoPath: protoPath,
+          url: `0.0.0.0:${+(process.env.PROPERTIES_PORT ?? 50052)}`,
         },
       },
     ]),

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package properties;
+
+message Property {
+  string id = 1;
+  optional string agency_id = 2;
+  string title = 3;
+  optional string description = 4;
+  optional string type = 5;
+  string price = 6;
+  string location = 7;
+  string features = 8;
+  optional string status = 9;
+  optional string user_id = 10;
+  optional string created_at = 11;
+}
+
+message PropertyList {
+  repeated Property data = 1;
+  Meta meta = 2;
+}
+
+message CreatePropertyRequest {
+  optional string agency_id = 1;
+  string title = 2;
+  optional string description = 3;
+  optional string type = 4;
+  string price = 5;
+  string location = 6;
+  string features = 7;
+}
+
+message UpdatePropertyRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string description = 3;
+  optional string type = 4;
+  optional string price = 5;
+  optional string location = 6;
+  optional string features = 7;
+  optional string status = 8;
+}
+
+message DeletePropertyRequest {
+  string id = 1;
+}
+
+message GetPropertyByIdRequest {
+  string id = 1;
+}
+
+message PropertyResponse {
+  Property property = 1;
+}
+
+message ActionResponse {
+  string message = 1;
+}
+
+message Meta {
+  int32 total = 1;
+  int32 lastPage = 2;
+  int32 currentPage = 3;
+  int32 perPage = 4;
+  int32 prev = 5;
+  int32 next = 6;
+}
+
+service PropertyService {
+  rpc create (CreatePropertyRequest) returns (ActionResponse);
+  rpc update (UpdatePropertyRequest) returns (ActionResponse);
+  rpc delete (DeletePropertyRequest) returns (ActionResponse);
+  rpc findOne (GetPropertyByIdRequest) returns (PropertyResponse);
+  rpc findAll (Empty) returns (PropertyList);
+}
+
+message Empty {}

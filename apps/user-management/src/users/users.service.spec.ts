@@ -1,6 +1,8 @@
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { UsersService } from './users.service'
 
 describe('UsersService', () => {
@@ -11,7 +13,7 @@ describe('UsersService', () => {
       imports: [
         ClientsModule.register([
           {
-            name: 'DATABASE_SERVICE_CLIENT',
+            name: MICRO_SERVICES.DATABASE_CLIENT,
             transport: Transport.TCP,
             options: {
               port: +(process.env.DATABASE_SERVICE_PORT ?? 3002),

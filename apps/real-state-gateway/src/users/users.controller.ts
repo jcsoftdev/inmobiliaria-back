@@ -78,7 +78,7 @@ export class UsersController {
     return this.usersService.create(data)
   }
 
-  @Patch(':id')
+  @Patch()
   @ApiResponse({
     status: 202,
     description: 'Update user',
@@ -88,7 +88,10 @@ export class UsersController {
     @Param('id') id: string,
     @Body() data: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
-    return this.usersService.update(id, data)
+    return this.usersService.update({
+      ...data,
+      id,
+    })
   }
 
   @Delete(':id')
@@ -98,7 +101,7 @@ export class UsersController {
     type: RemoveUserResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveUserResponse> {
-    return this.usersService.delete(id)
+    return this.usersService.remove(id)
   }
 
   @Post(':id/add-agencies')

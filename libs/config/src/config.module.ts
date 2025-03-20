@@ -1,0 +1,20 @@
+// src/libs/config/config.module.ts
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+
+import { SharedConfigService } from '@app/config/config.service'
+
+import configuration from './configuration'
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+  ],
+  providers: [ConfigService, SharedConfigService],
+  exports: [ConfigModule, SharedConfigService],
+})
+export class SharedConfigModule {}

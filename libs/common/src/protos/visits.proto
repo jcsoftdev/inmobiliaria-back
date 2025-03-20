@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package visits;
+
+message Visit {
+  string id = 1;
+  optional string client_id = 2;
+  optional string property_id = 3;
+  string scheduled_at = 4;
+  optional string status = 5;
+  optional string created_at = 6;
+}
+
+message VisitList {
+  repeated Visit data = 1;
+  Meta meta = 2;
+}
+
+message CreateVisitRequest {
+  optional string client_id = 1;
+  optional string property_id = 2;
+  string scheduled_at = 3;
+  optional string status = 4;
+}
+
+message UpdateVisitRequest {
+  string id = 1;
+  optional string client_id = 2;
+  optional string property_id = 3;
+  optional string scheduled_at = 4;
+  optional string status = 5;
+}
+
+message DeleteVisitRequest {
+  string id = 1;
+}
+
+message GetVisitByIdRequest {
+  string id = 1;
+}
+
+message VisitResponse {
+  Visit visit = 1;
+}
+
+message ActionResponse {
+  string message = 1;
+}
+
+message Meta {
+  int32 total = 1;
+  int32 lastPage = 2;
+  int32 currentPage = 3;
+  int32 perPage = 4;
+  int32 prev = 5;
+  int32 next = 6;
+}
+
+service VisitService {
+  rpc create (CreateVisitRequest) returns (ActionResponse);
+  rpc update (UpdateVisitRequest) returns (ActionResponse);
+  rpc delete (DeleteVisitRequest) returns (ActionResponse);
+  rpc findOne (GetVisitByIdRequest) returns (VisitResponse);
+  rpc listAll (Empty) returns (VisitList);
+}
+
+message Empty {}

@@ -1,43 +1,60 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom } from 'rxjs'
+import { ClientGrpcProxy } from '@nestjs/microservices'
+import { firstValueFrom, Observable } from 'rxjs'
 
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
   PaginatedPropertiesResponse,
-  PROPERTIES_PATTERNS,
-  PropertyProps,
   PropertySingleProps,
   RemovePropertyResponse,
   UpdatePropertyDto,
   UpdatePropertyResponse,
 } from '@app/contracts/properties'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
+
+interface PropertiesGrpcService {
+  findAll(props: PropertySingleProps): Observable<PaginatedPropertiesResponse>
+  create(data: CreatePropertyDto): Observable<CreatePropertyResponse>
+  update(request: {
+    id: string
+    data: Partial<UpdatePropertyDto>
+  }): Observable<UpdatePropertyResponse>
+  delete(request: { id: string }): Observable<RemovePropertyResponse>
+}
 
 @Injectable()
 export class PropertiesService {
+  private propertiesService!: PropertiesGrpcService
   constructor(
-    @Inject('PROPERTIES_CLIENT')
-    private readonly propertiesClient: ClientProxy,
+    @Inject(MICRO_SERVICES.PROPERTY_CLIENT)
+    private readonly propertiesClient: ClientGrpcProxy,
   ) {}
+
+  onModuleInit() {
+    this.propertiesService =
+      this.propertiesClient.getService<PropertiesGrpcService>(SERVICES.PROPERTY)
+  }
 
   findAll(props: PropertySingleProps): Promise<PaginatedPropertiesResponse> {
     return firstValueFrom(
-      this.propertiesClient.send<PaginatedPropertiesResponse, PropertyProps>(
-        PROPERTIES_PATTERNS.FIND_ALL,
-        {
-          ...props,
-        },
-      ),
+      // this.propertiesClient.send<PaginatedPropertiesResponse, PropertyProps>(
+      //   PROPERTIES_PATTERNS.FIND_ALL,
+      //   {
+      //     ...props,
+      //   },
+      // ),
+      this.propertiesService.findAll(props),
     )
   }
 
   create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
     return firstValueFrom(
-      this.propertiesClient.send<CreatePropertyResponse>(
-        PROPERTIES_PATTERNS.CREATE,
-        data,
-      ),
+      // this.propertiesClient.send<CreatePropertyResponse>(
+      //   PROPERTIES_PATTERNS.CREATE,
+      //   data,
+      // ),
+      this.propertiesService.create(data),
     )
   }
 
@@ -46,24 +63,26 @@ export class PropertiesService {
     data: Partial<UpdatePropertyDto>,
   ): Promise<UpdatePropertyResponse> {
     return firstValueFrom(
-      this.propertiesClient.send<UpdatePropertyResponse>(
-        PROPERTIES_PATTERNS.UPDATE,
-        {
-          id,
-          data,
-        },
-      ),
+      // this.propertiesClient.send<UpdatePropertyResponse>(
+      //   PROPERTIES_PATTERNS.UPDATE,
+      //   {
+      //     id,
+      //     data,
+      //   },
+      // ),
+      this.propertiesService.update({ id, data }),
     )
   }
 
   delete(id: string): Promise<RemovePropertyResponse> {
     return firstValueFrom(
-      this.propertiesClient.send<RemovePropertyResponse>(
-        PROPERTIES_PATTERNS.REMOVE,
-        {
-          id,
-        },
-      ),
+      // this.propertiesClient.send<RemovePropertyResponse>(
+      //   PROPERTIES_PATTERNS.REMOVE,
+      //   {
+      //     id,
+      //   },
+      // ),
+      this.propertiesService.delete({ id }),
     )
   }
 }
