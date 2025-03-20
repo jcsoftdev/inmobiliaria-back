@@ -4,11 +4,14 @@ import {
   IsArray,
   IsDateString,
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator'
 
 import { IsUUIDv7 } from '@app/common/decorators'
+
+import { UserRoles, UserStatus } from './user.response'
 
 export class CreateUserDto
   implements
@@ -70,8 +73,9 @@ export class CreateUserDto
     description: 'User role',
     example: 'admin',
   })
+  @IsNotEmpty()
   @IsString()
-  role!: string
+  role!: UserRoles
 
   @ApiProperty({
     description: 'User username',
@@ -84,8 +88,9 @@ export class CreateUserDto
     description: 'User status',
     example: 'active',
   })
+  @IsNotEmpty()
   @IsString()
-  status!: string
+  status!: UserStatus
 
   @ApiProperty({
     description: 'User dni',
