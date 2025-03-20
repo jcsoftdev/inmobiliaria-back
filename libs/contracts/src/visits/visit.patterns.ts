@@ -16,13 +16,13 @@ export const VISITS_PATTERNS = {
   FIND_ONE: 'findOne',
   CREATE: 'create',
   UPDATE: 'update',
-  REMOVE: 'remove',
+  DELETE: 'delete',
 }
 
 export interface VisitsGrpcService {
   findAll(props: VisitSingleProps): Observable<PaginatedVisitsResponse>
   create(data: CreateVisitDto): Observable<CreateVisitResponse>
   update(data: UpdateVisitDto): Observable<UpdateVisitResponse>
-  remove(id: string): Observable<RemoveVisitResponse>
+  delete(id: string): Observable<RemoveVisitResponse>
   findOne(id: string): Observable<Visit>
 }

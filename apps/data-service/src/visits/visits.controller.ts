@@ -44,8 +44,8 @@ export class VisitsController {
     return this.visitsService.update(id, data)
   }
 
-  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.REMOVE)
-  remove(@Payload() payload: { id: string }): Promise<RemoveVisitResponse> {
-    return this.visitsService.remove(payload.id)
+  @GrpcMethod(SERVICES.VISIT, VISITS_PATTERNS.DELETE)
+  delete(@Payload() payload: { id: string }): Promise<RemoveVisitResponse> {
+    return this.visitsService.delete(payload.id)
   }
 }

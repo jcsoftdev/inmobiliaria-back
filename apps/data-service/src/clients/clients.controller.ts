@@ -36,8 +36,8 @@ export class ClientsController {
     return this.clientsService.update(id, data)
   }
 
-  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.CLIENT, CLIENTS_PATTERNS.DELETE)
   delete(@Payload() payload: { id: string }) {
-    return this.clientsService.remove(payload.id)
+    return this.clientsService.delete(payload.id)
   }
 }

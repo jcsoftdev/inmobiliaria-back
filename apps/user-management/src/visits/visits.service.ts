@@ -47,9 +47,9 @@ export class VisitsService {
     return firstValueFrom(this.visitsService.update(data))
   }
 
-  remove(id: string): Promise<RemoveVisitResponse> {
+  delete(id: string): Promise<RemoveVisitResponse> {
     return firstValueFrom(
-      this.visitsClient.send<RemoveVisitResponse>(VISITS_PATTERNS.REMOVE, id),
+      this.visitsClient.send<RemoveVisitResponse>(VISITS_PATTERNS.DELETE, id),
     )
   }
 }

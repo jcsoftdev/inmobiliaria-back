@@ -16,13 +16,13 @@ export const AGENCIES_PATTERNS = {
   FIND_ONE: 'findOne',
   CREATE: 'create',
   UPDATE: 'update',
-  REMOVE: 'remove',
+  DELETE: 'delete',
 }
 
 export interface AgenciesGrpcService {
   findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
   create(data: CreateAgencyDto): Observable<CreateAgencyResponse>
   update(data: UpdateAgencyDto): Observable<UpdateAgencyResponse>
-  remove(id: string): Observable<RemoveAgencyResponse>
+  delete(id: string): Observable<RemoveAgencyResponse>
   findOne(id: string): Observable<Agency>
 }

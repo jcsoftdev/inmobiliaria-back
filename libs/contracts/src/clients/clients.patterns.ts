@@ -16,13 +16,13 @@ export const CLIENTS_PATTERNS = {
   FIND_ONE: 'findOne',
   CREATE: 'create',
   UPDATE: 'update',
-  REMOVE: 'remove',
+  DELETE: 'delete',
 }
 
 export interface ClientsGrpcService {
   findAll(props: ClientSingleProps): Observable<PaginatedClientsResponse>
   create(data: CreateClientDto): Observable<CreateClientResponse>
   update(data: UpdateClientDto): Observable<UpdateClientResponse>
-  remove(id: string): Observable<RemoveClientResponse>
+  delete(id: string): Observable<RemoveClientResponse>
   findOne(id: string): Observable<Client>
 }

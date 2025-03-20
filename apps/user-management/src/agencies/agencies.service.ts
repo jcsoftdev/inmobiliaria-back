@@ -17,7 +17,7 @@ interface AgenciesGrpcService {
   create(data: Agency): Observable<CreateAgencyResponse>
   findOne(id: string): Observable<Agency>
   update(updateAgencyDto: Agency): Observable<UpdateAgencyResponse>
-  remove(id: string): Observable<RemoveAgencyResponse>
+  delete(id: string): Observable<RemoveAgencyResponse>
 }
 
 @Injectable()
@@ -51,7 +51,7 @@ export class AgenciesService implements OnModuleInit {
     return lastValueFrom(this.agenciesService.update(updateAgencyDto))
   }
 
-  async remove(id: string): Promise<RemoveAgencyResponse> {
-    return lastValueFrom(this.agenciesService.remove(id))
+  async delete(id: string): Promise<RemoveAgencyResponse> {
+    return lastValueFrom(this.agenciesService.delete(id))
   }
 }

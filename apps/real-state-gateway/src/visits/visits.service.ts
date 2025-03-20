@@ -40,6 +40,6 @@ export class VisitsService {
   }
 
   delete(id: string): Promise<RemoveVisitResponse> {
-    return firstValueFrom(this.visitsService.remove(id))
+    return firstValueFrom(this.visitsService.delete(id))
   }
 }

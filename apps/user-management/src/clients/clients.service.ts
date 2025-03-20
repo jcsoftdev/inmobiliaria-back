@@ -19,7 +19,7 @@ interface ClientsGrpcService {
   create(data: CreateClientDto): Observable<CreateClientResponse>
   findOne(id: string): Observable<Client>
   update(updateClientDto: UpdateClientDto): Observable<UpdateClientResponse>
-  remove(id: string): Observable<RemoveClientResponse>
+  delete(id: string): Observable<RemoveClientResponse>
 }
 
 @Injectable()
@@ -53,7 +53,7 @@ export class ClientsService {
     return firstValueFrom(this.clientsService.update(data))
   }
 
-  remove(id: string): Promise<RemoveClientResponse> {
-    return firstValueFrom(this.clientsService.remove(id))
+  delete(id: string): Promise<RemoveClientResponse> {
+    return firstValueFrom(this.clientsService.delete(id))
   }
 }
