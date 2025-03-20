@@ -5,14 +5,12 @@ import {
   CLIENTS_PATTERNS,
   CreateClientDto,
   UpdateClientDto,
-} from '@app/contracts/clients'
-import {
   Client,
   ClientProps,
   PaginatedClientsResponse,
   RemoveClientResponse,
   UpdateClientResponse,
-} from '@app/contracts/clients/clients.response'
+} from '@app/contracts/clients'
 import { SERVICES } from '@app/shared'
 
 import { ClientsService } from './clients.service'

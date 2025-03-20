@@ -61,7 +61,10 @@ service VisitService {
   rpc update (UpdateVisitRequest) returns (ActionResponse);
   rpc delete (DeleteVisitRequest) returns (ActionResponse);
   rpc findOne (GetVisitByIdRequest) returns (VisitResponse);
-  rpc listAll (Empty) returns (VisitList);
+  rpc findAll (VisitProps) returns (VisitList);
 }
 
-message Empty {}
+message VisitProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}

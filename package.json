@@ -18,7 +18,7 @@
     "dev:ps": "nest start properties --watch",
     "dev:ds": "nest start data-service --watch",
     "dev:kafka": "nest start kafka-service --watch",
-    "dev:all": "KAFKAJS_NO_PARTITIONER_WARNING=1 concurrently --names \"User,Gateway,Properties,Data,Kafka\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
+    "dev:all": "concurrently --names \"User,Gateway,Properties,Data,Kafka\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

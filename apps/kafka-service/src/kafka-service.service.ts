@@ -47,13 +47,12 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
     console.log('🔄 Processing Kafka message:', message)
 
     await new Promise((resolve) => setTimeout(resolve, 0))
-    // Ensure message is properly handled
+
     if (!message || typeof message !== 'object') {
       console.error('⚠️ Invalid message format:', message)
       return { success: false }
     }
 
-    // Your processing logic...
     return { success: true }
   }
 }

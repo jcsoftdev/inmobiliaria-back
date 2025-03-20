@@ -76,7 +76,10 @@ service UserService {
   rpc update (UpdateUserRequest) returns (ActionResponse);
   rpc delete (DeleteUserRequest) returns (ActionResponse);
   rpc findOne (GetUserByIdRequest) returns (UserResponse);
-  rpc getAll (Empty) returns (UserList);
+  rpc findAll (UserProps) returns (UserList);
 }
 
-message Empty {}
+message UserProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}

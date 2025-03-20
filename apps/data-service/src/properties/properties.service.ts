@@ -146,7 +146,7 @@ export class PropertiesService {
 
   remove(id: string) {
     return this.prismaService.properties.delete({
-      where: { id }, // Convertimos a número por si acaso
+      where: { id },
     })
   }
 }

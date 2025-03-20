@@ -2,15 +2,16 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
 
-import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
+  CreateClientDto,
+  UpdateClientDto,
   Client,
   ClientProps,
   PaginatedClientsResponse,
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
-} from '@app/contracts/clients/clients.response'
+} from '@app/contracts/clients'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface ClientsGrpcService {

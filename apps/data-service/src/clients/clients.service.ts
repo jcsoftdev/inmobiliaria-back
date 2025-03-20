@@ -3,15 +3,16 @@ import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
 import { convertFieldsToArray, paginator } from '@app/common/pagination'
-import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
+  CreateClientDto,
+  UpdateClientDto,
   Client,
   ClientProps,
   PaginatedClientsResponse,
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
-} from '@app/contracts/clients/clients.response'
+} from '@app/contracts/clients'
 
 import { PrismaService } from '@data-service/prisma.service'
 
@@ -121,7 +122,7 @@ export class ClientsService {
 
   async remove(id: string): Promise<RemoveClientResponse> {
     await this.prismaService.clients.delete({
-      where: { id: id }, // Convertimos a número por si acaso
+      where: { id: id },
     })
     return {
       message: 'Client removed successfully',

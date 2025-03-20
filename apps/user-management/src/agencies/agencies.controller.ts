@@ -27,6 +27,7 @@ export class AgenciesController {
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.UPDATE)
   update(@Payload() updateAgencyDto: Agency) {
+    console.log({ updateAgencyDto })
     return this.agenciesService.update(updateAgencyDto)
   }
 

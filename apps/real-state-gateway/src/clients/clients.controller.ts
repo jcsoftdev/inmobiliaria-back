@@ -16,15 +16,16 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 
-import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
+  CreateClientDto,
+  UpdateClientDto,
   Client,
   ClientSingleProps,
   PaginatedClientsResponse,
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
-} from '@app/contracts/clients/clients.response'
+} from '@app/contracts/clients'
 
 import { ClientsService } from './clients.service'
 

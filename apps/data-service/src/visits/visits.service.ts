@@ -57,7 +57,7 @@ export class VisitsService {
         return {
           id: visit.id,
           client_id: visit.client_id,
-          property_id: visit.property_id ?? '', // change in database to be null
+          property_id: visit.property_id ?? '',
           scheduled_at: visit.scheduled_at ?? new Date(),
           status: (visit.status ?? 'pending') as Visit['status'],
           created_at: visit.created_at ?? new Date(),
@@ -99,7 +99,7 @@ export class VisitsService {
 
   async remove(id: string): Promise<RemoveVisitResponse> {
     await this.prismaService.visits.delete({
-      where: { id: id }, // Convertimos a número por si acaso
+      where: { id: id },
     })
     return { message: 'Visit removed successfully' }
   }

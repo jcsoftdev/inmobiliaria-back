@@ -12,7 +12,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter())
   app.enableCors()
 
-  // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('API Gateway documentation')
     .setDescription('API Gateway documentation')
@@ -28,13 +27,10 @@ async function bootstrap() {
     .addTag('API Gateway')
     .build()
 
-  // Create the Swagger document
   const document = SwaggerModule.createDocument(app, config)
 
-  // Set up Swagger
-  SwaggerModule.setup('swagger', app, document) // Ensure the third parameter is the document, not a factory function
+  SwaggerModule.setup('swagger', app, document)
 
-  // Start the application
   await app.listen(process.env.PORT ?? 3000)
 }
 

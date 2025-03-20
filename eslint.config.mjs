@@ -27,7 +27,7 @@ export default tseslint.config(
   },
   {
     plugins: {
-      import: importPlugin, // ✅ Fix: Use as an object, not a function
+      import: importPlugin,
     },
   },
   {
@@ -58,7 +58,7 @@ export default tseslint.config(
             { pattern: '@properties/**', group: 'internal', position: 'before' },
             { pattern: '@gateway/**', group: 'internal', position: 'before' },
           ],
-          pathGroupsExcludedImportTypes: ['internal'], // Ensure these groups are respected
+          pathGroupsExcludedImportTypes: ['internal'],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
         },

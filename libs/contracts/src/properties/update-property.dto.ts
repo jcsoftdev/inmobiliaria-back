@@ -12,6 +12,7 @@ import {
 import { CreatePropertyDto } from './create-property.dto'
 
 export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
+  @IsUUIDv7()
   id!: string
   @ApiPropertyOptional({
     description: 'Property title',

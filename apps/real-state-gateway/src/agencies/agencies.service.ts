@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { lastValueFrom, Observable } from 'rxjs'
+import { lastValueFrom } from 'rxjs'
 
 import {
   PaginatedAgenciesResponse,
@@ -10,18 +10,9 @@ import {
   CreateAgencyDto,
   UpdateAgencyDto,
   AgencySingleProps,
+  AgenciesGrpcService,
 } from '@app/contracts/agencies'
-import { MICRO_SERVICES } from '@app/shared'
-
-interface AgenciesGrpcService {
-  findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
-  create(data: CreateAgencyDto): Observable<CreateAgencyResponse>
-  update(request: {
-    id: string
-    data: UpdateAgencyDto
-  }): Observable<UpdateAgencyResponse>
-  delete(request: { id: string }): Observable<RemoveAgencyResponse>
-}
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class AgenciesService implements OnModuleInit {
@@ -34,7 +25,7 @@ export class AgenciesService implements OnModuleInit {
 
   onModuleInit() {
     this.agenciesService =
-      this.userManagementClient.getService<AgenciesGrpcService>('AgencyService')
+      this.userManagementClient.getService<AgenciesGrpcService>(SERVICES.AGENCY)
   }
 
   findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
@@ -45,11 +36,12 @@ export class AgenciesService implements OnModuleInit {
     return lastValueFrom(this.agenciesService.create(data))
   }
 
-  update(id: string, data: UpdateAgencyDto): Promise<UpdateAgencyResponse> {
-    return lastValueFrom(this.agenciesService.update({ id, data }))
+  update(data: UpdateAgencyDto): Promise<UpdateAgencyResponse> {
+    console.log({ data })
+    return lastValueFrom(this.agenciesService.update(data))
   }
 
   delete(id: string): Promise<RemoveAgencyResponse> {
-    return lastValueFrom(this.agenciesService.delete({ id }))
+    return lastValueFrom(this.agenciesService.remove(id))
   }
 }

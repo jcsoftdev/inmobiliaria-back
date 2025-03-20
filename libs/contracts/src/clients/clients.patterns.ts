@@ -7,9 +7,9 @@ import {
   PaginatedClientsResponse,
   RemoveClientResponse,
   UpdateClientResponse,
-} from '@app/contracts/clients/clients.response'
-import { CreateClientDto } from '@app/contracts/clients/create-client.dto'
-import { UpdateClientDto } from '@app/contracts/clients/update-client.dto'
+  CreateClientDto,
+  UpdateClientDto,
+} from '@app/contracts/clients'
 
 export const CLIENTS_PATTERNS = {
   FIND_ALL: 'findAll',

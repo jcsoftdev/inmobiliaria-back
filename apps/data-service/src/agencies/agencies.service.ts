@@ -57,10 +57,10 @@ export class AgenciesService {
     return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
   }
 
-  async update(
-    id: string,
-    updateAgencyDto: UpdateAgencyDto,
-  ): Promise<UpdateAgencyResponse> {
+  async update({
+    id,
+    ...updateAgencyDto
+  }: UpdateAgencyDto): Promise<UpdateAgencyResponse> {
     await this.prismaService.agencies.update({
       where: { id },
       data: {

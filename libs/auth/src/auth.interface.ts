@@ -4,11 +4,11 @@ export interface LoginBody {
 }
 
 export interface JwtPayload {
-  sub: string // Usually the user ID
+  sub: string
   email: string
-  roles?: string[] // Optional, if you're handling roles
-  iat?: number // Issued at (optional, auto-added by JWT)
-  exp?: number // Expiration time (optional, auto-added by JWT)
+  roles?: string[]
+  iat?: number
+  exp?: number
 }
 
 export interface UserPayload {

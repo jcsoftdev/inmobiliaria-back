@@ -28,23 +28,11 @@ export class VisitsService {
   }
 
   findAll(props: VisitProps): Promise<PaginatedVisitsResponse> {
-    return firstValueFrom(
-      // this.userManagementClient.send<PaginatedVisitsResponse, VisitProps>(
-      //   VISITS_PATTERNS.FIND_ALL,
-      //   props,
-      // ),
-      this.visitsService.findAll(props),
-    )
+    return firstValueFrom(this.visitsService.findAll(props))
   }
 
   create(data: CreateVisitDto): Promise<CreateVisitResponse> {
-    return firstValueFrom(
-      // this.userManagementClient.send<CreateVisitResponse>(
-      //   VISITS_PATTERNS.CREATE,
-      //   data,
-      // ),
-      this.visitsService.create(data),
-    )
+    return firstValueFrom(this.visitsService.create(data))
   }
 
   update(data: UpdateVisitDto): Promise<UpdateVisitResponse> {

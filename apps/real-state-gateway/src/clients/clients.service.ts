@@ -2,15 +2,16 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
 
-import { CreateClientDto, UpdateClientDto } from '@app/contracts/clients'
 import {
+  CreateClientDto,
+  UpdateClientDto,
   ClientProps,
   PaginatedClientsResponse,
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
   ClientSingleProps,
-} from '@app/contracts/clients/clients.response'
+} from '@app/contracts/clients'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface ClientsGrpcService {
@@ -50,10 +51,7 @@ export class ClientsService {
     id: string,
     data: Partial<UpdateClientDto>,
   ): Promise<UpdateClientResponse> {
-    return firstValueFrom(
-      // ),
-      this.clientsService.update({ id, data }),
-    )
+    return firstValueFrom(this.clientsService.update({ id, data }))
   }
 
   delete(id: string): Promise<RemoveClientResponse> {

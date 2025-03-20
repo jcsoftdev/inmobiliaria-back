@@ -7,6 +7,7 @@ import { VisitStatus } from '@app/contracts/visits/enums'
 import { CreateVisitDto } from './create-visit.dto'
 
 export class UpdateVisitDto extends PartialType(CreateVisitDto) {
+  @IsUUIDv7()
   id!: string
 
   @ApiPropertyOptional({
