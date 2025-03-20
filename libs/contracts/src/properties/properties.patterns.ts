@@ -1,7 +1,7 @@
 export const PROPERTIES_PATTERNS = {
-  FIND_ALL: 'properties.findAll',
-  FIND_ONE: 'properties.findOne',
-  CREATE: 'properties.create',
-  UPDATE: 'properties.update',
-  REMOVE: 'properties.remove',
+  FIND_ALL: 'findAll',
+  FIND_ONE: 'findOne',
+  CREATE: 'create',
+  UPDATE: 'update',
+  REMOVE: 'remove',
 }

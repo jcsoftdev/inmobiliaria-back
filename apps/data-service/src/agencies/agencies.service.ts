@@ -42,7 +42,7 @@ export class AgenciesService {
     where,
     ...props
   }: AgencyProps): Promise<PaginatedAgenciesResponse> {
-    return paginator.paginate(
+    const res = paginator.paginate(
       this.prismaService.agencies,
       {
         orderBy,
@@ -50,6 +50,7 @@ export class AgenciesService {
       },
       { ...props },
     )
+    return res
   }
 
   findOne(id: string): Promise<Agency> {

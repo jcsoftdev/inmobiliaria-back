@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { GrpcMethod, Payload } from '@nestjs/microservices'
 
 import { AGENCIES_PATTERNS, Agency, AgencyProps } from '@app/contracts/agencies'
 
@@ -9,27 +9,33 @@ import { AgenciesService } from './agencies.service'
 export class AgenciesController {
   constructor(private readonly agenciesService: AgenciesService) {}
 
-  @MessagePattern(AGENCIES_PATTERNS.CREATE)
+  // 🟢 gRPC: Obtener todas las agencias
+  @GrpcMethod('AgencyService', AGENCIES_PATTERNS.FIND_ALL)
+  findAll(@Payload() props: AgencyProps) {
+    console.log('props user management', props)
+    return this.agenciesService.findAll(props)
+  }
+
+  // 🟢 gRPC: Crear agencia
+  @GrpcMethod('AgencyService', AGENCIES_PATTERNS.CREATE)
   create(@Payload() createAgencyDto: Agency) {
     return this.agenciesService.create(createAgencyDto)
   }
 
-  @MessagePattern(AGENCIES_PATTERNS.FIND_ALL)
-  findAll(props: AgencyProps) {
-    return this.agenciesService.findAll(props)
-  }
-
-  @MessagePattern(AGENCIES_PATTERNS.FIND_ONE)
+  // 🟢 gRPC: Obtener una agencia por ID
+  @GrpcMethod('AgencyService', AGENCIES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: string) {
     return this.agenciesService.findOne(id)
   }
 
-  @MessagePattern(AGENCIES_PATTERNS.UPDATE)
+  // 🟢 gRPC: Actualizar agencia
+  @GrpcMethod('AgencyService', AGENCIES_PATTERNS.UPDATE)
   update(@Payload() updateAgencyDto: Agency) {
     return this.agenciesService.update(updateAgencyDto)
   }
 
-  @MessagePattern(AGENCIES_PATTERNS.REMOVE)
+  // 🟢 gRPC: Eliminar agencia
+  @GrpcMethod('AgencyService', AGENCIES_PATTERNS.REMOVE)
   remove(@Payload() id: string) {
     return this.agenciesService.remove(id)
   }

@@ -24,8 +24,8 @@ import {
   RemoveAgencyResponse,
   UpdateAgencyResponse,
   UpdateAgencyDto,
+  AgencySingleProps,
 } from '@app/contracts/agencies'
-import { PropertySingleProps } from '@app/contracts/properties'
 
 import { AgenciesService } from '@gateway/agencies/agencies.service'
 
@@ -54,7 +54,7 @@ export class AgenciesController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })
   findAll(
-    @Query() { ...props }: PropertySingleProps,
+    @Query() { ...props }: AgencySingleProps,
   ): Promise<PaginatedAgenciesResponse> {
     return this.agenciesService.findAll(props)
   }

@@ -46,6 +46,15 @@
         "tsConfigPath": "apps/data-service/tsconfig.app.json"
       }
     },
+    "kafka-service": {
+      "type": "application",
+      "root": "apps/kafka-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/kafka-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/kafka-service/tsconfig.app.json"
+      }
+    },
     "properties": {
       "type": "application",
       "root": "apps/properties",

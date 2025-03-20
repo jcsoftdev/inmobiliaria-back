@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 
@@ -5,16 +7,32 @@ import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.fil
 
 import { PropertiesModule } from './properties.module'
 
+const protoPath = path.join(
+  __dirname,
+  '../../../libs/common/src/protos/properties.proto',
+)
+
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     PropertiesModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.GRPC,
       options: {
-        port: +(process.env.port ?? 3001),
+        package: ['properties'],
+        protoPath,
+        url: '0.0.0.0:50052',
       },
     },
   )
+  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  //   PropertiesModule,
+  //   {
+  //     transport: Transport.TCP,
+  //     options: {
+  //       port: +(process.env.port ?? 3001),
+  //     },
+  //   },
+  // )
   app.useGlobalFilters(new RpcErrorForwardingFilter())
 
   await app.listen()
