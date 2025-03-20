@@ -37,52 +37,21 @@ export class PropertiesService {
   }
 
   findAll(props: PropertySingleProps): Promise<PaginatedPropertiesResponse> {
-    return firstValueFrom(
-      // this.propertiesClient.send<PaginatedPropertiesResponse, PropertyProps>(
-      //   PROPERTIES_PATTERNS.FIND_ALL,
-      //   {
-      //     ...props,
-      //   },
-      // ),
-      this.propertiesService.findAll(props),
-    )
+    return firstValueFrom(this.propertiesService.findAll(props))
   }
 
   create(data: CreatePropertyDto): Promise<CreatePropertyResponse> {
-    return firstValueFrom(
-      // this.propertiesClient.send<CreatePropertyResponse>(
-      //   PROPERTIES_PATTERNS.CREATE,
-      //   data,
-      // ),
-      this.propertiesService.create(data),
-    )
+    return firstValueFrom(this.propertiesService.create(data))
   }
 
   update(
     id: string,
     data: Partial<UpdatePropertyDto>,
   ): Promise<UpdatePropertyResponse> {
-    return firstValueFrom(
-      // this.propertiesClient.send<UpdatePropertyResponse>(
-      //   PROPERTIES_PATTERNS.UPDATE,
-      //   {
-      //     id,
-      //     data,
-      //   },
-      // ),
-      this.propertiesService.update({ id, data }),
-    )
+    return firstValueFrom(this.propertiesService.update({ id, data }))
   }
 
   delete(id: string): Promise<RemovePropertyResponse> {
-    return firstValueFrom(
-      // this.propertiesClient.send<RemovePropertyResponse>(
-      //   PROPERTIES_PATTERNS.REMOVE,
-      //   {
-      //     id,
-      //   },
-      // ),
-      this.propertiesService.delete({ id }),
-    )
+    return firstValueFrom(this.propertiesService.delete({ id }))
   }
 }

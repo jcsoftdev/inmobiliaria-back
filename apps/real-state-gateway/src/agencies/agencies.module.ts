@@ -1,4 +1,4 @@
-import { join } from 'path' // Importa 'path' para manejar rutas
+import { join } from 'path'
 
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'

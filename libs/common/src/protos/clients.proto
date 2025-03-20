@@ -4,7 +4,6 @@ package clients;
 
 import "google/protobuf/timestamp.proto";
 
-// Modelo de cliente basado en la respuesta esperada
 message Client {
   int32 id = 1;
   string dni = 2;
@@ -16,7 +15,6 @@ message Client {
   google.protobuf.Timestamp createdAt = 8;
 }
 
-// DTO para crear un cliente (POST request)
 message CreateClientRequest {
   string dni = 1;
   string lastName = 2;
@@ -26,22 +24,18 @@ message CreateClientRequest {
   string phone = 6;
 }
 
-// Respuesta del endpoint de creación
 message CreateClientResponse {
   string message = 1;
 }
 
-// DTO para obtener un cliente por ID
 message FindOneClientRequest {
   string id = 1;
 }
 
-// Respuesta al obtener un cliente
 message FindOneClientResponse {
   Client client = 1;
 }
 
-// DTO para actualizar un cliente
 message UpdateClientRequest {
   string id = 1;
   string dni = 2;
@@ -52,22 +46,18 @@ message UpdateClientRequest {
   string phone = 7;
 }
 
-// Respuesta a la actualización
 message UpdateClientResponse {
   string message = 1;
 }
 
-// DTO para eliminar un cliente
 message DeleteClientRequest {
   string id = 1;
 }
 
-// Respuesta a la eliminación
 message DeleteClientResponse {
   string message = 1;
 }
 
-// Definir la estructura de paginación
 message PaginationMeta {
   int32 total = 1;
   int32 lastPage = 2;
@@ -82,7 +72,6 @@ message PaginatedClientsResponse {
   PaginationMeta meta = 2;
 }
 
-// Servicio de clientes
 service ClientsService {
   rpc create(CreateClientRequest) returns (CreateClientResponse);
   rpc findAll(ClientProps) returns (PaginatedClientsResponse);

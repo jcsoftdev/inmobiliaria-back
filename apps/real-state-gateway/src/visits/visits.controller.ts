@@ -16,7 +16,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 
-import { ClientSingleProps } from '@app/contracts/clients/clients.response'
+import { ClientSingleProps } from '@app/contracts/clients'
 import {
   CreateVisitDto,
   Visit,

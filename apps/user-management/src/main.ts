@@ -1,4 +1,4 @@
-import { join } from 'path' // Importa 'path' para manejar rutas
+import { join } from 'path'
 
 import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
@@ -8,7 +8,7 @@ import { SharedConfigService } from '@app/config'
 
 import { UserManagementModule } from './user-management.module'
 
-const port = +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053) // Asegura que sea el mismo puerto
+const port = +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)
 
 const protoPath = [
   join(__dirname, '../../../libs/common/src/protos/agencies.proto'),
@@ -24,9 +24,9 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: ['agencies', 'clients', 'properties', 'users', 'visits'], // Asegura que los paquetes sean correctos
-        protoPath: protoPath, // Asegura que la ruta sea correcta
-        url: `0.0.0.0:${port}`, // gRPC necesita una URL
+        package: ['agencies', 'clients', 'properties', 'users', 'visits'],
+        protoPath: protoPath,
+        url: `0.0.0.0:${port}`,
       },
     },
   )

@@ -2,14 +2,12 @@ import { Controller } from '@nestjs/common'
 import { GrpcMethod, Payload } from '@nestjs/microservices'
 
 import {
+  ClientProps,
   CLIENTS_PATTERNS,
   CreateClientDto,
+  PaginatedClientsResponse,
   UpdateClientDto,
 } from '@app/contracts/clients'
-import {
-  ClientProps,
-  PaginatedClientsResponse,
-} from '@app/contracts/clients/clients.response'
 import { SERVICES } from '@app/shared'
 
 import { ClientsService } from './clients.service'

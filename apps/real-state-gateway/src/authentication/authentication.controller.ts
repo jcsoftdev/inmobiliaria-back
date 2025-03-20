@@ -6,10 +6,7 @@ import { AuthenticationService } from './authentication.service'
 
 @Controller('auth')
 export class AuthenticationController {
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    // private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @ApiOkResponse({
     description: 'Sign in',
