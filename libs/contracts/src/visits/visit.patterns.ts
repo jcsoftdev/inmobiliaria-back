@@ -23,6 +23,6 @@ export interface VisitsGrpcService {
   findAll(props: VisitSingleProps): Observable<PaginatedVisitsResponse>
   create(data: CreateVisitDto): Observable<CreateVisitResponse>
   update(data: UpdateVisitDto): Observable<UpdateVisitResponse>
-  delete(id: string): Observable<RemoveVisitResponse>
-  findOne(id: string): Observable<Visit>
+  delete({ id }: { id: string }): Observable<RemoveVisitResponse>
+  findOne({ id }: { id: string }): Observable<Visit>
 }

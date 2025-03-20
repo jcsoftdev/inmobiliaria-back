@@ -23,6 +23,6 @@ export interface AgenciesGrpcService {
   findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
   create(data: CreateAgencyDto): Observable<CreateAgencyResponse>
   update(data: UpdateAgencyDto): Observable<UpdateAgencyResponse>
-  delete(id: string): Observable<RemoveAgencyResponse>
-  findOne(id: string): Observable<Agency>
+  delete({ id }: { id: string }): Observable<RemoveAgencyResponse>
+  findOne({ id }: { id: string }): Observable<Agency>
 }

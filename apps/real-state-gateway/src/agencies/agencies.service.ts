@@ -41,7 +41,7 @@ export class AgenciesService implements OnModuleInit {
     return lastValueFrom(this.agenciesService.update(data))
   }
 
-  delete(id: string): Promise<RemoveAgencyResponse> {
-    return lastValueFrom(this.agenciesService.delete(id))
+  delete({ id }: { id: string }): Promise<RemoveAgencyResponse> {
+    return lastValueFrom(this.agenciesService.delete({ id }))
   }
 }

@@ -87,7 +87,7 @@ export class ClientsService {
     }
   }
 
-  async findOne(id: string): Promise<Client> {
+  async findOne({ id }: { id: string }): Promise<Client> {
     const result = await this.prismaService.clients.findUniqueOrThrow({
       where: { id },
     })
@@ -120,7 +120,7 @@ export class ClientsService {
     }
   }
 
-  async delete(id: string): Promise<RemoveClientResponse> {
+  async delete({ id }: { id: string }): Promise<RemoveClientResponse> {
     await this.prismaService.clients.delete({
       where: { id: id },
     })

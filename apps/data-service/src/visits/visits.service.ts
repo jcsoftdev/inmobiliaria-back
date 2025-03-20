@@ -66,7 +66,7 @@ export class VisitsService {
     }
   }
 
-  async findOne(id: string): Promise<Visit> {
+  async findOne({ id }: { id: string }): Promise<Visit> {
     const data = await this.prismaService.visits.findUniqueOrThrow({
       where: { id },
     })
@@ -97,7 +97,7 @@ export class VisitsService {
     return { message: 'Visit updated successfully' }
   }
 
-  async delete(id: string): Promise<RemoveVisitResponse> {
+  async delete({ id }: { id: string }): Promise<RemoveVisitResponse> {
     await this.prismaService.visits.delete({
       where: { id: id },
     })

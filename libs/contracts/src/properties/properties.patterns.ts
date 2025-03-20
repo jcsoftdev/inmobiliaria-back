@@ -23,6 +23,6 @@ export interface PropertiesGrpcService {
   findAll(props: PropertySingleProps): Observable<PaginatedPropertiesResponse>
   create(data: CreatePropertyDto): Observable<CreatePropertyResponse>
   update(data: UpdatePropertyDto): Observable<UpdatePropertyResponse>
-  delete(id: string): Observable<RemovePropertyResponse>
-  findOne(id: string): Observable<Property>
+  delete({ id }: { id: string }): Observable<RemovePropertyResponse>
+  findOne({ id }: { id: string }): Observable<Property>
 }

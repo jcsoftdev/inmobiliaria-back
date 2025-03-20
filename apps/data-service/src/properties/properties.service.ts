@@ -123,7 +123,7 @@ export class PropertiesService {
     return response
   }
 
-  findOne(id: string) {
+  findOne({ id }: { id: string }) {
     return this.prismaService.properties.findUniqueOrThrow({ where: { id } })
   }
 
@@ -144,7 +144,7 @@ export class PropertiesService {
     })
   }
 
-  delete(id: string) {
+  delete({ id }: { id: string }) {
     return this.prismaService.properties.delete({
       where: { id },
     })

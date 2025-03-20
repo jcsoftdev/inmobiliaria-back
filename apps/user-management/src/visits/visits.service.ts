@@ -4,7 +4,6 @@ import { firstValueFrom } from 'rxjs'
 
 import {
   CreateVisitDto,
-  VISITS_PATTERNS,
   Visit,
   CreateVisitResponse,
   VisitProps,
@@ -39,17 +38,15 @@ export class VisitsService {
     return firstValueFrom(this.visitsService.findAll(props))
   }
 
-  findOne(id: string): Promise<Visit> {
-    return firstValueFrom(this.visitsService.findOne(id))
+  findOne({ id }: { id: string }): Promise<Visit> {
+    return firstValueFrom(this.visitsService.findOne({ id }))
   }
 
   update(data: UpdateVisitDto): Promise<UpdateVisitResponse> {
     return firstValueFrom(this.visitsService.update(data))
   }
 
-  delete(id: string): Promise<RemoveVisitResponse> {
-    return firstValueFrom(
-      this.visitsClient.send<RemoveVisitResponse>(VISITS_PATTERNS.DELETE, id),
-    )
+  delete({ id }: { id: string }): Promise<RemoveVisitResponse> {
+    return firstValueFrom(this.visitsService.delete({ id }))
   }
 }

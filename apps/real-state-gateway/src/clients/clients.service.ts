@@ -54,7 +54,7 @@ export class ClientsService {
     return firstValueFrom(this.clientsService.update({ id, data }))
   }
 
-  delete(id: string): Promise<RemoveClientResponse> {
+  delete({ id }: { id: string }): Promise<RemoveClientResponse> {
     return firstValueFrom(this.clientsService.delete({ id }))
   }
 }

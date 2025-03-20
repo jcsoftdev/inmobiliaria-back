@@ -28,8 +28,8 @@ export class UsersController {
   }
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: string) {
-    return this.usersService.findOne(id)
+  findOne(@Payload() payload: { id: string }) {
+    return this.usersService.findOne(payload)
   }
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.UPDATE)
@@ -39,7 +39,7 @@ export class UsersController {
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.DELETE)
   delete(@Payload() payload: { id: string }) {
-    return this.usersService.delete(payload.id)
+    return this.usersService.delete(payload)
   }
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.ADD_AGENCY)

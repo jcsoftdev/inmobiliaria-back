@@ -92,6 +92,6 @@ export class AgenciesController {
     type: RemoveAgencyResponse,
   })
   delete(@Param('id') id: string): Promise<RemoveAgencyResponse> {
-    return this.agenciesService.delete(id)
+    return this.agenciesService.delete({ id })
   }
 }
