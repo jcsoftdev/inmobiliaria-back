@@ -8,6 +8,7 @@ import { CreateUserDto } from './create-user.dto'
 import { UserRoles } from './user.response'
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsUUIDv7()
   id!: string
 
   @ApiPropertyOptional({ description: 'User name', example: 'John Doe' })

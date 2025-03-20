@@ -79,7 +79,10 @@ export class AgenciesController {
     @Param('id') id: string,
     @Body() data: UpdateAgencyDto,
   ): Promise<UpdateAgencyResponse> {
-    return this.agenciesService.update(id, data)
+    return this.agenciesService.update({
+      ...data,
+      id,
+    })
   }
 
   @Delete(':id')

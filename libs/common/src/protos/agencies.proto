@@ -61,7 +61,10 @@ service AgencyService {
   rpc update (UpdateAgencyRequest) returns (ActionResponse);
   rpc delete (DeleteAgencyRequest) returns (ActionResponse);
   rpc GetAgencyById (GetAgencyByIdRequest) returns (AgencyResponse);
-  rpc findAll (Empty) returns (AgencyList);
+  rpc findAll (AgencyProps) returns (AgencyList);
 }
 
-message Empty {}
+message AgencyProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}

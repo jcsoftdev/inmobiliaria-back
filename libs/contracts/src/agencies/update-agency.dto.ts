@@ -1,9 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 
+import { IsUUIDv7 } from '@app/common/decorators'
+
 import { CreateAgencyDto } from './create-agency.dto'
 
 export class UpdateAgencyDto extends PartialType(CreateAgencyDto) {
+  @IsUUIDv7()
   id!: string
   @ApiPropertyOptional({
     description: 'Agency address',

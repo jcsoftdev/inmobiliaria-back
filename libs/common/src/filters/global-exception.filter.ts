@@ -45,7 +45,7 @@ export class AllExceptionsFilter
     } else {
       //
 
-      if (exception.constructor.name === 'InvalidMessageException') {
+      if (exception?.constructor?.name === 'InvalidMessageException') {
         console.log('❌ InvalidMessageException:', exception.constructor)
         return response.status(ERROR_STATUS.BAD_REQUEST).json({
           statusCode: ERROR_STATUS.BAD_REQUEST,

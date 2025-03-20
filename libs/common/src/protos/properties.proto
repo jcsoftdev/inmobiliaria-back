@@ -72,7 +72,11 @@ service PropertyService {
   rpc update (UpdatePropertyRequest) returns (ActionResponse);
   rpc delete (DeletePropertyRequest) returns (ActionResponse);
   rpc findOne (GetPropertyByIdRequest) returns (PropertyResponse);
-  rpc findAll (Empty) returns (PropertyList);
+  rpc findAll (PropertyProps) returns (PropertyList);
 }
 
-message Empty {}
+message PropertyProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}
+
