@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common'
 
+import { SharedConfigModule } from '@app/config'
+
 import { AgenciesModule } from './agencies/agencies.module'
 import { ClientsModule } from './clients/clients.module'
 import { DataServiceController } from './data-service.controller'
@@ -15,6 +17,7 @@ import { VisitsModule } from './visits/visits.module'
     ClientsModule,
     UsersModule,
     VisitsModule,
+    SharedConfigModule,
   ],
   controllers: [DataServiceController],
   providers: [DataServiceService],

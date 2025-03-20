@@ -11,6 +11,7 @@ import {
   UpdateAgencyDto,
   AgencySingleProps,
 } from '@app/contracts/agencies'
+import { MICRO_SERVICES } from '@app/shared'
 
 interface AgenciesGrpcService {
   findAll(props: AgencySingleProps): Observable<PaginatedAgenciesResponse>
@@ -27,7 +28,7 @@ export class AgenciesService implements OnModuleInit {
   private agenciesService!: AgenciesGrpcService
 
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
     private readonly userManagementClient: ClientGrpc,
   ) {}
 
@@ -37,6 +38,7 @@ export class AgenciesService implements OnModuleInit {
   }
 
   findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
+    console.log('props', props, this.agenciesService)
     return lastValueFrom(this.agenciesService.findAll(props))
   }
 

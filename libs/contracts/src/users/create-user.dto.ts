@@ -1,15 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { users } from '@prisma/client'
-import {
-  IsArray,
-  IsDateString,
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator'
-
-import { IsUUIDv7 } from '@app/common/decorators'
+import { IsDateString, IsEmail, IsNotEmpty, IsString } from 'class-validator'
 
 import { UserRoles, UserStatus } from './user.response'
 
@@ -45,15 +36,6 @@ export class CreateUserDto
   })
   @IsEmail()
   email!: string
-
-  @ApiPropertyOptional({
-    description: 'List of Agency IDs',
-    example: ['01956c22-9b54-7628-8304-13024295978b'],
-  })
-  @IsOptional()
-  @IsArray()
-  @IsUUIDv7({ each: true })
-  agencyIds?: string[]
 
   @ApiProperty({
     description: 'User password',

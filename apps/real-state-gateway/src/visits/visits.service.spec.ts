@@ -1,6 +1,8 @@
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { VisitsService } from './visits.service'
 
 describe('VisitsService', () => {
@@ -11,7 +13,7 @@ describe('VisitsService', () => {
       imports: [
         ClientsModule.register([
           {
-            name: 'USER_MANAGEMENT_CLIENT',
+            name: MICRO_SERVICES.USER_MANAGEMENT_CLIENT,
             transport: Transport.TCP,
             options: {
               port: +(process.env.VISITS_SERVICE_PORT ?? 3003),

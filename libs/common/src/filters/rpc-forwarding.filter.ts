@@ -1,5 +1,6 @@
 import { Catch, RpcExceptionFilter } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
+import { Prisma } from '@prisma/client'
 import { throwError } from 'rxjs'
 
 import {
@@ -9,11 +10,17 @@ import {
   ERROR_TYPES_MESSAGE,
   RpcExceptionSerializedWithResponse,
 } from '@app/common/exceptions/rpc.exception'
+import { SharedConfigService } from '@app/config'
 
 @Catch()
 export class RpcErrorForwardingFilter
   implements RpcExceptionFilter<RpcExceptionSerializedWithResponse>
 {
+  private readonly isDev: boolean
+
+  constructor(private readonly configService: SharedConfigService) {
+    this.isDev = configService.getMode() === 'development'
+  }
   catch(exception: RpcExceptionSerializedWithResponse) {
     console.error(
       '🚨 RPC Forwarding errors:',
@@ -25,30 +32,23 @@ export class RpcErrorForwardingFilter
       return throwError(() => exception) // ✅ Return existing RpcException
     }
 
-    if (exception.constructor.name === 'PrismaClientValidationError') {
-      console.log(
-        '❌ PrismaClientValidationError:',
-        exception.message.toString(),
-      )
-      return throwError(() =>
-        deserializeRpcException({
-          errorType: ERROR_TYPES.BAD_REQUEST,
-          statusCode: ERROR_STATUS.BAD_REQUEST,
-          message: ERROR_TYPES_MESSAGE.BAD_REQUEST,
-        }),
-      )
-    }
-
-    if (exception.constructor.name === 'PrismaClientKnownRequestError') {
+    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       console.log(
         '❌ PrismaClientKnownRequestError:',
         exception.message.toString(),
       )
+      const message = exception.message.split('\n').slice(-1)[0]
+
+      console.log({
+        code: exception.code,
+        meta: exception.message.split('\n').slice(-1)[0],
+      })
+
       return throwError(() =>
         deserializeRpcException({
           errorType: ERROR_TYPES.BAD_REQUEST,
           statusCode: ERROR_STATUS.BAD_REQUEST,
-          message: ERROR_TYPES_MESSAGE.BAD_REQUEST,
+          message: this.isDev ? message : ERROR_TYPES_MESSAGE.BAD_REQUEST,
         }),
       )
     }

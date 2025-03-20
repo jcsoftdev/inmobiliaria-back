@@ -11,6 +11,7 @@ import {
   UpdateClientResponse,
   ClientSingleProps,
 } from '@app/contracts/clients/clients.response'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface ClientsGrpcService {
   findAll(props: ClientSingleProps): Observable<PaginatedClientsResponse>
@@ -26,14 +27,14 @@ interface ClientsGrpcService {
 export class ClientsService {
   private clientsService!: ClientsGrpcService
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
     private readonly clientManagementClient: ClientGrpc,
   ) {}
 
   onModuleInit() {
     this.clientsService =
       this.clientManagementClient.getService<ClientsGrpcService>(
-        'ClientService',
+        SERVICES.CLIENT,
       )
   }
 

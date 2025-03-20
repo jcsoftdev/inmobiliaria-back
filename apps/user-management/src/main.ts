@@ -4,10 +4,11 @@ import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+import { SharedConfigService } from '@app/config'
 
 import { UserManagementModule } from './user-management.module'
 
-const port = +(process.env.AGENCIES_SERVICE_PORT ?? 3003) // Asegura que sea el mismo puerto
+const port = +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053) // Asegura que sea el mismo puerto
 
 const protoPath = [
   join(__dirname, '../../../libs/common/src/protos/agencies.proto'),
@@ -23,14 +24,16 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        url: `0.0.0.0:${port}`, // gRPC necesita una URL
         package: ['agencies', 'clients', 'properties', 'users', 'visits'], // Asegura que los paquetes sean correctos
         protoPath: protoPath, // Asegura que la ruta sea correcta
+        url: `0.0.0.0:${port}`, // gRPC necesita una URL
       },
     },
   )
 
-  app.useGlobalFilters(new RpcErrorForwardingFilter())
+  const configService = app.get(SharedConfigService)
+
+  app.useGlobalFilters(new RpcErrorForwardingFilter(configService))
 
   await app.listen()
 }

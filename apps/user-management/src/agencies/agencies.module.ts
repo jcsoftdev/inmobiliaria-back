@@ -3,6 +3,8 @@ import { join } from 'node:path'
 import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { AgenciesController } from './agencies.controller'
 import { AgenciesService } from './agencies.service'
 
@@ -15,11 +17,11 @@ const protoPath = join(
   imports: [
     ClientsModule.register([
       {
-        name: 'DATABASE_SERVICE_CLIENT',
+        name: MICRO_SERVICES.DATABASE_CLIENT,
         transport: Transport.GRPC,
         options: {
-          url: '0.0.0.0:50051', // Cambia la URL según tu config
-          package: 'agencies', // Debe coincidir con el .proto
+          url: '0.0.0.0:50051',
+          package: 'agencies',
           protoPath,
         },
       },

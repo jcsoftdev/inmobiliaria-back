@@ -6,6 +6,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 
 import { HttpValidationForRPCFilter } from '@app/common/filters/http-exception.filter'
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+import { SharedConfigService } from '@app/config'
 
 import { DataServiceModule } from './data-service.module'
 
@@ -30,24 +31,9 @@ async function bootstrap() {
     },
   )
 
-  // ✅ Configure Kafka Microservice
-  const kafkaApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-    DataServiceModule,
-    {
-      transport: Transport.KAFKA,
-      options: {
-        client: {
-          brokers: ['localhost:9092'],
-        },
-        consumer: {
-          groupId: 'data-service-group',
-        },
-      },
-    },
-  )
-
+  const configService = app.get(SharedConfigService)
   app.useGlobalFilters(
-    new RpcErrorForwardingFilter(),
+    new RpcErrorForwardingFilter(configService),
     new HttpValidationForRPCFilter(),
   )
   app.useGlobalPipes(
@@ -59,7 +45,6 @@ async function bootstrap() {
   )
 
   await app.listen()
-  await kafkaApp.listen()
 
   console.log('🚀 Data service is running with gRPC & Kafka')
 }

@@ -1,20 +1,31 @@
+import { join } from 'node:path'
+
 import { Module } from '@nestjs/common'
 import {
   ClientsModule as ClientsMSModule,
   Transport,
 } from '@nestjs/microservices'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { ClientsController } from './clients.controller'
 import { ClientsService } from './clients.service'
+
+const protoPath = join(
+  __dirname,
+  '../../../libs/common/src/protos/clients.proto',
+)
 
 @Module({
   imports: [
     ClientsMSModule.register([
       {
-        name: 'DATABASE_SERVICE_CLIENT',
-        transport: Transport.TCP,
+        name: MICRO_SERVICES.DATABASE_CLIENT,
+        transport: Transport.GRPC,
         options: {
-          port: +(process.env.DATABASE_SERVICE_PORT ?? 3002),
+          url: '0.0.0.0:50051',
+          package: 'clients',
+          protoPath,
         },
       },
     ]),

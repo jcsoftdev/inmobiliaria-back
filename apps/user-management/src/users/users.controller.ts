@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { GrpcMethod, Payload } from '@nestjs/microservices'
 
 import {
   CreateUserResponse,
@@ -12,7 +12,10 @@ import {
   UpdateUserAgencyDto,
   AddAgenciesResponse,
   RemoveAgenciesResponse,
+  CreateUserDto,
+  UpdateUserDto,
 } from '@app/contracts/users'
+import { SERVICES } from '@app/shared'
 
 import { UsersService } from './users.service'
 
@@ -20,32 +23,32 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @MessagePattern(USERS_PATTERNS.CREATE)
-  create(@Payload() createUserDto: User): Promise<CreateUserResponse> {
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.CREATE)
+  create(@Payload() createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     return this.usersService.create(createUserDto)
   }
 
-  @MessagePattern(USERS_PATTERNS.FIND_ALL)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.FIND_ALL)
   findAll(props: UserProps): Promise<PaginatedUsersResponse> {
     return this.usersService.findAll(props)
   }
 
-  @MessagePattern(USERS_PATTERNS.FIND_ONE)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: string): Promise<User> {
     return this.usersService.findOne(id)
   }
 
-  @MessagePattern(USERS_PATTERNS.UPDATE)
-  update(@Payload() updateUserDto: User): Promise<UpdateUserResponse> {
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.UPDATE)
+  update(@Payload() updateUserDto: UpdateUserDto): Promise<UpdateUserResponse> {
     return this.usersService.update(updateUserDto)
   }
 
-  @MessagePattern(USERS_PATTERNS.REMOVE)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.REMOVE)
   remove(@Payload() id: string): Promise<RemoveUserResponse> {
     return this.usersService.remove(id)
   }
 
-  @MessagePattern(USERS_PATTERNS.ADD_AGENCY)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.ADD_AGENCY)
   async addAgencies(
     @Payload() payload: UpdateUserAgencyDto,
   ): Promise<AddAgenciesResponse> {
@@ -60,7 +63,7 @@ export class UsersController {
     return this.usersService.addAgencies(payload.userId, payload.agencyIds)
   }
 
-  @MessagePattern(USERS_PATTERNS.REMOVE_AGENCY)
+  @GrpcMethod(SERVICES.USER, USERS_PATTERNS.REMOVE_AGENCY)
   async removeAgencies(
     @Payload() payload: UpdateUserAgencyDto,
   ): Promise<RemoveAgenciesResponse> {

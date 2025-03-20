@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 
 import { RpcErrorForwardingFilter } from '@app/common/filters/rpc-forwarding.filter'
+import { SharedConfigService } from '@app/config'
 
 import { PropertiesModule } from './properties.module'
 
@@ -24,16 +25,9 @@ async function bootstrap() {
       },
     },
   )
-  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-  //   PropertiesModule,
-  //   {
-  //     transport: Transport.TCP,
-  //     options: {
-  //       port: +(process.env.port ?? 3001),
-  //     },
-  //   },
-  // )
-  app.useGlobalFilters(new RpcErrorForwardingFilter())
+
+  const configService = app.get(SharedConfigService)
+  app.useGlobalFilters(new RpcErrorForwardingFilter(configService))
 
   await app.listen()
 }

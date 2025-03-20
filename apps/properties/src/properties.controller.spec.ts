@@ -1,6 +1,8 @@
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { PropertiesController } from './properties.controller'
 import { PropertiesService } from './properties.service'
 
@@ -14,7 +16,7 @@ describe('PropertiesController', () => {
       imports: [
         ClientsModule.register([
           {
-            name: 'DATABASE_SERVICE_CLIENT',
+            name: MICRO_SERVICES.DATABASE_CLIENT,
             transport: Transport.TCP,
             options: {
               port: +(process.env.PROPERTIES_SERVICE_PORT ?? 3001),

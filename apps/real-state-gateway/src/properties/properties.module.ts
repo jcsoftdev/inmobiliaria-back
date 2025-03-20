@@ -20,6 +20,7 @@ const protoPath = join(
         options: {
           package: 'properties',
           protoPath: protoPath,
+          url: `0.0.0.0:${+(process.env.PROPERTIES_PORT ?? 50052)}`,
         },
       },
     ]),

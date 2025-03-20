@@ -10,11 +10,12 @@ import {
   Property,
   PropertyProps,
 } from '@app/contracts/properties'
+import { MICRO_SERVICES } from '@app/shared'
 
 @Injectable()
 export class PropertiesService {
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
     private readonly propertiesClient: ClientProxy,
   ) {}
 

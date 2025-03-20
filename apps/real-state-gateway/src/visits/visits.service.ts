@@ -12,6 +12,7 @@ import {
   UpdateVisitDto,
   VisitSingleProps,
 } from '@app/contracts/visits'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface VisitsGrpcService {
   findAll(props: VisitSingleProps): Observable<PaginatedVisitsResponse>
@@ -27,13 +28,13 @@ interface VisitsGrpcService {
 export class VisitsService {
   private visitsService!: VisitsGrpcService
   constructor(
-    @Inject('USER_MANAGEMENT_CLIENT')
+    @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
     private readonly userManagementClient: ClientGrpcProxy,
   ) {}
 
   onModuleInit() {
     this.visitsService =
-      this.userManagementClient.getService<VisitsGrpcService>('VisitService')
+      this.userManagementClient.getService<VisitsGrpcService>(SERVICES.VISIT)
   }
 
   findAll(props: VisitProps): Promise<PaginatedVisitsResponse> {

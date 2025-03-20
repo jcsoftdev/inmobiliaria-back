@@ -1,5 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
+import { lastValueFrom, Observable } from 'rxjs'
 
 import {
   Agency,
@@ -9,13 +10,14 @@ import {
   RemoveAgencyResponse,
   UpdateAgencyResponse,
 } from '@app/contracts/agencies'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 interface AgenciesGrpcService {
-  findAll(props: AgencyProps): Promise<PaginatedAgenciesResponse>
-  create(data: Agency): Promise<CreateAgencyResponse>
-  findOne(id: string): Promise<Agency>
-  update(updateAgencyDto: Agency): Promise<UpdateAgencyResponse>
-  remove(id: string): Promise<RemoveAgencyResponse>
+  findAll(props: AgencyProps): Observable<PaginatedAgenciesResponse>
+  create(data: Agency): Observable<CreateAgencyResponse>
+  findOne(id: string): Observable<Agency>
+  update(updateAgencyDto: Agency): Observable<UpdateAgencyResponse>
+  remove(id: string): Observable<RemoveAgencyResponse>
 }
 
 @Injectable()
@@ -23,34 +25,37 @@ export class AgenciesService implements OnModuleInit {
   private agenciesService!: AgenciesGrpcService
 
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
     private readonly agenciesClient: ClientGrpc,
   ) {}
 
   onModuleInit() {
-    this.agenciesService =
-      this.agenciesClient.getService<AgenciesGrpcService>('AgencyService')
+    this.agenciesService = this.agenciesClient.getService<AgenciesGrpcService>(
+      SERVICES.AGENCY,
+    )
   }
 
   async findAll(props: AgencyProps): Promise<PaginatedAgenciesResponse> {
-    console.log('this.agenciesService')
-    console.log(this.agenciesService)
-    return await this.agenciesService.findAll(props)
+    console.log({
+      props,
+      agenciesService: this.agenciesService,
+    })
+    return lastValueFrom(this.agenciesService.findAll(props))
   }
 
   async create(data: Agency): Promise<CreateAgencyResponse> {
-    return await this.agenciesService.create(data)
+    return lastValueFrom(this.agenciesService.create(data))
   }
 
   async findOne(id: string): Promise<Agency> {
-    return await this.agenciesService.findOne(id)
+    return lastValueFrom(this.agenciesService.findOne(id))
   }
 
   async update(updateAgencyDto: Agency): Promise<UpdateAgencyResponse> {
-    return await this.agenciesService.update(updateAgencyDto)
+    return lastValueFrom(this.agenciesService.update(updateAgencyDto))
   }
 
   async remove(id: string): Promise<RemoveAgencyResponse> {
-    return await this.agenciesService.remove(id)
+    return lastValueFrom(this.agenciesService.remove(id))
   }
 }

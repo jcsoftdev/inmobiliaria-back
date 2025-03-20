@@ -12,11 +12,12 @@ import {
   UpdateVisitResponse,
   RemoveVisitResponse,
 } from '@app/contracts/visits'
+import { MICRO_SERVICES } from '@app/shared'
 
 @Injectable()
 export class VisitsService {
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
     private readonly visitsClient: ClientProxy,
   ) {}
 

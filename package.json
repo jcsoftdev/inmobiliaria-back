@@ -18,14 +18,14 @@
     "dev:ps": "nest start properties --watch",
     "dev:ds": "nest start data-service --watch",
     "dev:kafka": "nest start kafka-service --watch",
-    "dev:all": "KAFKAJS_NO_PARTITIONER_WARNING=1 concurrently --names \"User,Gateway,Properties,Data,Kafka\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\" \"pnpm run dev:kafka\"",
+    "dev:all": "KAFKAJS_NO_PARTITIONER_WARNING=1 concurrently --names \"User,Gateway,Properties,Data,Kafka\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "prepare": "husky",
-    "p:gen": "cd apps/data-service & prisma generate & cd ../..",
-    "p:migrate": "cd apps/data-service & prisma migrate dev & cd ../.."
+    "p:gen": "cd apps/data-service && prisma generate && cd ../..",
+    "p:migrate": "cd apps/data-service && prisma migrate dev && cd ../.."
   },
   "dependencies": {
     "@grpc/grpc-js": "1.13.0",
@@ -109,13 +109,15 @@
     "moduleNameMapper": {
       "^@app/common$": "<rootDir>/libs/common/src",
       "^@app/common/(.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^@app/contracts$": "<rootDir>/libs/contracts/src",
       "^@app/contracts/(.*)$": "<rootDir>/libs/contracts/src/$1",
+      "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
       "^@data-service/(.*)$": "<rootDir>/apps/data-service/src/$1",
       "^@gateway/(.*)$": "<rootDir>/apps/real-state-gateway/src/$1",
+      "^@libs/auth": "<rootDir>/libs/auth/src/main.ts",
       "^@properties/(.*)$": "<rootDir>/apps/properties/src/$1",
-      "^@user-management/(.*)$": "<rootDir>/apps/user-management/src/$1",
-      "^@libs/auth": "<rootDir>/libs/auth/src/main.ts"
+      "^@user-management/(.*)$": "<rootDir>/apps/user-management/src/$1"
     }
   },
   "pnpm": {

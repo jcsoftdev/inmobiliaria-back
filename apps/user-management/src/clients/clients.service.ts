@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
-import { firstValueFrom } from 'rxjs'
+import { ClientGrpcProxy } from '@nestjs/microservices'
+import { firstValueFrom, Observable } from 'rxjs'
 
 import { PaginateOptions } from '@app/common/pagination'
 import {
@@ -16,13 +16,30 @@ import {
   RemoveClientResponse,
   UpdateClientResponse,
 } from '@app/contracts/clients/clients.response'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
+
+interface ClientsGrpcService {
+  findAll(props: ClientProps): Observable<PaginatedClientsResponse>
+  create(data: Client): Observable<CreateClientResponse>
+  findOne(id: string): Observable<Client>
+  update(updateClientDto: Client): Observable<UpdateClientResponse>
+  remove(id: string): Observable<RemoveClientResponse>
+}
 
 @Injectable()
 export class ClientsService {
+  private clientsService!: ClientsGrpcService
+
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
-    private readonly clientsClient: ClientProxy,
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
+    private readonly clientsClient: ClientGrpcProxy,
   ) {}
+
+  onModuleInit() {
+    this.clientsService = this.clientsClient.getService<ClientsGrpcService>(
+      SERVICES.CLIENT,
+    )
+  }
 
   findAll(props: ClientProps): Promise<PaginatedClientsResponse> {
     return firstValueFrom(

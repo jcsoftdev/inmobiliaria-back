@@ -22,15 +22,18 @@ message UserList {
 }
 
 message CreateUserRequest {
-  string name = 2;
-  string last_name = 3;
-  string username = 4;
-  string email = 5;
-  string password = 6;
-  optional string phone = 7;
-  optional string role = 8;
+  string name = 1;
+  string last_name = 2;
+  string username = 3;
+  string email = 4;
+  string password = 5;
+  optional string phone = 6;
+  string role = 7;
+  string status = 8;
   string dni = 9;
+  optional string expires_at = 10;
 }
+
 
 message UpdateUserRequest {
   string id = 1;
@@ -69,11 +72,11 @@ message Meta {
 }
 
 service UserService {
-  rpc CreateUser (CreateUserRequest) returns (ActionResponse);
-  rpc UpdateUser (UpdateUserRequest) returns (ActionResponse);
-  rpc DeleteUser (DeleteUserRequest) returns (ActionResponse);
-  rpc GetUserById (GetUserByIdRequest) returns (UserResponse);
-  rpc ListUsers (Empty) returns (UserList);
+  rpc create (CreateUserRequest) returns (ActionResponse);
+  rpc update (UpdateUserRequest) returns (ActionResponse);
+  rpc delete (DeleteUserRequest) returns (ActionResponse);
+  rpc getUserById (GetUserByIdRequest) returns (UserResponse);
+  rpc getAll (Empty) returns (UserList);
 }
 
 message Empty {}

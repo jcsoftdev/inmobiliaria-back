@@ -6,6 +6,8 @@ import {
   Transport,
 } from '@nestjs/microservices'
 
+import { MICRO_SERVICES } from '@app/shared'
+
 import { ClientsController } from './clients.controller'
 import { ClientsService } from './clients.service'
 
@@ -17,11 +19,12 @@ const protoPath = join(
   imports: [
     ClientsMSModule.register([
       {
-        name: 'USER_MANAGEMENT_CLIENT',
+        name: MICRO_SERVICES.USER_MANAGEMENT_CLIENT,
         transport: Transport.GRPC,
         options: {
           package: 'clients',
           protoPath: protoPath,
+          url: `0.0.0.0:${+(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)}`,
         },
       },
     ]),

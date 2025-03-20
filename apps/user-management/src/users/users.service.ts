@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
+import { UsersGrpcService } from '@app/contracts/agencies'
 import {
-  USERS_PATTERNS,
   User,
   UserProps,
   CreateUserResponse,
@@ -12,46 +12,45 @@ import {
   UpdateUserResponse,
   AddAgenciesResponse,
   RemoveAgenciesResponse,
+  CreateUserDto,
+  UpdateUserDto,
 } from '@app/contracts/users'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class UsersService {
+  private usersService!: UsersGrpcService
+
   constructor(
-    @Inject('DATABASE_SERVICE_CLIENT')
-    private readonly usersClient: ClientProxy,
+    @Inject(MICRO_SERVICES.DATABASE_CLIENT)
+    private readonly usersClient: ClientGrpc,
   ) {}
 
-  findAll(props: UserProps): Promise<PaginatedUsersResponse> {
-    return firstValueFrom(
-      this.usersClient.send<PaginatedUsersResponse, UserProps>(
-        USERS_PATTERNS.FIND_ALL,
-        props,
-      ),
+  onModuleInit() {
+    this.usersService = this.usersClient.getService<UsersGrpcService>(
+      SERVICES.USER,
     )
   }
 
-  create(data: User): Promise<CreateUserResponse> {
-    return firstValueFrom(
-      this.usersClient.send<CreateUserResponse>(USERS_PATTERNS.CREATE, data),
-    )
+  findAll(props: UserProps): Promise<PaginatedUsersResponse> {
+    return firstValueFrom(this.usersService.findAll(props))
+  }
+
+  create(data: CreateUserDto): Promise<CreateUserResponse> {
+    console.log({ data, usersClient: this.usersClient })
+    return firstValueFrom(this.usersService.create(data))
   }
 
   findOne(id: string): Promise<User> {
-    return firstValueFrom(
-      this.usersClient.send<User>(USERS_PATTERNS.FIND_ONE, id),
-    )
+    return firstValueFrom(this.usersService.findOne(id))
   }
 
-  update(id: User): Promise<UpdateUserResponse> {
-    return firstValueFrom(
-      this.usersClient.send<UpdateUserResponse>(USERS_PATTERNS.UPDATE, id),
-    )
+  update(data: UpdateUserDto): Promise<UpdateUserResponse> {
+    return firstValueFrom(this.usersService.update(data))
   }
 
   remove(id: string): Promise<RemoveUserResponse> {
-    return firstValueFrom(
-      this.usersClient.send<RemoveUserResponse>(USERS_PATTERNS.REMOVE, id),
-    )
+    return firstValueFrom(this.usersService.remove(id))
   }
 
   addAgencies(
@@ -59,7 +58,7 @@ export class UsersService {
     agencyIds: string[],
   ): Promise<AddAgenciesResponse> {
     return firstValueFrom(
-      this.usersClient.send<AddAgenciesResponse>(USERS_PATTERNS.ADD_AGENCY, {
+      this.usersService.addAgency({
         userId,
         agencyIds,
       }),
@@ -71,13 +70,10 @@ export class UsersService {
     agencyIds: string[],
   ): Promise<RemoveAgenciesResponse> {
     return firstValueFrom(
-      this.usersClient.send<RemoveAgenciesResponse>(
-        USERS_PATTERNS.REMOVE_AGENCY,
-        {
-          userId,
-          agencyIds,
-        },
-      ),
+      this.usersService.removeAgency({
+        userId,
+        agencyIds,
+      }),
     )
   }
 }
