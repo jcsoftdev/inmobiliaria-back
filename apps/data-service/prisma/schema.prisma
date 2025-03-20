@@ -154,7 +154,7 @@ model companies {
   address  String            @db.VarChar(100)
   services String            @db.VarChar(100)
   email    String            @unique @db.VarChar(100)
-  users    users_companies[]
+  users_companies    users_companies[]
   phone    String            @db.VarChar(20)
 }
 
