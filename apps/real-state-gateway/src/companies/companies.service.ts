@@ -1,91 +1,62 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientGrpcProxy } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 
 import { PaginateOptions } from '@app/common/pagination'
 import {
-  COMPANIES_PATTERNS,
-  Company,
   CreateCompanyDto,
-  UpdateCompanyUserDto,
-} from '@app/contracts/companies'
-import {
   PaginatedCompaniesResponse,
   CreateCompanyResponse,
   RemoveCompanyResponse,
   UpdateCompanyResponse,
+  CompaniesGrpcService,
+  UpdateCompanyDto,
+  AddUsersBody,
+  DeleteUsersBody,
 } from '@app/contracts/companies'
-import { MICRO_SERVICES } from '@app/shared'
+import { MICRO_SERVICES, SERVICES } from '@app/shared'
 
 @Injectable()
 export class CompaniesService {
+  private companiesService!: CompaniesGrpcService
+
   constructor(
     @Inject(MICRO_SERVICES.USER_MANAGEMENT_CLIENT)
-    private userManagementClient: ClientProxy,
+    private readonly userManagementClient: ClientGrpcProxy,
   ) {}
 
-  findAll(props: PaginateOptions): Promise<PaginatedCompaniesResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<
-        PaginatedCompaniesResponse,
-        PaginateOptions
-      >(COMPANIES_PATTERNS.FIND_ALL, props),
+  onModuleInit() {
+    this.companiesService =
+      this.userManagementClient.getService<CompaniesGrpcService>(
+        SERVICES.COMPANY,
+      )
+  }
+
+  async findAll(props: PaginateOptions): Promise<PaginatedCompaniesResponse> {
+    return await firstValueFrom(this.companiesService.findAll(props)).then(
+      (res) => {
+        return { ...res, data: res.data ?? [] }
+      },
     )
   }
 
   create(data: CreateCompanyDto): Promise<CreateCompanyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<CreateCompanyResponse>(
-        COMPANIES_PATTERNS.CREATE,
-        data,
-      ),
-    )
+    return firstValueFrom(this.companiesService.create(data))
   }
 
-  update(id: string, data: Partial<Company>): Promise<UpdateCompanyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<UpdateCompanyResponse>(
-        COMPANIES_PATTERNS.UPDATE,
-        {
-          id,
-          data,
-        },
-      ),
-    )
+  update(data: UpdateCompanyDto): Promise<UpdateCompanyResponse> {
+    return firstValueFrom(this.companiesService.update({ ...data }))
   }
 
   delete(id: string): Promise<RemoveCompanyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<RemoveCompanyResponse>(
-        COMPANIES_PATTERNS.REMOVE,
-        {
-          id,
-        },
-      ),
-    )
+    return firstValueFrom(this.companiesService.delete({ id }))
   }
 
-  addUserToCompany(
-    companyId: string,
-    userId: string[],
-  ): Promise<UpdateCompanyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<
-        UpdateCompanyResponse,
-        UpdateCompanyUserDto
-      >(COMPANIES_PATTERNS.ADD_USER, { companyId, userIds: userId }),
-    )
+  addUsersToCompany(data: AddUsersBody): Promise<UpdateCompanyResponse> {
+    return firstValueFrom(this.companiesService.addUsers(data))
   }
 
-  removeUserFromCompany(
-    companyId: string,
-    userIds: string[],
-  ): Promise<UpdateCompanyResponse> {
-    return firstValueFrom(
-      this.userManagementClient.send<
-        UpdateCompanyResponse,
-        UpdateCompanyUserDto
-      >(COMPANIES_PATTERNS.REMOVE_USER, { companyId, userIds }),
-    )
+  removeUserFromCompany(data: DeleteUsersBody): Promise<UpdateCompanyResponse> {
+    return firstValueFrom(this.companiesService.removeUsers(data))
   }
 }

@@ -9,6 +9,8 @@ import {
   UpdateClientResponse,
   CreateClientDto,
   UpdateClientDto,
+  FindOneClientBody,
+  DeleteClientBody,
 } from '@app/contracts/clients'
 
 export const CLIENTS_PATTERNS = {
@@ -23,6 +25,6 @@ export interface ClientsGrpcService {
   findAll(props: ClientSingleProps): Observable<PaginatedClientsResponse>
   create(data: CreateClientDto): Observable<CreateClientResponse>
   update(data: UpdateClientDto): Observable<UpdateClientResponse>
-  delete({ id }: { id: string }): Observable<RemoveClientResponse>
-  findOne({ id }: { id: string }): Observable<Client>
+  delete(data: DeleteClientBody): Observable<RemoveClientResponse>
+  findOne(data: FindOneClientBody): Observable<Client>
 }

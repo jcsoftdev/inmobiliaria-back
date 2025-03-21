@@ -1,8 +1,9 @@
 import { Controller } from '@nestjs/common'
-import { MessagePattern, Payload } from '@nestjs/microservices'
+import { GrpcMethod, Payload } from '@nestjs/microservices'
 
+import { DeleteClientBody } from '@app/contracts/clients'
 import {
-  AddUsersReponse,
+  AddUsersResponse,
   Company,
   CompanyProps,
   CreateCompanyResponse,
@@ -10,9 +11,14 @@ import {
   RemoveCompanyResponse,
   UpdateCompanyResponse,
   COMPANIES_PATTERNS,
-  UpdateCompanyUserDto,
-  RemoveUsersReponse,
+  RemoveUsersResponse,
+  CreateCompanyDto,
+  FindOneCompanyBody,
+  UpdateCompanyDto,
+  DeleteUsersBody,
+  AddUsersBody,
 } from '@app/contracts/companies'
+import { SERVICES } from '@app/shared'
 
 import { CompaniesService } from './companies.service'
 
@@ -20,35 +26,37 @@ import { CompaniesService } from './companies.service'
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
-  @MessagePattern(COMPANIES_PATTERNS.CREATE)
-  create(@Payload() createCompanyDto: Company): Promise<CreateCompanyResponse> {
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.CREATE)
+  create(
+    @Payload() createCompanyDto: CreateCompanyDto,
+  ): Promise<CreateCompanyResponse> {
     return this.companiesService.create(createCompanyDto)
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.FIND_ALL)
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.FIND_ALL)
   findAll(props: CompanyProps): Promise<PaginatedCompaniesResponse> {
     return this.companiesService.findAll(props)
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.FIND_ONE)
-  findOne(@Payload() id: string): Promise<Company> {
-    return this.companiesService.findOne(id)
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.FIND_ONE)
+  findOne(@Payload() payload: FindOneCompanyBody): Promise<Company> {
+    return this.companiesService.findOne(payload)
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.UPDATE)
-  update(@Payload() updateCompanyDto: Company): Promise<UpdateCompanyResponse> {
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.UPDATE)
+  update(
+    @Payload() updateCompanyDto: UpdateCompanyDto,
+  ): Promise<UpdateCompanyResponse> {
     return this.companiesService.update(updateCompanyDto)
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.REMOVE)
-  remove(@Payload() id: string): Promise<RemoveCompanyResponse> {
-    return this.companiesService.remove(id)
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.DELETE)
+  delete(@Payload() payload: DeleteClientBody): Promise<RemoveCompanyResponse> {
+    return this.companiesService.delete(payload)
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.ADD_USER)
-  async addUsers(
-    @Payload() payload: UpdateCompanyUserDto,
-  ): Promise<AddUsersReponse> {
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.ADD_USER)
+  async addUsers(@Payload() payload: AddUsersBody): Promise<AddUsersResponse> {
     if (
       !payload.companyId ||
       !payload.userIds ||
@@ -56,16 +64,16 @@ export class CompaniesController {
     ) {
       throw new Error('companyId y userIds son requeridos')
     }
-    return this.companiesService.addUsers(payload.companyId, payload.userIds)
+    return this.companiesService.addUsers({
+      companyId: payload.companyId,
+      userIds: payload.userIds,
+    })
   }
 
-  @MessagePattern(COMPANIES_PATTERNS.REMOVE_USER)
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.REMOVE_USER)
   async removeUsers(
-    @Payload() payload: UpdateCompanyUserDto,
-  ): Promise<RemoveUsersReponse> {
-    return this.companiesService.removeUsers(
-      payload.companyId,
-      payload.userIds ?? [],
-    )
+    @Payload() payload: DeleteUsersBody,
+  ): Promise<RemoveUsersResponse> {
+    return this.companiesService.removeUsers(payload)
   }
 }

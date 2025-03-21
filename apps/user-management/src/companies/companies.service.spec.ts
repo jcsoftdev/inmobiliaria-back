@@ -1,9 +1,16 @@
+import { join } from 'node:path'
+
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { Test, TestingModule } from '@nestjs/testing'
 
 import { MICRO_SERVICES } from '@app/shared'
 
-import { CompaniesService } from '@gateway/companies/companies.service'
+import { CompaniesService } from './companies.service'
+
+const protoPath = join(
+  __dirname,
+  '../../../../libs/common/src/protos/companies.proto',
+)
 
 describe('CompaniesService', () => {
   let service: CompaniesService
@@ -13,10 +20,12 @@ describe('CompaniesService', () => {
       imports: [
         ClientsModule.register([
           {
-            name: MICRO_SERVICES.USER_MANAGEMENT_CLIENT,
-            transport: Transport.TCP,
+            name: MICRO_SERVICES.DATABASE_CLIENT,
+            transport: Transport.GRPC,
             options: {
-              port: +(process.env.DATABASE_SERVICE_PORT ?? 3002),
+              package: 'companies',
+              protoPath: protoPath,
+              url: `0.0.0.0:${+(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50051)}`,
             },
           },
         ]),

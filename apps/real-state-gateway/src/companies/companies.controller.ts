@@ -18,9 +18,10 @@ import {
 } from '@nestjs/swagger'
 
 import {
+  AddUsersBody,
   CreateCompanyDto,
+  DeleteUsersBody,
   UpdateCompanyDto,
-  UpdateCompanyUserDto,
 } from '@app/contracts/companies'
 import {
   Company,
@@ -82,7 +83,10 @@ export class CompaniesController {
     @Param('id') id: string,
     @Body() data: UpdateCompanyDto,
   ): Promise<UpdateCompanyResponse> {
-    return this.companiesService.update(id, data)
+    return this.companiesService.update({
+      ...data,
+      id,
+    })
   }
 
   @Delete(':id')
@@ -102,9 +106,12 @@ export class CompaniesController {
   })
   addUser(
     @Param('id') companyId: string,
-    @Body() data: UpdateCompanyUserDto,
+    @Body() data: AddUsersBody,
   ): Promise<UpdateCompanyResponse> {
-    return this.companiesService.addUserToCompany(companyId, data.userIds ?? [])
+    return this.companiesService.addUsersToCompany({
+      ...data,
+      companyId,
+    })
   }
 
   @Post(':id/remove-users')
@@ -115,11 +122,11 @@ export class CompaniesController {
   })
   removeUser(
     @Param('id') companyId: string,
-    @Body() data: UpdateCompanyUserDto,
+    @Body() data: DeleteUsersBody,
   ): Promise<UpdateCompanyResponse> {
-    return this.companiesService.removeUserFromCompany(
+    return this.companiesService.removeUserFromCompany({
+      ...data,
       companyId,
-      data.userIds ?? [],
-    )
+    })
   }
 }

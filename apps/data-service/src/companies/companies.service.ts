@@ -51,12 +51,13 @@ export class CompaniesService {
 
     return {
       ...results,
-      data: results.data.map(({ users, ...company }) => {
-        return {
-          ...company,
-          users: users?.map((a) => a.users.id) || [],
-        }
-      }),
+      data:
+        results.data.map(({ users, ...company }) => {
+          return {
+            ...company,
+            users: users?.map((a) => a.users.id) || [],
+          }
+        }) ?? [],
     }
   }
 
