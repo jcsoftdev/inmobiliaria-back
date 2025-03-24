@@ -7,6 +7,8 @@ import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
 
 import { RealStateGatewayModule } from './real-state-gateway.module'
 
+const port = process.env.GATEWAY_PORT
+
 async function bootstrap() {
   const app = await NestFactory.create(RealStateGatewayModule)
   app.useGlobalFilters(new AllExceptionsFilter())
@@ -31,9 +33,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('swagger', app, document)
 
-  await app.listen(process.env.PORT ?? 3000)
+  await app.listen(+(port ?? ''))
 }
 
 bootstrap()
-  .then(() => console.log('Application is running'))
+  .then(() => console.log('Application is running: ' + port))
   .catch(console.error)

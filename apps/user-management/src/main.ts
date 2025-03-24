@@ -8,7 +8,7 @@ import { SharedConfigService } from '@app/config'
 
 import { UserManagementModule } from './user-management.module'
 
-const port = +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)
+const port = process.env.USER_MANAGEMENT_SERVICE_PORT ?? ''
 
 const protoPath = [
   join(__dirname, '../../../libs/common/src/protos/agencies.proto'),

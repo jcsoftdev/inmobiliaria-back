@@ -9,6 +9,7 @@ import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
 const protoPath = join(__dirname, '../../../libs/common/src/protos/users.proto')
+const port = process.env.DATABASE_SERVICE_PORT ?? ''
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ const protoPath = join(__dirname, '../../../libs/common/src/protos/users.proto')
         name: MICRO_SERVICES.DATABASE_CLIENT,
         transport: Transport.GRPC,
         options: {
-          url: '0.0.0.0:50051',
+          url: '0.0.0.0:' + port,
           package: 'users',
           protoPath,
         },

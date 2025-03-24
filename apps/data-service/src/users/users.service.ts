@@ -75,7 +75,7 @@ export class UsersService {
       },
       props,
     )
-    return {
+    const data = {
       ...results,
       data: results.data.map(
         ({
@@ -99,6 +99,9 @@ export class UsersService {
         },
       ),
     }
+
+    console.log(data)
+    return data
   }
 
   async findOne({ id }: { id: string }): Promise<User> {

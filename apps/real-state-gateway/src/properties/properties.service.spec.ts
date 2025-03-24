@@ -20,7 +20,7 @@ describe('PropertiesService', () => {
             options: {
               package: 'properties',
               protoPath: protoPath,
-              url: `0.0.0.0:${+(process.env.PROPERTIES_PORT ?? 50052)}`,
+              url: `0.0.0.0:${+(process.env.PROPERTIES_SERVICE_PORT ?? 50052)}`,
             },
           },
         ]),

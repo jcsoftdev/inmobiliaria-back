@@ -16,7 +16,7 @@ describe('VisitsService', () => {
             name: MICRO_SERVICES.USER_MANAGEMENT_CLIENT,
             transport: Transport.TCP,
             options: {
-              port: +(process.env.VISITS_SERVICE_PORT ?? 3003),
+              port: +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 3003),
             },
           },
         ]),

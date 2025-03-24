@@ -16,12 +16,13 @@ export class AuthenticationService {
 
   async login(data: LoginBody) {
     const user = await this.validateUser(data.username, data.password)
-
     return await this.authService.signin(
       {
         email: user.email,
         id: `${user.id}`,
         roles: [`${user.role}`],
+        name: user.name,
+        username: user.username,
       },
       (userId, refreshToken) => this.updateRefreshToken(userId, refreshToken),
     )
@@ -64,16 +65,19 @@ export class AuthenticationService {
       },
     })
 
-    if (!user) {
+    const payload = this.authService.validateRefreshToken(token)
+
+    if (!user || user.email !== payload.email) {
       throw new Error('Invalid token')
     }
 
-    const payload = this.authService.validateRefreshToken(token)
     return this.authService.signin(
       {
-        id: payload.sub,
-        email: payload.email,
-        roles: payload.roles ?? [],
+        id: user.id,
+        email: user.email,
+        roles: [user.role],
+        name: user.name,
+        username: user.username,
       },
       (userId, refreshToken) => this.updateRefreshToken(userId, refreshToken),
     )

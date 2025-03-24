@@ -10,6 +10,9 @@ import { UsersController } from './users.controller'
 import { UsersService } from './users.service'
 
 const protoPath = join(__dirname, '../../../libs/common/src/protos/users.proto')
+
+const port = process.env.USER_MANAGEMENT_SERVICE_PORT ?? ''
+
 @Module({
   imports: [
     ClientsModule.register([
@@ -19,7 +22,7 @@ const protoPath = join(__dirname, '../../../libs/common/src/protos/users.proto')
         options: {
           package: 'users',
           protoPath: protoPath,
-          url: `0.0.0.0:${+(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)}`,
+          url: `0.0.0.0:${port}`,
         },
       },
     ]),
