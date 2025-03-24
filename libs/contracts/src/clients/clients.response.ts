@@ -24,6 +24,13 @@ export class Client implements Omit<clients, 'created_at' | 'last_name'> {
 
 export class PaginatedClientsResponse extends PaginatedResult<Client> {}
 
+export class DeleteClientBody {
+  id!: string
+}
+export class FindOneClientBody {
+  id!: string
+}
+
 export class CreateClientResponse {
   @ApiResponseProperty({ type: String })
   message!: string

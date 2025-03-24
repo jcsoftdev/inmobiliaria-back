@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 import {
   CreateClientDto,
@@ -11,16 +11,9 @@ import {
   CreateClientResponse,
   RemoveClientResponse,
   UpdateClientResponse,
+  ClientsGrpcService,
 } from '@app/contracts/clients'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
-
-interface ClientsGrpcService {
-  findAll(props: ClientProps): Observable<PaginatedClientsResponse>
-  create(data: CreateClientDto): Observable<CreateClientResponse>
-  findOne(data: { id: string }): Observable<Client>
-  update(updateClientDto: UpdateClientDto): Observable<UpdateClientResponse>
-  delete(data: { id: string }): Observable<RemoveClientResponse>
-}
 
 @Injectable()
 export class ClientsService {

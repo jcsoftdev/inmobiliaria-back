@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
+/*
 import {
   ERROR_TYPES,
   TypedRpcException,
-} from '@app/common/exceptions/rpc.exception'
+} from '@app/common/exceptions/rpc.exception' */
 import {
   convertFieldsToArray,
   PaginatedResult,
@@ -28,13 +29,14 @@ export class PropertiesService {
   async create(
     createPropertyDto: CreatePropertyDto,
   ): Promise<CreatePropertyResponse> {
+    /*
     if (!createPropertyDto.agencyId || !createPropertyDto.userId) {
       throw new TypedRpcException({
         errorType: ERROR_TYPES.BAD_REQUEST,
         statusCode: 400,
         message: 'Agency ID and User ID are required',
       })
-    }
+    }*/
     await this.prismaService.properties.create({
       data: {
         id: uuidV7(),
@@ -106,8 +108,8 @@ export class PropertiesService {
         ({ agency_id, user_id, created_at, ...property }): Property => ({
           ...property,
           price: Number(property.price),
-          agencyId: agency_id,
-          userId: user_id,
+          agencyId: agency_id ?? '',
+          userId: user_id ?? '',
           createdAt: created_at,
           description: property.description ?? '',
           status: property.status as Property['status'],

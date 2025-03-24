@@ -16,6 +16,7 @@ const protoPath = [
   join(__dirname, '../../../libs/common/src/protos/properties.proto'),
   join(__dirname, '../../../libs/common/src/protos/users.proto'),
   join(__dirname, '../../../libs/common/src/protos/visits.proto'),
+  join(__dirname, '../../../libs/common/src/protos/companies.proto'),
 ]
 
 async function bootstrap() {
@@ -24,7 +25,14 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: ['agencies', 'clients', 'properties', 'users', 'visits'],
+        package: [
+          'agencies',
+          'clients',
+          'properties',
+          'users',
+          'visits',
+          'companies',
+        ],
         protoPath: protoPath,
         url: `0.0.0.0:${port}`,
       },

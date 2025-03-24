@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package companies;
+
+message Company {
+  string id = 1;
+  string name = 2;
+  string address = 3;
+  string services = 4;
+  string email = 5;
+  string phone = 6;
+  optional string created_at = 7;
+}
+
+message CompanyList {
+  repeated Company data = 1;
+  Meta meta = 2;
+}
+
+message CreateCompanyRequest {
+  string name = 1;
+  string address = 2;
+  string services = 3;
+  string email = 4;
+  string phone = 5;
+}
+
+message UpdateCompanyRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string address = 3;
+  optional string services = 4;
+  optional string email = 5;
+  optional string phone = 6;
+}
+
+message DeleteCompanyRequest {
+  string id = 1;
+}
+
+message GetCompanyByIdRequest {
+  string id = 1;
+}
+
+message CompanyResponse {
+  Company company = 1;
+}
+
+message ActionResponse {
+  string message = 1;
+}
+
+message Meta {
+  int32 total = 1;
+  int32 lastPage = 2;
+  int32 currentPage = 3;
+  int32 perPage = 4;
+  optional int32 prev = 5;
+  optional int32 next = 6;
+}
+
+
+message AddUserRequest {
+  string companyId = 1;
+  repeated string userIds = 2;
+}
+
+message RemoveUserRequest {
+  string companyId = 1;
+  repeated string userIds = 2;
+}
+
+message CompanyProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}
+
+service CompanyService {
+  rpc create (CreateCompanyRequest) returns (ActionResponse);
+  rpc update (UpdateCompanyRequest) returns (ActionResponse);
+  rpc delete (DeleteCompanyRequest) returns (ActionResponse);
+  rpc findOne (GetCompanyByIdRequest) returns (CompanyResponse);
+  rpc findAll (CompanyProps) returns (CompanyList);
+  rpc addUser (AddUserRequest) returns (ActionResponse);
+  rpc removeUser (RemoveUserRequest) returns (ActionResponse);
+}

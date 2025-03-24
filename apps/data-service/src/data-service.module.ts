@@ -4,6 +4,7 @@ import { SharedConfigModule } from '@app/config'
 
 import { AgenciesModule } from './agencies/agencies.module'
 import { ClientsModule } from './clients/clients.module'
+import { CompaniesModule } from './companies/companies.module'
 import { DataServiceController } from './data-service.controller'
 import { DataServiceService } from './data-service.service'
 import { PropertiesModule } from './properties/properties.module'
@@ -18,6 +19,7 @@ import { VisitsModule } from './visits/visits.module'
     UsersModule,
     VisitsModule,
     SharedConfigModule,
+    CompaniesModule,
   ],
   controllers: [DataServiceController],
   providers: [DataServiceService],

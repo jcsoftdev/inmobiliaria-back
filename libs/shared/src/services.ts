@@ -4,6 +4,7 @@ export const SERVICES = {
   PROPERTY: 'PropertyService',
   USER: 'UserService',
   VISIT: 'VisitService',
+  COMPANY: 'CompanyService',
 }
 
 export const MICRO_SERVICES = {
