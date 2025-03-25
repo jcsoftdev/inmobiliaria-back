@@ -69,6 +69,7 @@ export class Property
         | 'agency_id'
         | 'user_id'
         | 'created_at'
+        | 'amenities'
       >
     >
 {
@@ -95,6 +96,9 @@ export class Property
 
   @ApiProperty({ type: [PropertyFeature] })
   features!: PropertyFeature[]
+
+  @ApiProperty({ type: [PropertyFeature] })
+  amenities!: PropertyFeature[]
 
   @ApiProperty({ type: Date })
   createdAt!: Date | null

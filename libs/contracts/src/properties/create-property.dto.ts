@@ -90,6 +90,19 @@ export class CreatePropertyDto
   features!: PropertyFeature[]
 
   @ApiProperty({
+    description: 'Property amenities',
+    example: {
+      bedrooms: 3,
+      bathrooms: 2,
+      kitchens: 1,
+    },
+  })
+  @IsArray({ message: 'Amenities must be an array of amenities' })
+  @ValidateNested({ each: true })
+  @Type(() => PropertyFeature)
+  amenities!: PropertyFeature[]
+
+  @ApiProperty({
     description: 'Property status',
     example: PropertyStatus.AVAILABLE,
   })
