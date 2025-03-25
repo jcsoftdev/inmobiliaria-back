@@ -58,6 +58,11 @@ export class PropertiesService {
             return createPropertyDto.features
           },
         },
+        amenities: {
+          toJSON() {
+            return createPropertyDto.amenities
+          },
+        },
       },
     })
 
@@ -117,6 +122,8 @@ export class PropertiesService {
           location: property.location as unknown as Property['location'],
           features:
             property.features as string as unknown as Property['features'],
+          amenities:
+            property.amenities as string as unknown as Property['amenities'],
         }),
       ),
       meta: res.meta,
