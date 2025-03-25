@@ -13,6 +13,8 @@ const protoPath = join(
   '../../../libs/common/src/protos/companies.proto',
 )
 
+const port = process.env.DATABASE_SERVICE_PORT ?? ''
+
 @Module({
   imports: [
     ClientsModule.register([
@@ -22,7 +24,7 @@ const protoPath = join(
         options: {
           package: 'companies',
           protoPath: protoPath,
-          url: `0.0.0.0:${+(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50051)}`,
+          url: `0.0.0.0:${port}`,
         },
       },
     ]),

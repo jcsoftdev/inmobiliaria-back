@@ -32,8 +32,11 @@ export class UsersService {
     )
   }
 
-  findAll(props: UserProps): Promise<PaginatedUsersResponse> {
-    return firstValueFrom(this.usersService.findAll(props))
+  async findAll(props: UserProps): Promise<PaginatedUsersResponse> {
+    const data = await firstValueFrom(this.usersService.findAll(props))
+
+    console.log(data)
+    return data
   }
 
   create(data: CreateUserDto): Promise<CreateUserResponse> {

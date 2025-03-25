@@ -16,6 +16,8 @@ const protoPath = join(
   '../../../libs/common/src/protos/clients.proto',
 )
 
+const port = process.env.DATABASE_SERVICE_PORT ?? ''
+
 @Module({
   imports: [
     ClientsMSModule.register([
@@ -23,7 +25,7 @@ const protoPath = join(
         name: MICRO_SERVICES.DATABASE_CLIENT,
         transport: Transport.GRPC,
         options: {
-          url: '0.0.0.0:50051',
+          url: '0.0.0.0:' + port,
           package: 'clients',
           protoPath,
         },

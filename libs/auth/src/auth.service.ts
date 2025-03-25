@@ -1,4 +1,9 @@
-import { JwtPayload, UpdateRefreshTokenFn, UserPayload } from '@libs/auth'
+import {
+  JwtPayload,
+  JwtRefreshPayload,
+  UpdateRefreshTokenFn,
+  UserPayload,
+} from '@libs/auth'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs'
@@ -14,6 +19,8 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       roles: user.roles,
+      name: user.name,
+      username: user.username,
     }
 
     const token = this.jwtService.sign(payload, {
@@ -21,10 +28,15 @@ export class AuthService {
       expiresIn: jwtConstants.expiresIn,
     })
 
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: jwtConstants.refreshSecret,
-      expiresIn: jwtConstants.refreshExpiresIn,
-    })
+    const refreshToken = this.jwtService.sign(
+      {
+        email: user.email,
+      },
+      {
+        secret: jwtConstants.refreshSecret,
+        expiresIn: jwtConstants.refreshExpiresIn,
+      },
+    )
 
     await updateRefreshToken(user.id, refreshToken)
 
@@ -38,18 +50,6 @@ export class AuthService {
     return await bcrypt.compare(password, hashedPassword)
   }
 
-  async refreshToken(token: string, fn: UpdateRefreshTokenFn) {
-    const payload = this.validateRefreshToken(token)
-    return this.signin(
-      {
-        id: payload.sub,
-        email: payload.email,
-        roles: payload.roles ?? [],
-      },
-      fn,
-    )
-  }
-
   validateToken(token: string) {
     return this.jwtService.verify<JwtPayload>(token, {
       secret: jwtConstants.secret,
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   validateRefreshToken(token: string) {
-    return this.jwtService.verify<JwtPayload>(token, {
+    return this.jwtService.verify<JwtRefreshPayload>(token, {
       secret: jwtConstants.refreshSecret,
       ignoreExpiration: false,
     })

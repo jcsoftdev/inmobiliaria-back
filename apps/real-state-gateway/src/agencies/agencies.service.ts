@@ -37,7 +37,6 @@ export class AgenciesService implements OnModuleInit {
   }
 
   update(data: UpdateAgencyDto): Promise<UpdateAgencyResponse> {
-    console.log({ data })
     return lastValueFrom(this.agenciesService.update(data))
   }
 

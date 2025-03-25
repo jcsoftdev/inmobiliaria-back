@@ -35,7 +35,7 @@ export class CompaniesService {
           services: true,
           email: true,
           phone: true,
-          users: {
+          users_companies: {
             select: {
               users: {
                 select: {
@@ -52,10 +52,10 @@ export class CompaniesService {
     return {
       ...results,
       data:
-        results.data.map(({ users, ...company }) => {
+        results.data.map(({ users_companies, ...company }) => {
           return {
             ...company,
-            users: users?.map((a) => a.users.id) || [],
+            users: users_companies?.map((a) => a.users.id) || [],
           }
         }) ?? [],
     }
@@ -90,7 +90,7 @@ export class CompaniesService {
         services: true,
         email: true,
         phone: true,
-        users: {
+        users_companies: {
           select: {
             users: {
               select: {
@@ -104,7 +104,7 @@ export class CompaniesService {
 
     return {
       ...result,
-      users: result.users?.map((a) => a.users.id) || [],
+      users: result.users_companies?.map((a) => a.users.id) || [],
     }
   }
 

@@ -13,6 +13,8 @@ const protoPath = path.join(
   '../../../libs/common/src/protos/properties.proto',
 )
 
+const port = process.env.PROPERTIES_SERVICE_PORT ?? ''
+
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     PropertiesModule,
@@ -21,7 +23,7 @@ async function bootstrap() {
       options: {
         package: ['properties'],
         protoPath,
-        url: '0.0.0.0:50052',
+        url: '0.0.0.0:' + port,
       },
     },
   )
@@ -33,5 +35,5 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(() => console.log('Application is running'))
+  .then(() => console.log('Application is running on gRPC port: ' + port))
   .catch(console.error)

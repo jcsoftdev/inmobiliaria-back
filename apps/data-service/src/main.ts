@@ -19,6 +19,8 @@ const protoPath = [
   join(__dirname, '../../../libs/common/src/protos/companies.proto'),
 ]
 
+const port = process.env.DATABASE_SERVICE_PORT ?? ''
+
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     DataServiceModule,
@@ -34,7 +36,7 @@ async function bootstrap() {
           'companies',
         ],
         protoPath,
-        url: '0.0.0.0:50051',
+        url: '0.0.0.0:' + port,
       },
     },
   )
@@ -53,8 +55,7 @@ async function bootstrap() {
   )
 
   await app.listen()
-
-  console.log('🚀 Data service is running with gRPC & Kafka')
+  console.log(`Data Service Microservice is running on gRPC port ${port}`)
 }
 
 bootstrap().catch(console.error)

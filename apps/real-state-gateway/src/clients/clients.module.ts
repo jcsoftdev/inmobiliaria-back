@@ -15,6 +15,9 @@ const protoPath = join(
   __dirname,
   '../../../libs/common/src/protos/clients.proto',
 )
+
+const port = process.env.USER_MANAGEMENT_SERVICE_PORT ?? ''
+
 @Module({
   imports: [
     ClientsMSModule.register([
@@ -24,7 +27,7 @@ const protoPath = join(
         options: {
           package: 'clients',
           protoPath: protoPath,
-          url: `0.0.0.0:${+(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)}`,
+          url: `0.0.0.0:${port}`,
         },
       },
     ]),

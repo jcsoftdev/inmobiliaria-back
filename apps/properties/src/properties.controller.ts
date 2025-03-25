@@ -22,7 +22,6 @@ export class PropertiesController {
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.FIND_ALL)
   findAll(props: PropertyProps) {
-    console.log({ props })
     return this.propertiesService.findAll(props)
   }
 

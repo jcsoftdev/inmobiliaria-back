@@ -14,7 +14,7 @@ const protoPath = join(
   '../../../libs/common/src/protos/companies.proto',
 )
 
-const port = +(process.env.USER_MANAGEMENT_SERVICE_PORT ?? 50053)
+const port = process.env.USER_MANAGEMENT_SERVICE_PORT ?? ''
 
 @Module({
   imports: [

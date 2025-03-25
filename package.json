@@ -7,6 +7,17 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "build:all": "pnpm run build:um && pnpm run build:rs && pnpm run build:ps && pnpm run build:ds",
+    "deploy": "pnpm run p:gen && pnpm run build:all && pnpm run start:all",
+    "build:um": "nest build user-management",
+    "build:rs": "nest build real-state-gateway",
+    "build:ps": "nest build properties",
+    "build:ds": "nest build data-service",
+    "start:all": "pnpm run start:um & pnpm run start:rs & pnpm run start:ps & pnpm run start:ds",
+    "start:um": "node dist/apps/user-management/main",
+    "start:rs": "node dist/apps/real-state-gateway/main",
+    "start:ps": "node dist/apps/properties/main",
+    "start:ds": "node dist/apps/data-service/main",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -17,15 +28,14 @@
     "dev:rs": "nest start real-state-gateway --watch",
     "dev:ps": "nest start properties --watch",
     "dev:ds": "nest start data-service --watch",
-    "dev:kafka": "nest start kafka-service --watch",
     "dev:all": "concurrently --names \"User,Gateway,Properties,Data,Kafka\" \"pnpm run dev:um\" \"pnpm run dev:rs\" \"pnpm run dev:ps\" \"pnpm run dev:ds\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "prepare": "husky",
-    "p:gen": "cd apps/data-service && prisma generate && cd ../..",
-    "p:migrate": "cd apps/data-service && prisma migrate dev && cd ../.."
+    "p:gen": "prisma generate",
+    "p:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@grpc/grpc-js": "1.13.0",
@@ -133,5 +143,6 @@
       "@swc/core",
       "prisma"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af"
 }

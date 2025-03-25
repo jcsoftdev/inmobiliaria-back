@@ -14,6 +14,8 @@ const protoPath = join(
   '../../../libs/common/src/protos/properties.proto',
 )
 
+const port = process.env.DATABASE_SERVICE_PORT ?? ''
+
 @Module({
   imports: [
     SharedConfigModule,
@@ -24,7 +26,7 @@ const protoPath = join(
         options: {
           package: 'properties',
           protoPath,
-          url: '0.0.0.0:50051',
+          url: '0.0.0.0:' + port,
         },
       },
     ]),
