@@ -7,7 +7,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 
 COPY . .
-
+RUN pnpm install
 RUN pnpm run build:all
 
 
