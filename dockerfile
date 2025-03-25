@@ -1,31 +1,27 @@
-# Base image
 FROM node:20 AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy entire project
+
 COPY . .
 
-# Build the project
 RUN pnpm run build:all
 
-# Production image
-FROM node:20 AS runner
 
+FROM node:20 AS runner
 WORKDIR /app
 
-# Copy built files and dependencies
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/libs/common/src/protos ./libs/common/src/protos
 COPY package.json ./
 
-# Expose necessary ports (adjust as needed)
 EXPOSE 3000 3001 3002 3003
 
-# Start the services
 CMD ["pnpm", "run", "start:all"]
+
