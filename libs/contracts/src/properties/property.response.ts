@@ -46,7 +46,9 @@ export class PropertyFeature {
   })
   name!: string
 
-  @ApiProperty({ type: String, default: 'Could be string number or boolean' })
+  @ApiProperty({
+    oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
+  })
   @IsDefined({ message: 'Feature value is required' })
   value!: string | number | boolean
 }
@@ -97,8 +99,8 @@ export class Property
   @ApiProperty({ type: [PropertyFeature] })
   features!: PropertyFeature[]
 
-  @ApiProperty({ type: [PropertyFeature] })
-  amenities!: PropertyFeature[]
+  @ApiProperty({ type: [String] })
+  amenities!: string[]
 
   @ApiProperty({ type: Date })
   createdAt!: Date | null
@@ -106,7 +108,7 @@ export class Property
   @ApiProperty({ enum: PropertyStatus })
   status!: PropertyStatus
 
-  @ApiProperty({ type: Number })
+  @ApiProperty({ type: String, nullable: true })
   userId!: string | null
 }
 

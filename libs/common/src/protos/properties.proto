@@ -2,18 +2,48 @@ syntax = "proto3";
 
 package properties;
 
+message Location {
+  string type = 1; // "Point"
+  repeated double coordinates = 2; // [latitude, longitude]
+  string address = 3;
+}
+
+message PropertyFeature {
+  string name = 1;
+  oneof value {
+    string string_value = 2;
+    int32 int_value = 3;
+    bool bool_value = 4;
+  }
+}
+
+enum PropertyType {
+  APARTMENT = 0;
+  HOUSE = 1;
+  PARKING = 2;
+}
+
+enum PropertyStatus {
+  AVAILABLE = 0;
+  SELL_PENDING = 1;
+  SOLD = 2;
+  INACTIVE = 3;
+  RESERVED = 4;
+}
+
 message Property {
   string id = 1;
   optional string agency_id = 2;
   string title = 3;
   optional string description = 4;
-  optional string type = 5;
-  string price = 6;
-  string location = 7;
-  string features = 8;
-  optional string status = 9;
-  optional string user_id = 10;
-  optional string created_at = 11;
+  optional PropertyType type = 5;
+  double price = 6;
+  Location location = 7;
+  repeated PropertyFeature features = 8;
+  repeated string amenities = 9;
+  optional PropertyStatus status = 10;
+  optional string user_id = 11;
+  optional string created_at = 12;
 }
 
 message PropertyList {
@@ -25,21 +55,24 @@ message CreatePropertyRequest {
   optional string agency_id = 1;
   string title = 2;
   optional string description = 3;
-  optional string type = 4;
-  string price = 5;
-  string location = 6;
-  string features = 7;
+  optional PropertyType type = 4;
+  double price = 5;
+  Location location = 6;
+  repeated PropertyFeature features = 7;
+  repeated string amenities = 8;
+  optional PropertyStatus status = 9;
 }
 
 message UpdatePropertyRequest {
   string id = 1;
   optional string title = 2;
   optional string description = 3;
-  optional string type = 4;
-  optional string price = 5;
-  optional string location = 6;
-  optional string features = 7;
-  optional string status = 8;
+  optional PropertyType type = 4;
+  optional double price = 5;
+  optional Location location = 6;
+  repeated PropertyFeature features = 7;
+  repeated string amenities = 8;
+  optional PropertyStatus status = 9;
 }
 
 message DeletePropertyRequest {

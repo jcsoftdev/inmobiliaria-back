@@ -2,20 +2,17 @@ import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
-/*
-import {
-  ERROR_TYPES,
-  TypedRpcException,
-} from '@app/common/exceptions/rpc.exception' */
 import {
   convertFieldsToArray,
   PaginatedResult,
   paginator,
 } from '@app/common/pagination'
+import { PropertyType, PropertyStatus } from '@app/contracts/properties'
 import {
   CreatePropertyDto,
   CreatePropertyResponse,
   Property,
+  PropertyFeature,
   PropertyProps,
   UpdatePropertyDto,
 } from '@app/contracts/properties'
@@ -29,14 +26,6 @@ export class PropertiesService {
   async create(
     createPropertyDto: CreatePropertyDto,
   ): Promise<CreatePropertyResponse> {
-    /*
-    if (!createPropertyDto.agencyId || !createPropertyDto.userId) {
-      throw new TypedRpcException({
-        errorType: ERROR_TYPES.BAD_REQUEST,
-        statusCode: 400,
-        message: 'Agency ID and User ID are required',
-      })
-    }*/
     await this.prismaService.properties.create({
       data: {
         id: uuidV7(),
@@ -46,23 +35,12 @@ export class PropertiesService {
         status: createPropertyDto.status,
         type: createPropertyDto.type,
         agency_id: createPropertyDto.agencyId,
-        user_id: createPropertyDto.userId,
-        created_at: new Date(),
-        location: {
-          toJSON() {
-            return createPropertyDto.location
-          },
-        },
-        features: {
-          toJSON() {
-            return createPropertyDto.features
-          },
-        },
-        amenities: {
-          toJSON() {
-            return createPropertyDto.amenities
-          },
-        },
+        location: createPropertyDto.location
+          ? (createPropertyDto.location as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
+        features: createPropertyDto.features
+          ? (createPropertyDto.features as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
       },
     })
 
@@ -77,14 +55,15 @@ export class PropertiesService {
     ...props
   }: PropertyProps): Promise<PaginatedResult<Property>> {
     let selectQuery: Prisma.propertiesSelect = {
-      description: true,
       id: true,
+      title: true,
+      description: true,
       price: true,
       status: true,
-      title: true,
       type: true,
       location: true,
       features: true,
+      amenities: true,
       created_at: true,
       agency_id: true,
       user_id: true,
@@ -110,20 +89,28 @@ export class PropertiesService {
 
     const response: PaginatedResult<Property> = {
       data: res.data.map(
-        ({ agency_id, user_id, created_at, ...property }): Property => ({
+        ({
+          agency_id,
+          user_id,
+          created_at,
+          location,
+          features,
+          amenities,
+          ...property
+        }): Property => ({
           ...property,
           price: Number(property.price),
           agencyId: agency_id ?? '',
           userId: user_id ?? '',
           createdAt: created_at,
           description: property.description ?? '',
-          status: property.status as Property['status'],
-          type: property.type as Property['type'],
-          location: property.location as unknown as Property['location'],
-          features:
-            property.features as string as unknown as Property['features'],
-          amenities:
-            property.amenities as string as unknown as Property['amenities'],
+          status: property.status as PropertyStatus,
+          type: property.type as PropertyType,
+          location: location
+            ? (location as unknown as Property['location'])
+            : { type: 'Point', coordinates: [0, 0], address: '' },
+          features: features ? (features as unknown as PropertyFeature[]) : [],
+          amenities: amenities ? (amenities as unknown as string[]) : [],
         }),
       ),
       meta: res.meta,
@@ -142,13 +129,20 @@ export class PropertiesService {
       data: {
         title: updatePropertyDto.title,
         description: updatePropertyDto.description,
-        price: updatePropertyDto.price,
-        status: updatePropertyDto.status,
-        type: updatePropertyDto.type,
-        agency_id: updatePropertyDto.agencyId,
-        user_id: updatePropertyDto.userId,
-        location: JSON.stringify(updatePropertyDto.location),
-        features: JSON.stringify(updatePropertyDto.features),
+        price: updatePropertyDto.price
+          ? new Prisma.Decimal(updatePropertyDto.price)
+          : undefined,
+        status: updatePropertyDto.status as PropertyStatus,
+        type: updatePropertyDto.type as PropertyType,
+        location: updatePropertyDto.location
+          ? (updatePropertyDto.location as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
+        features: updatePropertyDto.features
+          ? (updatePropertyDto.features as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
+        amenities: updatePropertyDto.amenities
+          ? (updatePropertyDto.amenities as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
       },
     })
   }

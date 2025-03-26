@@ -45,7 +45,9 @@ export class CreatePropertyDto
     description: 'Property type',
     example: PropertyType.APARTMENT,
   })
-  @IsEnum(PropertyType)
+  @IsEnum(PropertyType, {
+    message: `type must be one of: ${Object.values(PropertyType).join(', ')}`,
+  })
   type!: PropertyType
 
   @ApiProperty({
@@ -73,40 +75,39 @@ export class CreatePropertyDto
   })
   @ValidateNested()
   @Type(() => LocationType)
+  @IsOptional()
   location!: LocationType
 
   @ApiProperty({
     description: 'Property features',
     example: [
-      {
-        name: 'feature name',
-        value: 'feature value',
-      },
+      { name: 'bedrooms', value: 3 },
+      { name: 'hasGarage', value: true },
+      { name: 'flooring', value: 'wood' },
     ],
   })
-  @IsArray({ message: 'Features must be an array of features' })
+  @IsArray({ message: 'features must be an array' })
   @ValidateNested({ each: true })
   @Type(() => PropertyFeature)
+  @IsOptional()
   features!: PropertyFeature[]
 
   @ApiProperty({
     description: 'Property amenities',
-    example: {
-      bedrooms: 3,
-      bathrooms: 2,
-      kitchens: 1,
-    },
+    example: ['cerca al parque', 'cerca al hospital', 'tiene piscina'],
   })
-  @IsArray({ message: 'Amenities must be an array of amenities' })
-  @ValidateNested({ each: true })
-  @Type(() => PropertyFeature)
-  amenities!: PropertyFeature[]
+  @IsArray({ message: 'amenities must be an array' })
+  @IsString({ each: true })
+  @IsOptional()
+  amenities!: string[]
 
   @ApiProperty({
     description: 'Property status',
     example: PropertyStatus.AVAILABLE,
   })
-  @IsEnum(PropertyStatus)
+  @IsEnum(PropertyStatus, {
+    message: `status must be one of: ${Object.values(PropertyStatus).join(', ')}`,
+  })
   status!: PropertyStatus
 
   @ApiProperty({
@@ -114,5 +115,6 @@ export class CreatePropertyDto
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsUUIDv7()
+  @IsOptional()
   userId!: string
 }
