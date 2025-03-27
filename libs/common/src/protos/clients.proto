@@ -5,7 +5,7 @@ package clients;
 import "google/protobuf/timestamp.proto";
 
 message Client {
-  int32 id = 1;
+  string id = 1;
   string dni = 2;
   string lastName = 3;
   string address = 4;

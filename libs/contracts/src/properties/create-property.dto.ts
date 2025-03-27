@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsIn,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
   ValidateNested,
@@ -97,9 +98,8 @@ export class CreatePropertyDto
     description: 'Property type',
     example: PropertyType.APARTMENT,
   })
-  @IsEnum(PropertyType, {
-    message: `type must be one of: ${Object.values(PropertyType).join(', ')}`,
-  })
+  @IsEnum(PropertyType)
+  @IsOptional()
   type!: PropertyType
 
   @ApiProperty({
@@ -149,9 +149,8 @@ export class CreatePropertyDto
     description: 'Property status',
     example: PropertyStatus.AVAILABLE,
   })
-  @IsEnum(PropertyStatus, {
-    message: `status must be one of: ${Object.values(PropertyStatus).join(', ')}`,
-  })
+  @IsEnum(PropertyStatus)
+  @IsOptional()
   status!: PropertyStatus
 
   @ApiProperty({

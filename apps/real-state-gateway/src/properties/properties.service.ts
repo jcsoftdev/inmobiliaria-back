@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpcProxy } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 
 import {
   CreatePropertyDto,
@@ -10,18 +10,9 @@ import {
   RemovePropertyResponse,
   UpdatePropertyDto,
   UpdatePropertyResponse,
+  PropertiesGrpcService,
 } from '@app/contracts/properties'
 import { MICRO_SERVICES, SERVICES } from '@app/shared'
-
-interface PropertiesGrpcService {
-  findAll(props: PropertySingleProps): Observable<PaginatedPropertiesResponse>
-  create(data: CreatePropertyDto): Observable<CreatePropertyResponse>
-  update(request: {
-    id: string
-    data: Partial<UpdatePropertyDto>
-  }): Observable<UpdatePropertyResponse>
-  delete(request: { id: string }): Observable<RemovePropertyResponse>
-}
 
 @Injectable()
 export class PropertiesService {
@@ -44,11 +35,8 @@ export class PropertiesService {
     return firstValueFrom(this.propertiesService.create(data))
   }
 
-  update(
-    id: string,
-    data: Partial<UpdatePropertyDto>,
-  ): Promise<UpdatePropertyResponse> {
-    return firstValueFrom(this.propertiesService.update({ id, data }))
+  update(data: UpdatePropertyDto): Promise<UpdatePropertyResponse> {
+    return firstValueFrom(this.propertiesService.update(data))
   }
 
   delete({ id }: { id: string }): Promise<RemovePropertyResponse> {

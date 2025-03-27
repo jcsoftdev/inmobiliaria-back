@@ -100,7 +100,7 @@ export class CompaniesController {
 
   @Post(':id/add-users')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Add user to company',
     type: UpdateCompanyResponse,
   })
@@ -116,7 +116,7 @@ export class CompaniesController {
 
   @Post(':id/remove-users')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Remove user from company',
     type: UpdateCompanyResponse,
   })

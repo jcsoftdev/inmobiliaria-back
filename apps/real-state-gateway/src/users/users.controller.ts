@@ -78,9 +78,9 @@ export class UsersController {
     return this.usersService.create(data)
   }
 
-  @Patch()
+  @Patch(':id')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Update user',
     type: UpdateUserResponse,
   })
@@ -96,7 +96,7 @@ export class UsersController {
 
   @Delete(':id')
   @ApiResponse({
-    status: 203,
+    status: 200,
     description: 'Delete user',
     type: RemoveUserResponse,
   })
@@ -106,7 +106,7 @@ export class UsersController {
 
   @Post(':id/add-agencies')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Add agency to user',
     type: UpdateUserResponse,
   })
@@ -119,7 +119,7 @@ export class UsersController {
 
   @Post(':id/delete-agencies')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Remove agency from user',
     type: UpdateUserResponse,
   })

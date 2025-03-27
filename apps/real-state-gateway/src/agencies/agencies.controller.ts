@@ -71,7 +71,7 @@ export class AgenciesController {
 
   @Patch(':id')
   @ApiResponse({
-    status: 202,
+    status: 200,
     description: 'Update agency',
     type: UpdateAgencyResponse,
   })
@@ -87,7 +87,7 @@ export class AgenciesController {
 
   @Delete(':id')
   @ApiResponse({
-    status: 203,
+    status: 200,
     description: 'Delete agency',
     type: RemoveAgencyResponse,
   })

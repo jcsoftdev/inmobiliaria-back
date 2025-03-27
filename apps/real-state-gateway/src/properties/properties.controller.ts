@@ -9,6 +9,7 @@ import {
   Param,
   Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common'
 import {
   ApiBearerAuth,
@@ -70,7 +71,7 @@ export class PropertiesController {
 
   @Post()
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Create property ',
     type: CreatePropertyResponse,
   })
@@ -79,22 +80,26 @@ export class PropertiesController {
     return this.propertiesService.create(data)
   }
 
-  @Patch(':id')
+  @Patch()
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Update property',
     type: UpdatePropertyResponse,
   })
   update(
-    @Param('id') id: string,
     @Body() data: UpdatePropertyDto,
+    @Query('id') queryId?: string,
   ): Promise<UpdatePropertyResponse> {
-    return this.propertiesService.update(id, data)
+    const id = data.id ?? queryId
+    if (!id) {
+      throw new BadRequestException('Property ID is required')
+    }
+    return this.propertiesService.update({ ...data, id })
   }
 
   @Delete(':id')
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Delete property',
     type: CreatePropertyResponse,
   })
