@@ -11,29 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Configure SSH and Deploy
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Configure SSH and Deploy
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Stop script on any error
 
-        ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          # Ensure repository exists, else clone
-          if [ ! -d "~/inmobiliaria-back/.git" ]; then
+            # Backup the .env file if it exists
+            if [ -f ~/inmobiliaria-back/.env ]; then
+              mv ~/inmobiliaria-back/.env ~/.env_backup
+            fi
+
+            # Remove old repository and clone fresh
             rm -rf ~/inmobiliaria-back
             git clone https://github.com/jcsoftdev/inmobiliaria-back.git ~/inmobiliaria-back
-          fi
 
-          # Navigate to project, pull latest code from develop
-          cd ~/inmobiliaria-back
-          git checkout develop
-          git pull origin develop
+            # Restore .env file if it was backed up
+            if [ -f ~/.env_backup ]; then
+              mv ~/.env_backup ~/inmobiliaria-back/.env
+            fi
 
-          # Stop, remove old containers, and start new ones
-          docker compose down
-          docker compose up -d --build
-        EOF
+            # Navigate to project, pull latest code
+            cd ~/inmobiliaria-back
+            git checkout develop
+            git pull origin develop
+
+            # Stop, remove old containers, and start new ones
+            docker-compose down
+            docker-compose up -d --build
+          EOF
