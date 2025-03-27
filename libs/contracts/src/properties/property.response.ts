@@ -1,65 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Prisma, properties } from '@prisma/client'
-import {
-  IsArray,
-  IsDefined,
-  IsIn,
-  IsNumber,
-  IsString,
-  Length,
-} from 'class-validator'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
+import {
+  LocationType,
+  PropertyFeature,
+  PropertyStatus,
+  PropertyType,
+} from '@app/contracts/properties/create-property.dto'
 
-export enum PropertyType {
-  APARTMENT = 'apartment',
-  HOUSE = 'house',
-  PARKING = 'parking',
-}
-
-export class LocationType {
-  @ApiProperty()
-  @IsDefined({ message: 'Type is required' })
-  @IsString({ message: 'Type must be a string' })
-  @IsIn(['Point'], { message: 'Type must be "Point"' })
-  type!: 'Point'
-
-  @ApiProperty({ type: [Number], default: [0, 0] })
-  @IsDefined({ message: 'Coordinates are required' })
-  @IsArray({ message: 'Coordinates must be an array' })
-  @IsNumber({}, { each: true, message: 'Each coordinate must be a number' })
-  coordinates!: [number, number] // [latitude, longitude]
-
-  @ApiProperty()
-  @IsDefined({ message: 'Address is required' })
-  @IsString({ message: 'Address must be a string' })
-  @Length(1, 255, { message: 'Address must be between 1 and 255 characters' })
-  address!: string
-}
-
-export class PropertyFeature {
-  @ApiProperty()
-  @IsDefined({ message: 'Feature name is required' })
-  @IsString({ message: 'Feature name must be a string' })
-  @Length(1, 100, {
-    message: 'Feature name must be between 1 and 100 characters',
-  })
-  name!: string
-
-  @ApiProperty({
-    oneOf: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
-  })
-  @IsDefined({ message: 'Feature value is required' })
-  value!: string | number | boolean
-}
-
-export enum PropertyStatus {
-  AVAILABLE = 'available',
-  SELL_PENDING = 'sell_pending',
-  SOLD = 'sold',
-  INACTIVE = 'inactive',
-  RESERVED = 'reserved',
-}
 export class Property
   implements
     Readonly<

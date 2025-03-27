@@ -4,14 +4,14 @@ import { Type } from 'class-transformer'
 import { IsArray, IsString, ValidateNested } from 'class-validator'
 
 import { IsUUIDv7 } from '@app/common/decorators'
+
 import {
+  CreatePropertyDto,
   LocationType,
   PropertyFeature,
   PropertyStatus,
   PropertyType,
-} from '@app/contracts/properties/property.response'
-
-import { CreatePropertyDto } from './create-property.dto'
+} from './create-property.dto'
 
 export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
   @IsUUIDv7()

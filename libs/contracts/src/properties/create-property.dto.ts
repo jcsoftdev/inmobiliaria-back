@@ -2,21 +2,69 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   IsArray,
+  IsDefined,
   IsEnum,
+  IsIn,
   IsNumber,
-  IsOptional,
   IsString,
+  Length,
   ValidateNested,
 } from 'class-validator'
 
 import { IsUUIDv7 } from '@app/common/decorators'
-import {
-  LocationType,
-  Property,
-  PropertyFeature,
-  PropertyStatus,
-  PropertyType,
-} from '@app/contracts/properties/property.response'
+import { Property } from '@app/contracts/properties/property.response'
+
+export enum PropertyType {
+  APARTMENT = 'apartment',
+  HOUSE = 'house',
+  PARKING = 'parking',
+}
+
+export enum PropertyStatus {
+  AVAILABLE = 'available',
+  SELL_PENDING = 'sell_pending',
+  SOLD = 'sold',
+  INACTIVE = 'inactive',
+  RESERVED = 'reserved',
+}
+
+export class LocationType {
+  @ApiProperty()
+  @IsDefined({ message: 'Type is required' })
+  @IsString({ message: 'Type must be a string' })
+  @IsIn(['Point'], { message: 'Type must be "Point"' })
+  type!: 'Point'
+
+  @ApiProperty({ type: [Number], default: [0, 0] })
+  @IsDefined({ message: 'Coordinates are required' })
+  @IsArray({ message: 'Coordinates must be an array' })
+  @IsNumber({}, { each: true, message: 'Each coordinate must be a number' })
+  coordinates!: [number, number] // [latitude, longitude]
+
+  @ApiProperty()
+  @IsDefined({ message: 'Address is required' })
+  @IsString({ message: 'Address must be a string' })
+  @Length(1, 255, { message: 'Address must be between 1 and 255 characters' })
+  address!: string
+}
+
+export class PropertyFeature {
+  @ApiProperty()
+  @IsDefined({ message: 'Feature name is required' })
+  @IsString({ message: 'Feature name must be a string' })
+  @Length(1, 100, {
+    message: 'Feature name must be between 1 and 100 characters',
+  })
+  name!: string
+
+  @ApiProperty()
+  @IsDefined({ message: 'value is required' })
+  @IsString({ message: 'value must be string' })
+  @Length(1, 100, {
+    message: 'Feature value must be between 1 and 100 characters',
+  })
+  value!: string
+}
 
 export class CreatePropertyDto
   implements
@@ -27,6 +75,10 @@ export class CreatePropertyDto
       >
     >
 {
+  constructor() {
+    console.log(this)
+  }
+
   @ApiProperty({
     description: 'Property title',
     example: '01956c22-9b54-7628-8304-13024295978b',
@@ -55,8 +107,7 @@ export class CreatePropertyDto
     example: '01956c22-9b54-7628-8304-13024295978b',
   })
   @IsUUIDv7()
-  @IsOptional()
-  agencyId!: string | null
+  agencyId!: string
 
   @ApiProperty({
     description: 'Property price',
@@ -75,21 +126,15 @@ export class CreatePropertyDto
   })
   @ValidateNested()
   @Type(() => LocationType)
-  @IsOptional()
   location!: LocationType
 
   @ApiProperty({
     description: 'Property features',
-    example: [
-      { name: 'bedrooms', value: 3 },
-      { name: 'hasGarage', value: true },
-      { name: 'flooring', value: 'wood' },
-    ],
+    example: [{ name: 'has_pool', value: 'Piscina' }],
   })
   @IsArray({ message: 'features must be an array' })
   @ValidateNested({ each: true })
   @Type(() => PropertyFeature)
-  @IsOptional()
   features!: PropertyFeature[]
 
   @ApiProperty({
@@ -98,7 +143,6 @@ export class CreatePropertyDto
   })
   @IsArray({ message: 'amenities must be an array' })
   @IsString({ each: true })
-  @IsOptional()
   amenities!: string[]
 
   @ApiProperty({
@@ -112,9 +156,8 @@ export class CreatePropertyDto
 
   @ApiProperty({
     description: 'User id',
-    example: '01956c22-9b54-7628-8304-13024295978b',
+    example: '0195d983-c57b-724a-a5c1-e3fb0f543c41',
   })
   @IsUUIDv7()
-  @IsOptional()
   userId!: string
 }
