@@ -26,7 +26,7 @@ jobs:
               mv ~/inmobiliaria-back/.env ~/.env_backup
             fi
 
-            rm -rf ~/inmobiliaria-back
+            sudo rm -rf ~/inmobiliaria-back
             git clone https://github.com/jcsoftdev/inmobiliaria-back.git ~/inmobiliaria-back
 
             if [ -f ~/.env_backup ]; then
