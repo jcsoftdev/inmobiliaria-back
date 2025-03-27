@@ -14,10 +14,9 @@ WORKDIR /app
 
 ENV PNPM_HOME=/root/.local/share/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+ENV SHELL=/bin/sh
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
-
-RUN pnpm setup
 RUN pnpm add -g prisma
 
 COPY --from=builder /app/node_modules ./node_modules
