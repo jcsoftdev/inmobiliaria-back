@@ -27,4 +27,4 @@ COPY package.json ./
 
 EXPOSE 3000 3001 3002 3003
 
-CMD ["bash", "-c", "pnpm prisma migrate deploy --schema=./prisma/schema.prisma && pnpm run start:all"]
+CMD ["bash", "-c", "pnpm prisma db push --schema=./prisma/schema.prisma && pnpm run start:all"]
