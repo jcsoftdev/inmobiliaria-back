@@ -1,19 +1,22 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
+import { IsArray, IsString, ValidateNested } from 'class-validator'
 
 import { IsUUIDv7 } from '@app/common/decorators'
+
 import {
+  CreatePropertyDto,
   LocationType,
   PropertyFeature,
   PropertyStatus,
   PropertyType,
-} from '@app/contracts/properties/property.response'
-
-import { CreatePropertyDto } from './create-property.dto'
+} from './create-property.dto'
 
 export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
   @IsUUIDv7()
   id!: string
+
   @ApiPropertyOptional({
     description: 'Property title',
     example: 'Property title',
@@ -36,13 +39,22 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
   @ApiPropertyOptional({
     description: 'Property features',
     example: [
-      {
-        name: 'feature name',
-        value: 'feature value',
-      },
+      { name: 'bedrooms', value: 3 },
+      { name: 'bathrooms', value: 2 },
     ],
   })
+  @IsArray({ message: 'Features must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => PropertyFeature)
   features?: PropertyFeature[]
+
+  @ApiPropertyOptional({
+    description: 'Property amenities',
+    example: ['cerca al parque', 'cerca al hospital', 'tiene piscina'],
+  })
+  @IsArray({ message: 'Amenities must be an array of strings' })
+  @IsString({ each: true, message: 'Each amenity must be a string' })
+  amenities?: string[]
 
   @ApiPropertyOptional({
     description: 'Property location',

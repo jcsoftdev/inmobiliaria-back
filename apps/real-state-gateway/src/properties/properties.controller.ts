@@ -75,6 +75,7 @@ export class PropertiesController {
     type: CreatePropertyResponse,
   })
   create(@Body() data: CreatePropertyDto): Promise<CreatePropertyResponse> {
+    console.log('Received DTO:', data)
     return this.propertiesService.create(data)
   }
 

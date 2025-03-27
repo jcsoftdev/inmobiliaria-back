@@ -1,3 +1,4 @@
+# Build Stage
 FROM node:20 AS builder
 
 WORKDIR /app
@@ -10,7 +11,6 @@ COPY . .
 RUN pnpm install
 RUN pnpm run build:all
 
-
 FROM node:20 AS runner
 WORKDIR /app
 
@@ -21,7 +21,9 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/libs/common/src/protos ./libs/common/src/protos
 COPY package.json ./
 
+
+RUN pnpm add -g prisma
+
 EXPOSE 3000 3001 3002 3003
 
-CMD ["pnpm", "run", "start:all"]
-
+CMD ["sh", "-c", "pnpm prisma migrate deploy && pnpm run start:all"]
