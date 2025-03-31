@@ -119,32 +119,27 @@ export class PropertiesService {
     return response
   }
 
-  findOne({ id }: { id: string }) {
+  async findOne({ id }: { id: string }) {
     return this.prismaService.properties.findUniqueOrThrow({ where: { id } })
   }
 
-  update(id: string, updatePropertyDto: UpdatePropertyDto) {
-    return this.prismaService.properties.update({
+  async update({
+    id,
+    ...updatePropertyDto
+  }: UpdatePropertyDto): Promise<{ message: string }> {
+    await this.prismaService.properties.update({
       where: { id },
       data: {
-        title: updatePropertyDto.title,
-        description: updatePropertyDto.description,
-        price: updatePropertyDto.price
-          ? new Prisma.Decimal(updatePropertyDto.price)
-          : undefined,
-        status: updatePropertyDto.status as PropertyStatus,
-        type: updatePropertyDto.type as PropertyType,
+        ...updatePropertyDto,
         location: updatePropertyDto.location
           ? (updatePropertyDto.location as unknown as Prisma.InputJsonValue)
           : Prisma.JsonNull,
         features: updatePropertyDto.features
           ? (updatePropertyDto.features as unknown as Prisma.InputJsonValue)
           : Prisma.JsonNull,
-        amenities: updatePropertyDto.amenities
-          ? (updatePropertyDto.amenities as unknown as Prisma.InputJsonValue)
-          : Prisma.JsonNull,
       },
     })
+    return { message: 'Property updated successfully' }
   }
 
   delete({ id }: { id: string }) {

@@ -33,7 +33,7 @@ export class UsersController {
   }
 
   @GrpcMethod(SERVICES.USER, USERS_PATTERNS.UPDATE)
-  update(@Payload() data: UpdateUserDto) {
+  async update(@Payload() data: UpdateUserDto) {
     return this.usersService.update(data)
   }
 

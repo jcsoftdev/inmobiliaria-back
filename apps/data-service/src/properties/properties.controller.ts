@@ -31,8 +31,8 @@ export class PropertiesController {
   }
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.UPDATE)
-  update(@Payload() { id, data }: { id: string; data: UpdatePropertyDto }) {
-    return this.propertiesService.update(id, data)
+  update(@Payload() data: UpdatePropertyDto) {
+    return this.propertiesService.update(data)
   }
 
   @GrpcMethod(SERVICES.PROPERTY, PROPERTIES_PATTERNS.DELETE)

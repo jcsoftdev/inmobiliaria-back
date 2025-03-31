@@ -74,7 +74,7 @@ export class VisitsController {
 
   @Patch(':id')
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'Update visit.',
     type: UpdateVisitResponse,
   })
@@ -90,7 +90,7 @@ export class VisitsController {
 
   @Delete(':id')
   @ApiResponse({
-    status: 203,
+    status: 200,
     description: 'Delete visit.',
     type: RemoveVisitResponse,
   })
