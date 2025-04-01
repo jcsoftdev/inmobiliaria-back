@@ -37,16 +37,11 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
-            # Detect OS and use appropriate sed command
-            if [[ "$OSTYPE" == "darwin"* ]]; then
-              sed -i '' "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
-            else
-              sed -i "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
-            fi
+            # Eliminar líneas defectuosas de DATABASE_URL (con o sin comillas)
+            sed -i.bak "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env && rm ~/inmobiliaria-back/.env.bak
 
-
-
-            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
+            # Agregar nueva línea limpia usando printf (más seguro que echo)
+            printf 'DATABASE_URL=%s\n' "${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
             git checkout develop
