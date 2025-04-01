@@ -38,7 +38,8 @@ jobs:
             fi
 
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
-
+            # logging the DATABASE_URL for debugging purposes
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}"
             cd ~/inmobiliaria-back
             git checkout develop
             git pull origin develop
