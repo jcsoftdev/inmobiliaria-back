@@ -20,6 +20,7 @@ jobs:
 
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << "EOF"
             set -e
+
             echo "🧼 Cleaning up unused Docker resources (containers, images, networks, volumes)..."
             docker system prune -af --volumes
 
@@ -68,7 +69,7 @@ jobs:
             for i in {1..10}; do
               STATUS=$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
               echo "Attempt $i: Container status is '$STATUS'"
-              
+
               if [ "$STATUS" = "running" ]; then
                 echo "✅ inmobiliaria-app is running!"
                 break
@@ -89,8 +90,11 @@ jobs:
               sleep 5
             done
 
-            echo "📡 Curling app directly (http://localhost:3000)..."
-            curl -I http://localhost:3000 || echo "❌ App not responding on port 3000"
+            echo "📡 Curling app directly (http://127.0.0.1:3000)..."
+            curl -I http://127.0.0.1:3000 || {
+              echo "❌ App not responding on port 3000"
+              docker logs inmobiliaria-app
+            }
 
             echo "🧼 Cleaning unused images and containers..."
             docker image prune -f
@@ -108,7 +112,7 @@ jobs:
             echo "📄 Last 20 lines of Nginx error log:"
             sudo tail -n 20 /var/log/nginx/error.log || echo "❌ Could not read Nginx logs"
 
-            echo "🌐 Testing public endpoint (Nginx) with redirect support:"
-            curl -IL http://localhost || echo "❌ Nginx is not serving correctly"
+            echo "🌐 Testing public endpoint (Nginx):"
+            curl -IL http://justfordevelopment.tech || echo "❌ Nginx is not serving correctly"
 
           EOF
