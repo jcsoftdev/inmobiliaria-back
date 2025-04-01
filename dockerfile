@@ -5,6 +5,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# 👉 Establecer el registry explícitamente para evitar errores de autorización o bloqueos
+RUN pnpm config set registry https://registry.npmjs.org/
+
 COPY . .
 
 # Instala con dev deps, sin scripts
@@ -30,10 +33,10 @@ ENV SHELL=/bin/bash
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Instala PM2 y Prisma CLI global
+# PM2 y Prisma CLI globales
+RUN pnpm config set registry https://registry.npmjs.org/
 RUN pnpm add -g pm2 prisma
 
-# Copia archivos necesarios
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/libs/common/src/protos ./libs/common/src/protos
