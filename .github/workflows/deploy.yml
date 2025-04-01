@@ -45,7 +45,6 @@ jobs:
             echo "📂 Listing .env contents (sanitized):"
             grep -v 'SECRET\|PASSWORD\|TOKEN' .env || echo "(no .env or all vars are sensitive)"
 
-            # Install netcat if not available
             if ! command -v nc &> /dev/null; then
               sudo apt-get update && sudo apt-get install -y netcat
             fi
@@ -65,8 +64,21 @@ jobs:
             git checkout develop
             git pull origin develop
 
+            echo "📁 Showing files before build:"
+            ls -la
+
+            echo "📦 Showing Docker version and system info:"
+            docker --version
+            docker info
+
             echo "🐳 Building and starting Docker containers..."
             docker-compose up -d --no-deps --build
+
+            echo "📦 Showing docker images:"
+            docker images
+
+            echo "📦 Showing docker containers:"
+            docker ps -a
 
             echo "⏳ Waiting for inmobiliaria-app container to be running..."
             for i in {1..10}; do
@@ -97,7 +109,10 @@ jobs:
             docker exec inmobiliaria-app ps aux || echo "⚠️ Could not list processes"
 
             echo "🔎 Checking ports inside container..."
-            docker exec inmobiliaria-app netstat -tulpn || echo "⚠️ Could not inspect open ports"
+            docker exec inmobiliaria-app ss -tulpn || echo "⚠️ Could not inspect open ports"
+
+            echo "🔍 Showing environment variables inside container (sanitized):"
+            docker exec inmobiliaria-app printenv | grep -v 'SECRET\|TOKEN\|PASSWORD' || echo "⚠️ Could not list env vars"
 
             echo "⏳ Waiting for port 3000 to respond inside container..."
             for i in {1..10}; do
@@ -129,8 +144,11 @@ jobs:
             echo "🔁 Restarting Nginx service..."
             sudo systemctl restart nginx
 
+            echo "📄 Last 20 lines of Nginx access log:"
+            sudo tail -n 20 /var/log/nginx/access.log || echo "❌ Could not read Nginx access logs"
+
             echo "📄 Last 20 lines of Nginx error log:"
-            sudo tail -n 20 /var/log/nginx/error.log || echo "❌ Could not read Nginx logs"
+            sudo tail -n 20 /var/log/nginx/error.log || echo "❌ Could not read Nginx error logs"
 
             echo "🌐 Testing public endpoint (Nginx):"
             curl -IL http://justfordevelopment.tech || echo "❌ Nginx is not serving correctly"

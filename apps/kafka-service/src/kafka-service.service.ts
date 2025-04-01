@@ -3,7 +3,7 @@ import { Consumer, Kafka, EachMessagePayload } from 'kafkajs'
 
 @Injectable()
 export class KafkaService implements OnModuleInit, OnModuleDestroy {
-  private readonly kafka = new Kafka({ brokers: ['localhost:9092'] })
+  private readonly kafka = new Kafka({ brokers: ['0.0.0.0:9092'] })
   private readonly consumer: Consumer = this.kafka.consumer({
     groupId: 'kafka-service-group',
   })
