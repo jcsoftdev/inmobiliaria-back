@@ -37,7 +37,14 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
-            sed -i "/^['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
+            # Detect OS and use appropriate sed command
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+              sed -i '' "/['\"]*DATABASE_URL['\"]*=.*/d" .env
+            else
+              sed -i "/['\"]*DATABASE_URL['\"]*=.*/d" .env
+            fi
+
+
 
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
