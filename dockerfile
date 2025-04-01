@@ -8,8 +8,6 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY . .
 RUN pnpm install && pnpm run build:all && pnpm prune --prod
 
-COPY --from=builder /app/node_modules ./node_modules
-
 
 FROM node:20 AS runner
 
