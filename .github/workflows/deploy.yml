@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - name: Configure SSH and Deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -42,7 +44,7 @@ jobs:
 
             echo "🔄 Updating DATABASE_URL in .env file..."
             sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
+            echo "DATABASE_URL=$DATABASE_URL" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
 
@@ -100,7 +102,7 @@ jobs:
                 exit 1
               fi
 
-              if [ "$i" -eq 10 ]; then
+              if [ "$i" -eq 10]; then
                 echo "❌ Timeout: Container did not reach running status in time."
                 docker logs inmobiliaria-app
                 exit 1
@@ -123,7 +125,7 @@ jobs:
               nc -z 127.0.0.1 3000 && echo "✅ Port 3000 is up!" && break
               echo "Attempt $i: Port 3000 not ready yet..."
               sleep 5
-              if [ "$i" -eq 10 ]; then
+              if [ "$i" -eq 10]; then
                 echo "❌ Timeout waiting for port 3000"
                 docker logs inmobiliaria-app
                 exit 1
