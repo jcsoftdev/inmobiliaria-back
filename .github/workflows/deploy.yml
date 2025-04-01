@@ -22,7 +22,7 @@ jobs:
             set -e
 
             echo "🧼 Cleaning up unused Docker resources (containers, images, networks, volumes)..."
-            docker system prune -af --volumes
+            docker system prune -af --volumes || true
 
             echo "🔄 Backing up old environment if it exists..."
             if [ -f ~/inmobiliaria-back/.env ]; then
@@ -90,18 +90,26 @@ jobs:
               sleep 5
             done
 
+            echo "⏳ Waiting for port 3000 to respond inside container..."
+            for i in {1..10}; do
+              nc -z 127.0.0.1 3000 && echo "✅ Port 3000 is up!" && break
+              echo "Attempt $i: Port 3000 not ready yet..."
+              sleep 5
+              if [ "$i" -eq 10 ]; then
+                echo "❌ Timeout waiting for port 3000"
+                docker logs inmobiliaria-app
+                exit 1
+              fi
+            done
+
             echo "📡 Curling app directly (http://127.0.0.1:3000)..."
             curl -I http://127.0.0.1:3000 || {
               echo "❌ App not responding on port 3000"
               docker logs inmobiliaria-app
             }
+
             echo "📜 Showing last 100 lines of app logs:"
             docker logs inmobiliaria-app --tail 100
-
-
-            echo "🧼 Cleaning unused images and containers..."
-            docker image prune -f
-            docker container prune -f
 
             echo "🔍 Verifying app container status..."
             docker ps
@@ -117,5 +125,9 @@ jobs:
 
             echo "🌐 Testing public endpoint (Nginx):"
             curl -IL http://justfordevelopment.tech || echo "❌ Nginx is not serving correctly"
+
+            echo "🧼 Cleaning unused images and containers..."
+            docker image prune -f
+            docker container prune -f
 
           EOF
