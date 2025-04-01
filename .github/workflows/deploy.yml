@@ -60,7 +60,7 @@ jobs:
             git pull origin develop
 
             echo "🐳 Building and starting Docker containers..."
-            COMPOSE_BAKE=true docker-compose up -d --no-deps --build
+            docker-compose up -d --no-deps --build
 
             echo "⏳ Waiting for inmobiliaria-app to become healthy..."
             for i in {1..10}; do
