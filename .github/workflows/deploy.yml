@@ -38,7 +38,7 @@ jobs:
             fi
 
             sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
-            echo "DATABASE_URL='${{ env.DATABASE_URL }}'" >> ~/inmobiliaria-back/.env
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
             git checkout develop
