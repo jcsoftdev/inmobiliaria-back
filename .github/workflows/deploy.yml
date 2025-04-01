@@ -42,6 +42,9 @@ jobs:
 
             cd ~/inmobiliaria-back
 
+            echo "📂 Listing .env contents (sanitized):"
+            grep -v 'SECRET\|PASSWORD\|TOKEN' .env || echo "(no .env or all vars are sensitive)"
+
             # Install netcat if not available
             if ! command -v nc &> /dev/null; then
               sudo apt-get update && sudo apt-get install -y netcat
@@ -53,8 +56,8 @@ jobs:
             HOST=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+):([0-9]+).*|\1|')
             PORT=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+):([0-9]+).*|\2|')
 
-            echo "Parsed host: $HOST"
-            echo "Parsed port: $PORT"
+            echo "Parsed DB host: $HOST"
+            echo "Parsed DB port: $PORT"
 
             nc -zv $HOST $PORT || echo "❌ Could not connect to DB host/port"
 
@@ -89,6 +92,12 @@ jobs:
 
               sleep 5
             done
+
+            echo "🧪 Listing processes inside container..."
+            docker exec inmobiliaria-app ps aux || echo "⚠️ Could not list processes"
+
+            echo "🔎 Checking ports inside container..."
+            docker exec inmobiliaria-app netstat -tulpn || echo "⚠️ Could not inspect open ports"
 
             echo "⏳ Waiting for port 3000 to respond inside container..."
             for i in {1..10}; do
