@@ -37,9 +37,16 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
-            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
-            echo "😳 logging the DATABASE_URL for debugging purposes"
-            echo "DATABASE_URL=${{ env.DATABASE_URL }}"
+            # Parse and construct a valid DATABASE_URL
+            RAW_DATABASE_URL="${{ vars.DATABASE_URL }}"
+            ESCAPED_DATABASE_URL=$(echo "$RAW_DATABASE_URL" | sed -e 's/#/%23/g' -e 's/</%3C/g' -e 's/>/%3E/g' -e 's/\[/%5B/g' -e 's/\]/%5D/g')
+
+            # Remove existing DATABASE_URL from .env
+            sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
+
+            # Add the escaped DATABASE_URL to .env
+            echo "DATABASE_URL=$ESCAPED_DATABASE_URL" >> ~/inmobiliaria-back/.env
+
             cd ~/inmobiliaria-back
             git checkout develop
             git pull origin develop
