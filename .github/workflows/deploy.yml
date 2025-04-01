@@ -37,7 +37,8 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
-            sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
+            sed -i "/^['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
+
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
