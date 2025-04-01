@@ -29,6 +29,7 @@ export class AgenciesService {
         address: createAgencyDto.address,
         phone: createAgencyDto.phone,
         email: createAgencyDto.email,
+        ruc: createAgencyDto.ruc,
         created_at: new Date(),
       },
     })
@@ -37,11 +38,23 @@ export class AgenciesService {
     }
   }
 
-  findAll({
+  async findAll({
+    q,
     orderBy,
-    where,
+    where = {},
     ...props
-  }: AgencyProps): Promise<PaginatedAgenciesResponse> {
+  }: { q?: string } & AgencyProps): Promise<PaginatedAgenciesResponse> {
+    if (q) {
+      where.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { email: { contains: q, mode: 'insensitive' } },
+        { ruc: { contains: q, mode: 'insensitive' } },
+      ]
+    }
+
+    console.log('Search query:', q)
+    console.log('Search filters:', where)
+
     const res = paginator.paginate(
       this.prismaService.agencies,
       {
@@ -50,11 +63,28 @@ export class AgenciesService {
       },
       { ...props },
     )
-    return res
+
+    return res.then((result) => {
+      console.log('Paginated results:', result)
+      return {
+        ...result,
+        data: result.data.map((agency) => ({
+          ...agency,
+          email: agency.email ?? '',
+          ruc: agency.ruc ?? '',
+        })),
+      }
+    })
   }
 
   findOne({ id }: { id: string }): Promise<Agency> {
-    return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
+    return this.prismaService.agencies
+      .findUniqueOrThrow({ where: { id } })
+      .then((agency) => ({
+        ...agency,
+        email: agency.email ?? '',
+        ruc: agency.ruc ?? '',
+      }))
   }
 
   async update({
@@ -68,6 +98,7 @@ export class AgenciesService {
         address: updateAgencyDto.address,
         phone: updateAgencyDto.phone,
         email: updateAgencyDto.email,
+        ruc: updateAgencyDto.ruc,
       },
     })
 

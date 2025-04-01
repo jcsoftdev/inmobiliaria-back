@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package projects;
+
+message Project {
+  string id = 1;
+  string name = 2;
+  string location = 3;
+  optional string started_at = 4;
+  optional string completed_at = 5;
+  string budget = 6;
+  string phone = 7;
+}
+
+message ProjectList {
+  repeated Project data = 1;
+  Meta meta = 2;
+}
+
+message CreateProjectRequest {
+  string name = 1;
+  string location = 2;
+  optional string started_at = 3;
+  optional string completed_at = 4;
+  string budget = 5;
+  string phone = 6;
+}
+
+message UpdateProjectRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string location = 3;
+  optional string started_at = 4;
+  optional string completed_at = 5;
+  optional string budget = 6;
+  optional string phone = 7;
+}
+
+message DeleteProjectRequest {
+  string id = 1;
+}
+
+message GetProjectByIdRequest {
+  string id = 1;
+}
+
+message ProjectResponse {
+  Project project = 1;
+}
+
+message ActionResponse {
+  string message = 1;
+}
+
+message Meta {
+  int32 total = 1;
+  int32 lastPage = 2;
+  int32 currentPage = 3;
+  int32 perPage = 4;
+  int32 prev = 5;
+  int32 next = 6;
+}
+
+service ProjectService {
+  rpc create (CreateProjectRequest) returns (ActionResponse);
+  rpc update (UpdateProjectRequest) returns (ActionResponse);
+  rpc delete (DeleteProjectRequest) returns (ActionResponse);
+  rpc GetProjectById (GetProjectByIdRequest) returns (ProjectResponse);
+  rpc findAll (ProjectProps) returns (ProjectList);
+}
+
+message ProjectProps {
+  optional int32 perPage = 1;
+  optional int32 page = 2;
+}

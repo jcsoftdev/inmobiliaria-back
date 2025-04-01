@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsEmail } from 'class-validator'
+import { IsString, IsOptional } from 'class-validator'
 
 export class CreateAgencyDto {
   @ApiProperty({
@@ -21,12 +21,20 @@ export class CreateAgencyDto {
     example: '+34 954 567 321',
   })
   @IsString()
+  @IsOptional()
   phone!: string
 
   @ApiProperty({
     description: 'Agency email',
     example: 'Inmueblesseguros@gmail.com',
   })
-  @IsEmail()
+  @IsOptional()
   email!: string
+
+  @ApiProperty({
+    description: 'Agency RUC',
+    example: '12345678901',
+  })
+  @IsString()
+  ruc!: string
 }

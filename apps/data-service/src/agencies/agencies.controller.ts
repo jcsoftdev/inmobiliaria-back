@@ -23,7 +23,7 @@ export class AgenciesController {
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.FIND_ALL)
   async findAll(
-    @Payload() props: PaginateOptions,
+    @Payload() props: { q?: string } & PaginateOptions,
   ): Promise<PaginatedAgenciesResponse> {
     return this.agenciesService.findAll(props)
   }

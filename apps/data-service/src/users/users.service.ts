@@ -94,7 +94,12 @@ export class UsersService {
             lastName: last_name,
             role: role as UserRoles,
             status: status as UserStatus,
-            agencies: agencies?.map((a) => a.agencies) || [],
+            agencies:
+              agencies?.map((a) => ({
+                ...a.agencies,
+                email: a.agencies.email || '',
+                ruc: a.agencies.ruc || '',
+              })) || [],
           }
         },
       ),
@@ -133,7 +138,12 @@ export class UsersService {
       lastName: result.last_name,
       role: result.status as UserRoles,
       status: result.status as UserStatus,
-      agencies: result.agencies?.map((a) => a.agencies) || [],
+      agencies:
+        result.agencies?.map((a) => ({
+          ...a.agencies,
+          email: a.agencies.email || '',
+          ruc: a.agencies.ruc || '',
+        })) || [],
     }
   }
 
