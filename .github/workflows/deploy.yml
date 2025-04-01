@@ -42,7 +42,7 @@ jobs:
 
             # Add DATABASE_URL from env.DATABASE_URL
             echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
-
+            cat ~/inmobiliaria-back/.env
             cd ~/inmobiliaria-back
             git checkout develop
             git pull origin develop
