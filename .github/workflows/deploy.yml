@@ -95,6 +95,9 @@ jobs:
               echo "❌ App not responding on port 3000"
               docker logs inmobiliaria-app
             }
+            echo "📜 Showing last 100 lines of app logs:"
+            docker logs inmobiliaria-app --tail 100
+
 
             echo "🧼 Cleaning unused images and containers..."
             docker image prune -f
