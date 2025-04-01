@@ -6,7 +6,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY . .
-RUN pnpm install && pnpm run build:all && pnpm prune --prod
+RUN pnpm install --ignore-scripts && pnpm run build:all && pnpm prune --prod --ignore-scripts
 
 
 FROM node:20 AS runner
