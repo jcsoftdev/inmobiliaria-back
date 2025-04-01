@@ -37,13 +37,9 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
-            # Remove existing DATABASE_URL from .env
             sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
-
-            # Add DATABASE_URL from env.DATABASE_URL
-            echo "DATABASE_URL=${{ env.DATABASE_URL }}"
             echo "DATABASE_URL='${{ env.DATABASE_URL }}'" >> ~/inmobiliaria-back/.env
-            cat ~/inmobiliaria-back/.env
+
             cd ~/inmobiliaria-back
             git checkout develop
             git pull origin develop
@@ -52,9 +48,7 @@ jobs:
 
             for i in {1..10}; do
               STATUS=$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
-              if [ "$STATUS" = "running" ]; then
-                break
-              fi
+              if [ "$STATUS" = "running" ]; then break; fi
               if [ "$STATUS" = "exited" ] || [ "$STATUS" = "dead" ]; then
                 docker logs inmobiliaria-app
                 exit 1
@@ -63,18 +57,10 @@ jobs:
               sleep 5
             done
 
-            nc -z 127.0.0.1 3000 || {
-              docker logs inmobiliaria-app
-              exit 1
-            }
-
-            curl -sSf http://127.0.0.1:3000 > /dev/null || {
-              docker logs inmobiliaria-app
-              exit 1
-            }
+            nc -z 127.0.0.1 3000 || exit 1
+            curl -sSf http://127.0.0.1:3000 > /dev/null || exit 1
 
             sudo nginx -t && sudo systemctl restart nginx
-
             curl -sSf http://justfordevelopment.tech > /dev/null || exit 1
 
             docker image prune -f
