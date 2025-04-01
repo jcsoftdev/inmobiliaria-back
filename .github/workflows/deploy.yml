@@ -99,6 +99,7 @@ jobs:
             echo "📄 Last 20 lines of Nginx error log:"
             sudo tail -n 20 /var/log/nginx/error.log || echo "❌ Could not read Nginx logs"
 
-            echo "🌐 Testing public endpoint (Nginx):"
-            curl -I http://localhost || echo "❌ Nginx is not serving correctly"
+            echo "🌐 Testing public endpoint (Nginx) with redirect support:"
+            curl -IL http://localhost || echo "❌ Nginx is not serving correctly"
+
           EOF
