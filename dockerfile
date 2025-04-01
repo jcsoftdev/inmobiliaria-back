@@ -6,11 +6,10 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY . .
-RUN pnpm install
-RUN pnpm run build:all
+RUN pnpm install && pnpm run build:all && pnpm prune --prod
 
-# 🔧 Do the pruning here while the store is available
-RUN pnpm prune --prod
+COPY --from=builder /app/node_modules ./node_modules
+
 
 FROM node:20 AS runner
 
