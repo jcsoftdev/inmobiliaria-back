@@ -8,6 +8,13 @@ on:
 
 env:
   DATABASE_URL: ${{ vars.DATABASE_URL }}
+  DATABASE_SERVICE_PORT: ${{ vars.DATABASE_SERVICE_PORT }}
+  USER_MANAGEMENT_SERVICE_PORT: ${{ vars.USER_MANAGEMENT_SERVICE_PORT }}
+  GATEWAY_PORT: ${{ vars.GATEWAY_PORT }}
+  PROPERTIES_SERVICE_PORT: ${{ vars.PROPERTIES_SERVICE_PORT }}
+  NODE_ENV: ${{ vars.NODE_ENV }}
+  JWT_SECRET: ${{ vars.JWT_SECRET }}
+  JWT_REFRESH_SECRET: ${{ vars.JWT_REFRESH_SECRET }}
 
 jobs:
   deploy:
@@ -26,37 +33,25 @@ jobs:
 
             docker system prune -af --volumes || true
 
-            if [ -f ~/inmobiliaria-back/.env ]; then
-              mv ~/inmobiliaria-back/.env ~/.env_backup
-            fi
-
             sudo rm -rf ~/inmobiliaria-back
             git clone https://github.com/jcsoftdev/inmobiliaria-back.git ~/inmobiliaria-back
-
-            if [ -f ~/.env_backup ]; then
-              mv ~/.env_backup ~/inmobiliaria-back/.env
-            fi
-
-            # Eliminar líneas defectuosas de DATABASE_URL (con o sin comillas)
-            sed -i.bak "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env && rm ~/inmobiliaria-back/.env.bak
-
-            # Agregar nueva línea limpia usando printf (más seguro que echo)
-            printf 'DATABASE_URL=%s\n' "${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
             git checkout develop
             git pull origin develop
 
-            docker-compose up --no-deps --build
+            echo -e "DATABASE_URL=${{ env.DATABASE_URL }}\nDATABASE_SERVICE_PORT=${{ env.DATABASE_SERVICE_PORT }}\nUSER_MANAGEMENT_SERVICE_PORT=${{ env.USER_MANAGEMENT_SERVICE_PORT }}\nGATEWAY_PORT=${{ env.GATEWAY_PORT }}\nPROPERTIES_SERVICE_PORT=${{ env.PROPERTIES_SERVICE_PORT }}\nNODE_ENV=${{ env.NODE_ENV }}\nJWT_SECRET=${{ env.JWT_SECRET }}\nJWT_REFRESH_SECRET=${{ env.JWT_REFRESH_SECRET }}" > .env
+
+            docker-compose up --no-deps --build -d
 
             for i in {1..10}; do
-              STATUS=$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
-              if [ "$STATUS" = "running" ]; then break; fi
-              if [ "$STATUS" = "exited" ] || [ "$STATUS" = "dead" ]; then
+              STATUS=\$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
+              if [ "\$STATUS" = "running" ]; then break; fi
+              if [ "\$STATUS" = "exited" ] || [ "\$STATUS" = "dead" ]; then
                 docker logs inmobiliaria-app
                 exit 1
               fi
-              [ "$i" -eq 10 ] && docker logs inmobiliaria-app && exit 1
+              [ "\$i" -eq 10 ] && docker logs inmobiliaria-app && exit 1
               sleep 5
             done
 
