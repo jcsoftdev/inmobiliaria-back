@@ -7,7 +7,7 @@ import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
 
 import { RealStateGatewayModule } from './real-state-gateway.module'
 
-const port = process.env.GATEWAY_PORT
+const port = process.env.GATEWAY_PORT ?? 3000
 
 async function bootstrap() {
   const app = await NestFactory.create(RealStateGatewayModule)
