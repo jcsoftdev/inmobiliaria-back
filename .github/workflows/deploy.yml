@@ -39,9 +39,9 @@ jobs:
 
             # Detect OS and use appropriate sed command
             if [[ "$OSTYPE" == "darwin"* ]]; then
-              sed -i '' "/['\"]*DATABASE_URL['\"]*=.*/d" .env
+              sed -i '' "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
             else
-              sed -i "/['\"]*DATABASE_URL['\"]*=.*/d" .env
+              sed -i "/['\"]*DATABASE_URL['\"]*=.*/d" ~/inmobiliaria-back/.env
             fi
 
 
