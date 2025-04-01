@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package clients;
 
-import "google/protobuf/timestamp.proto";
-
 message Client {
   string id = 1;
   string dni = 2;
@@ -12,7 +10,7 @@ message Client {
   string name = 5;
   string email = 6;
   string phone = 7;
-  google.protobuf.Timestamp createdAt = 8;
+  string createdAt = 8;
 }
 
 message CreateClientRequest {

@@ -11,6 +11,7 @@ export interface JwtPayload {
   exp?: number
   username: string
   name: string
+  hasCompanies?: boolean
 }
 
 export interface JwtRefreshPayload {
@@ -23,6 +24,7 @@ export interface UserPayload {
   roles: string[]
   username: string
   name: string
+  hasCompanies?: boolean
 }
 
 export type UpdateRefreshTokenFn = (

@@ -23,18 +23,40 @@ export class AuthenticationService {
         roles: [`${user.role}`],
         name: user.name,
         username: user.username,
+        hasCompanies: user._count.users_companies > 0,
       },
       (userId, refreshToken) => this.updateRefreshToken(userId, refreshToken),
     )
   }
 
-  async validateUser(username: string, password: string) {
+  getUser = async ({
+    refresh_token,
+    username,
+  }: {
+    username?: string
+    refresh_token?: string
+  }) => {
     const user = await this.prismaService.users.findFirst({
       where: {
         email: username,
+        refresh_token,
+      },
+      include: {
+        _count: {
+          select: {
+            users_companies: true,
+          },
+        },
       },
     })
+    if (!user) {
+      throw new Error('User not found')
+    }
+    return user
+  }
 
+  async validateUser(username: string, password: string) {
+    const user = await this.getUser({ username })
     if (!user) {
       throw new Error('Invalid credentials')
     }
@@ -59,17 +81,14 @@ export class AuthenticationService {
   }
 
   async refreshToken(token: string) {
-    const user = await this.prismaService.users.findFirst({
-      where: {
-        refresh_token: token,
-      },
-    })
-
+    const user = await this.getUser({ refresh_token: token })
     const payload = this.authService.validateRefreshToken(token)
 
     if (!user || user.email !== payload.email) {
       throw new Error('Invalid token')
     }
+
+    console.log(user._count.users_companies > 0)
 
     return this.authService.signin(
       {
@@ -78,6 +97,7 @@ export class AuthenticationService {
         roles: [user.role],
         name: user.name,
         username: user.username,
+        hasCompanies: user._count.users_companies > 0,
       },
       (userId, refreshToken) => this.updateRefreshToken(userId, refreshToken),
     )
