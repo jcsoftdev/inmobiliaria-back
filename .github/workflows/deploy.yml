@@ -34,10 +34,26 @@ jobs:
             fi
 
             cd ~/inmobiliaria-back
-            
+
             echo "--- .env contents ---"
             cat .env
             echo "--- end of .env ---"
+
+            # Install netcat if not available
+            if ! command -v nc &> /dev/null; then
+              sudo apt-get update && sudo apt-get install -y netcat
+            fi
+
+            echo "Testing DATABASE_URL TCP connection..."
+            DATABASE_URL=$(grep DATABASE_URL .env | cut -d '=' -f2-)
+
+            HOST=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+):([0-9]+).*|\1|')
+            PORT=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+):([0-9]+).*|\2|')
+
+            echo "Parsed host: $HOST"
+            echo "Parsed port: $PORT"
+
+            nc -zv $HOST $PORT
 
             git checkout develop
             git pull origin develop
