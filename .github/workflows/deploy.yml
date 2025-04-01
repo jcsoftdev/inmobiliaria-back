@@ -18,7 +18,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << "EOF"
             set -e
 
             echo "🔄 Backing up old environment if it exists..."
@@ -65,12 +65,15 @@ jobs:
             echo "⏳ Waiting for inmobiliaria-app to become healthy..."
             for i in {1..10}; do
               STATUS=$(docker inspect --format='{{.State.Health.Status}}' inmobiliaria-app || echo "unknown")
-              echo "Health status: \$STATUS"
-              if [ "\$STATUS" = "healthy" ]; then
+              echo "Attempt $i: Checking health status..."
+              docker ps
+              echo "Container ID: $(docker ps -q -f name=inmobiliaria-app)"
+              echo "Health status: $STATUS"
+              if [ "$STATUS" = "healthy" ]; then
                 echo "✅ inmobiliaria-app is healthy!"
                 break
               fi
-              if [ "\$i" -eq 10 ]; then
+              if [ "$i" -eq 10 ]; then
                 echo "❌ Timeout: Container did not become healthy in time."
                 exit 1
               fi

@@ -18,6 +18,7 @@ ENV SHELL=/bin/bash
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 RUN pnpm add -g prisma
+RUN pnpm prune --prod
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
