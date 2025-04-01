@@ -6,6 +6,9 @@ on:
       - develop
   workflow_dispatch:
 
+env:
+  DATABASE_URL: ${{ vars.DATABASE_URL }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,10 +20,8 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          echo "${{ secrets.EC2_SSH_KEY }}"
-          echo "${{ secrets.EC2_HOST }}"
-          echo "${{ secrets.EC2_USER }}"
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << "EOF"
+
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<EOF
             set -e
 
             docker system prune -af --volumes || true
@@ -35,6 +36,8 @@ jobs:
             if [ -f ~/.env_backup ]; then
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
+
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
             git checkout develop
