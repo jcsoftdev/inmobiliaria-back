@@ -20,10 +20,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-          ssh -o SendEnv=DATABASE_URL ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << "EOF"
-            export DATABASE_URL=$DATABASE_URL
-
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << "EOF"
             set -e
+
+            echo "🔧 Configuring environment variables on EC2..."
+            echo "export DATABASE_URL=${{ secrets.DATABASE_URL }}" | sudo tee -a /etc/environment
 
             echo "🧼 Cleaning up unused Docker resources (containers, images, networks, volumes)..."
             docker system prune -af --volumes || true
@@ -46,7 +47,7 @@ jobs:
 
             echo "🔄 Updating DATABASE_URL in .env file..."
             sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
-            echo "DATABASE_URL=$DATABASE_URL" >> ~/inmobiliaria-back/.env
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
 
             cd ~/inmobiliaria-back
 
