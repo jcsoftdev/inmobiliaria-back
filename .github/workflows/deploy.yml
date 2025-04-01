@@ -41,7 +41,8 @@ jobs:
             sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
 
             # Add DATABASE_URL from env.DATABASE_URL
-            echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
+            echo "DATABASE_URL=${{ env.DATABASE_URL }}"
+            echo "DATABASE_URL='${{ env.DATABASE_URL }}'" >> ~/inmobiliaria-back/.env
             cat ~/inmobiliaria-back/.env
             cd ~/inmobiliaria-back
             git checkout develop
