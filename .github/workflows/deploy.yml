@@ -39,10 +39,6 @@ jobs:
 
             cd ~/inmobiliaria-back
 
-            echo "--- 📄 .env contents ---"
-            cat .env
-            echo "--- end of .env ---"
-
             # Install netcat if not available
             if ! command -v nc &> /dev/null; then
               sudo apt-get update && sudo apt-get install -y netcat
@@ -64,7 +60,25 @@ jobs:
             git pull origin develop
 
             echo "🐳 Building and starting Docker containers..."
-            docker-compose up -d --no-deps --build
+            COMPOSE_BAKE=true docker-compose up -d --no-deps --build
+
+            echo "⏳ Waiting for inmobiliaria-app to become healthy..."
+            for i in {1..10}; do
+              STATUS=$(docker inspect --format='{{.State.Health.Status}}' inmobiliaria-app || echo "unknown")
+              echo "Health status: \$STATUS"
+              if [ "\$STATUS" = "healthy" ]; then
+                echo "✅ inmobiliaria-app is healthy!"
+                break
+              fi
+              if [ "\$i" -eq 10 ]; then
+                echo "❌ Timeout: Container did not become healthy in time."
+                exit 1
+              fi
+              sleep 5
+            done
+
+            echo "📡 Curling app directly (http://localhost:3000)..."
+            curl -I http://localhost:3000 || echo "❌ App not responding on port 3000"
 
             echo "🧼 Cleaning unused images and containers..."
             docker image prune -f
@@ -72,9 +86,6 @@ jobs:
 
             echo "🔍 Verifying app container status..."
             docker ps
-
-            echo "📡 Curling app directly (http://localhost:3000)..."
-            curl -I http://localhost:3000 || echo "❌ App not responding on port 3000"
 
             echo "🧠 Checking Nginx config syntax..."
             sudo nginx -t || echo "❌ Invalid nginx config"

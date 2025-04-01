@@ -12,4 +12,9 @@ services:
       - "3003:3003"
     env_file:
       - .env
-
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
