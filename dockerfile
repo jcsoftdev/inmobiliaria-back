@@ -6,7 +6,18 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY . .
-RUN pnpm install --ignore-scripts && pnpm run build:all && pnpm prune --prod --ignore-scripts
+
+# Instala con dev deps, sin scripts
+RUN pnpm install --ignore-scripts
+
+# Genera prisma antes del build
+RUN pnpm prisma generate
+
+# Compila la app
+RUN pnpm run build:all
+
+# Elimina dev deps
+RUN pnpm prune --prod --ignore-scripts
 
 
 FROM node:20 AS runner
@@ -18,6 +29,8 @@ ENV PATH=$PNPM_HOME:$PATH
 ENV SHELL=/bin/bash
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Prisma CLI global (opcional si no usas en runtime)
 RUN pnpm add -g prisma
 
 COPY --from=builder /app/node_modules ./node_modules

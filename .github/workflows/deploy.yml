@@ -64,21 +64,28 @@ jobs:
             echo "🐳 Building and starting Docker containers..."
             docker-compose up -d --no-deps --build
 
-            echo "⏳ Waiting for inmobiliaria-app to become healthy..."
+            echo "⏳ Waiting for inmobiliaria-app container to be running..."
             for i in {1..10}; do
-              STATUS=$(docker inspect --format='{{.State.Health.Status}}' inmobiliaria-app || echo "unknown")
-              echo "Attempt $i: Checking health status..."
-              docker ps
-              echo "Container ID: $(docker ps -q -f name=inmobiliaria-app)"
-              echo "Health status: $STATUS"
-              if [ "$STATUS" = "healthy" ]; then
-                echo "✅ inmobiliaria-app is healthy!"
+              STATUS=$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
+              echo "Attempt $i: Container status is '$STATUS'"
+              
+              if [ "$STATUS" = "running" ]; then
+                echo "✅ inmobiliaria-app is running!"
                 break
               fi
-              if [ "$i" -eq 10 ]; then
-                echo "❌ Timeout: Container did not become healthy in time."
+
+              if [ "$STATUS" = "exited" ] || [ "$STATUS" = "dead" ]; then
+                echo "❌ Container failed to start (status: $STATUS)"
+                docker logs inmobiliaria-app
                 exit 1
               fi
+
+              if [ "$i" -eq 10 ]; then
+                echo "❌ Timeout: Container did not reach running status in time."
+                docker logs inmobiliaria-app
+                exit 1
+              fi
+
               sleep 5
             done
 
