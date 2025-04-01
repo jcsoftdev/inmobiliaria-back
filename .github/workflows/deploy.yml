@@ -40,6 +40,10 @@ jobs:
               mv ~/.env_backup ~/inmobiliaria-back/.env
             fi
 
+            echo "🔄 Updating DATABASE_URL in .env file..."
+            sed -i '/^DATABASE_URL=/d' ~/inmobiliaria-back/.env
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ~/inmobiliaria-back/.env
+
             cd ~/inmobiliaria-back
 
             echo "📂 Listing .env contents (sanitized):"
