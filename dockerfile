@@ -32,6 +32,8 @@ ENV PATH=$PNPM_HOME:$PATH
 ENV SHELL=/bin/bash
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm config set registry https://registry.npmjs.org/
+
 
 # PM2 y Prisma CLI globales
 RUN pnpm config set registry https://registry.npmjs.org/
