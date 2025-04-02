@@ -56,7 +56,13 @@ jobs:
             done
 
             nc -z 127.0.0.1 3000 || exit 1
-            curl -sSf http://127.0.0.1:3000 > /dev/null || exit 1
+            echo "🔍 Checking app response on port 3000"
+            curl -i http://127.0.0.1:3000 || {
+              echo "❌ App did not respond correctly on port 3000"
+              docker logs inmobiliaria-app
+              exit 1
+            }
+
 
             sudo nginx -t && sudo systemctl restart nginx
             curl -sSf http://justfordevelopment.tech > /dev/null || exit 1
