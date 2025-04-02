@@ -42,7 +42,7 @@ jobs:
 
             echo -e "DATABASE_URL=${{ env.DATABASE_URL }}\nDATABASE_SERVICE_PORT=${{ env.DATABASE_SERVICE_PORT }}\nUSER_MANAGEMENT_SERVICE_PORT=${{ env.USER_MANAGEMENT_SERVICE_PORT }}\nGATEWAY_PORT=${{ env.GATEWAY_PORT }}\nPROPERTIES_SERVICE_PORT=${{ env.PROPERTIES_SERVICE_PORT }}\nNODE_ENV=${{ env.NODE_ENV }}\nJWT_SECRET=${{ env.JWT_SECRET }}\nJWT_REFRESH_SECRET=${{ env.JWT_REFRESH_SECRET }}" > .env
 
-            docker-compose up --no-deps --build
+            docker-compose up --no-deps --build -d
 
             for i in {1..10}; do
               STATUS=\$(docker inspect --format='{{.State.Status}}' inmobiliaria-app 2>/dev/null || echo "not_found")
