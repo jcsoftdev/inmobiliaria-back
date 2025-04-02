@@ -1,5 +1,6 @@
 import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger'
 import { agencies, Prisma } from '@prisma/client'
+import { IsOptional } from 'class-validator'
 
 import { PaginatedResult, PaginationProps } from '@app/common/pagination'
 
@@ -17,10 +18,16 @@ export class Agency implements agencies {
   address!: string | null
 
   @ApiProperty({ type: String, example: '010230123' })
+  @IsOptional()
   phone!: string | null
 
   @ApiProperty({ type: String, example: 'test@gmail.com' })
-  email!: string
+  @IsOptional()
+  email!: string | null
+
+  @ApiProperty({ type: String, example: '12345678901' })
+  ruc!: string
+
   @ApiProperty({ type: Date })
   created_at!: Date | null
 }
@@ -42,4 +49,6 @@ export type AgencyProps = PaginationProps<
   AgencyFields
 >
 
-export type AgencySingleProps = Omit<AgencyProps, 'where' | 'orderBy'>
+export type AgencySingleProps = Omit<AgencyProps, 'where' | 'orderBy'> & {
+  search?: string
+}

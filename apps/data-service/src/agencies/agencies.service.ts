@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
 import {
   Agency,
-  AgencyProps,
+  AgencySingleProps,
   CreateAgencyDto,
   CreateAgencyResponse,
   PaginatedAgenciesResponse,
@@ -29,6 +30,7 @@ export class AgenciesService {
         address: createAgencyDto.address,
         phone: createAgencyDto.phone,
         email: createAgencyDto.email,
+        ruc: createAgencyDto.ruc,
         created_at: new Date(),
       },
     })
@@ -37,24 +39,49 @@ export class AgenciesService {
     }
   }
 
-  findAll({
-    orderBy,
-    where,
-    ...props
-  }: AgencyProps): Promise<PaginatedAgenciesResponse> {
+  async findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
+    const searchWhere = this.buildSearchWhere(props.search)
+
     const res = paginator.paginate(
       this.prismaService.agencies,
       {
-        orderBy,
-        where,
+        where: searchWhere,
       },
-      { ...props },
+      props,
     )
-    return res
+
+    return res.then((result) => {
+      return {
+        ...result,
+        data: result.data.map((agency) => ({
+          ...agency,
+          email: agency.email ?? '',
+          ruc: agency.ruc ?? '',
+        })),
+      }
+    })
+  }
+
+  private buildSearchWhere(search?: string): Prisma.agenciesWhereInput {
+    const where: Prisma.agenciesWhereInput = {}
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { ruc: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+    return where
   }
 
   findOne({ id }: { id: string }): Promise<Agency> {
-    return this.prismaService.agencies.findUniqueOrThrow({ where: { id } })
+    return this.prismaService.agencies
+      .findUniqueOrThrow({ where: { id } })
+      .then((agency) => ({
+        ...agency,
+        email: agency.email ?? '',
+        ruc: agency.ruc ?? '',
+      }))
   }
 
   async update({
@@ -68,6 +95,7 @@ export class AgenciesService {
         address: updateAgencyDto.address,
         phone: updateAgencyDto.phone,
         email: updateAgencyDto.email,
+        ruc: updateAgencyDto.ruc,
       },
     })
 

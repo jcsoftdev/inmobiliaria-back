@@ -51,12 +51,28 @@ export class AgenciesController {
       ],
     },
   })
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search query',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'perPage',
+    required: false,
+    type: Number,
+    description: 'Items per page',
+  })
   findAll(
-    @Query() { ...props }: AgencySingleProps,
+    @Query() { search, ...props }: AgencySingleProps,
   ): Promise<PaginatedAgenciesResponse> {
-    return this.agenciesService.findAll(props)
+    return this.agenciesService.findAll({ search, ...props })
   }
 
   @Post()
