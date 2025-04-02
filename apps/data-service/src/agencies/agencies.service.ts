@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
 import {
   Agency,
-  AgencyProps,
+  AgencySingleProps,
   CreateAgencyDto,
   CreateAgencyResponse,
   PaginatedAgenciesResponse,
@@ -38,34 +39,18 @@ export class AgenciesService {
     }
   }
 
-  async findAll({
-    q,
-    orderBy,
-    where = {},
-    ...props
-  }: { q?: string } & AgencyProps): Promise<PaginatedAgenciesResponse> {
-    if (q) {
-      where.OR = [
-        { name: { contains: q, mode: 'insensitive' } },
-        { email: { contains: q, mode: 'insensitive' } },
-        { ruc: { contains: q, mode: 'insensitive' } },
-      ]
-    }
-
-    console.log('Search query:', q)
-    console.log('Search filters:', where)
+  async findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
+    const searchWhere = this.buildSearchWhere(props.search)
 
     const res = paginator.paginate(
       this.prismaService.agencies,
       {
-        orderBy,
-        where,
+        where: searchWhere,
       },
-      { ...props },
+      props,
     )
 
     return res.then((result) => {
-      console.log('Paginated results:', result)
       return {
         ...result,
         data: result.data.map((agency) => ({
@@ -75,6 +60,18 @@ export class AgenciesService {
         })),
       }
     })
+  }
+
+  private buildSearchWhere(search?: string): Prisma.agenciesWhereInput {
+    const where: Prisma.agenciesWhereInput = {}
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { ruc: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+    return where
   }
 
   findOne({ id }: { id: string }): Promise<Agency> {

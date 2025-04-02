@@ -25,12 +25,7 @@ export class AgenciesController {
   async findAll(
     @Payload() props: AgencySingleProps,
   ): Promise<PaginatedAgenciesResponse> {
-    console.log(
-      'Received payload in data-service:',
-      JSON.stringify(props, null, 2),
-    )
-    const { q, ...rest } = props
-    return this.agenciesService.findAll({ q, ...rest })
+    return this.agenciesService.findAll(props)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.FIND_ONE)

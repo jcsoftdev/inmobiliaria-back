@@ -50,5 +50,5 @@ export type AgencyProps = PaginationProps<
 >
 
 export type AgencySingleProps = Omit<AgencyProps, 'where' | 'orderBy'> & {
-  q?: string
+  search?: string
 }
