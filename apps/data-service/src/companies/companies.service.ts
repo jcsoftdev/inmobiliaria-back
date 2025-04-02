@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { v7 as uuidV7 } from 'uuid'
 
 import { paginator } from '@app/common/pagination'
@@ -21,13 +22,36 @@ export class CompaniesService {
   async findAll({
     orderBy,
     where,
+    search,
     ...props
   }: CompanyProps): Promise<PaginatedCompaniesResponse> {
+    const searchWhere: Prisma.companiesWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            {
+              address: { contains: search, mode: Prisma.QueryMode.insensitive },
+            },
+            {
+              services: {
+                contains: search,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+            { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { phone: { contains: search, mode: Prisma.QueryMode.insensitive } },
+          ],
+        }
+      : {}
+
     const results = await paginator.paginate(
       this.prismaService.companies,
       {
         orderBy,
-        where,
+        where: {
+          ...where,
+          ...searchWhere,
+        },
         select: {
           id: true,
           name: true,
@@ -65,7 +89,7 @@ export class CompaniesService {
     createCompanyDto: CreateCompanyDto,
   ): Promise<CreateCompanyResponse> {
     return this.prismaService.$transaction(async (prisma) => {
-      await prisma.companies.create({
+      const company = await prisma.companies.create({
         data: {
           id: uuidV7(),
           name: createCompanyDto.name,
@@ -75,6 +99,9 @@ export class CompaniesService {
           phone: createCompanyDto.phone,
         },
       })
+      if (createCompanyDto.userIds?.length) {
+        await this.addUserToCompany(company.id, createCompanyDto.userIds)
+      }
 
       return { message: 'Company created successfully' }
     })

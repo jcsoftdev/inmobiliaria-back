@@ -120,6 +120,7 @@ export const convertFieldsToArray = <T extends string>(fields?: T): T[] => {
 export type PaginationProps<Where, OrderBy, Fields> = {
   page?: number
   perPage?: number
+  search?: string
   where?: Where
   orderBy?: OrderBy
   fields?: Fields

@@ -23,6 +23,7 @@ message CreateCompanyRequest {
   string services = 3;
   string email = 4;
   string phone = 5;
+  repeated string userIds = 6;
 }
 
 message UpdateCompanyRequest {
@@ -73,6 +74,7 @@ message RemoveUserRequest {
 message CompanyProps {
   optional int32 perPage = 1;
   optional int32 page = 2;
+  optional string search = 3;
 }
 
 service CompanyService {

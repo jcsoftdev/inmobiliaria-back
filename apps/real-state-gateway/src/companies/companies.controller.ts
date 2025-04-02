@@ -59,6 +59,13 @@ export class CompaniesController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description:
+      'Search companies by name, address, services, email or phone (case insensitive)',
+  })
   findAll(
     @Query() { ...props }: CompanySingleProps,
   ): Promise<PaginatedCompaniesResponse> {
