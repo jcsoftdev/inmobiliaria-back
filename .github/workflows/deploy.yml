@@ -56,13 +56,21 @@ jobs:
             done
 
             nc -z 127.0.0.1 3000 || exit 1
-            echo "🔍 Checking app response on port 3000"
-            curl -i http://127.0.0.1:3000 || {
-              echo "❌ App did not respond correctly on port 3000"
-              docker logs inmobiliaria-app
-              exit 1
-            }
 
+            echo "🔍 Waiting for HTTP server to respond on port 3000"
+            for i in {1..10}; do
+              if curl -s http://127.0.0.1:3000 > /dev/null; then
+                echo "✅ HTTP server is up!"
+                break
+              fi
+              echo "⏳ Attempt \$i: Server not ready yet. Retrying in 3s..."
+              sleep 3
+              if [ "\$i" -eq 10 ]; then
+                echo "❌ Server did not respond after multiple attempts."
+                docker logs inmobiliaria-app
+                exit 1
+              fi
+            done
 
             sudo nginx -t && sudo systemctl restart nginx
             curl -sSf http://justfordevelopment.tech > /dev/null || exit 1
