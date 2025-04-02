@@ -29,8 +29,13 @@ export class AgenciesService implements OnModuleInit {
   }
 
   findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
-    console.log('Passing query to data-service:', props.q)
-    return lastValueFrom(this.agenciesService.findAll(props))
+    const queryParams = {
+      q: props.q ?? '',
+      page: props.page ?? 1,
+      perPage: props.perPage ?? 10,
+    }
+
+    return lastValueFrom(this.agenciesService.findAll(queryParams))
   }
 
   create(data: CreateAgencyDto): Promise<CreateAgencyResponse> {

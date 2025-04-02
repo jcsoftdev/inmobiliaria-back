@@ -70,4 +70,5 @@ service AgencyService {
 message AgencyProps {
   optional int32 perPage = 1;
   optional int32 page = 2;
+  optional string q = 3;
 }

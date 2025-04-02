@@ -51,13 +51,27 @@ export class AgenciesController {
       ],
     },
   })
-  @ApiQuery({ name: 'q', required: false, type: String })
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiQuery({
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Search query',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'perPage',
+    required: false,
+    type: Number,
+    description: 'Items per page',
+  })
   findAll(
     @Query() { q, ...props }: AgencySingleProps,
   ): Promise<PaginatedAgenciesResponse> {
-    console.log('Query parameter q:', q)
     return this.agenciesService.findAll({ q, ...props })
   }
 
