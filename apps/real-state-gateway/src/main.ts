@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { Response } from 'express'
 
 import { AllExceptionsFilter } from '@app/common/filters/global-exception.filter'
 
@@ -30,7 +31,9 @@ async function bootstrap() {
     .build()
 
   const document = SwaggerModule.createDocument(app, config)
-
+  app
+    .getHttpAdapter()
+    .get('/health', (_req, res: Response) => res.send('OK' as string))
   SwaggerModule.setup('swagger', app, document)
 
   await app.listen(+(port ?? ''))
