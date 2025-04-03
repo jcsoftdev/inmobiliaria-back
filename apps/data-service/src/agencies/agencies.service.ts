@@ -20,6 +20,51 @@ import { PrismaService } from '@data-service/prisma.service'
 export class AgenciesService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findAll({
+    search,
+    ...props
+  }: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
+    const searchWhere: Prisma.agenciesWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            {
+              address: { contains: search, mode: Prisma.QueryMode.insensitive },
+            },
+            { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { phone: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { ruc: { contains: search, mode: Prisma.QueryMode.insensitive } },
+          ],
+        }
+      : {}
+
+    const results = await paginator.paginate(
+      this.prismaService.agencies,
+      {
+        where: searchWhere,
+        select: {
+          id: true,
+          name: true,
+          address: true,
+          phone: true,
+          email: true,
+          ruc: true,
+          created_at: true,
+        },
+      },
+      props,
+    )
+
+    return {
+      ...results,
+      data: results.data.map((agency) => ({
+        ...agency,
+        email: agency.email ?? '',
+        ruc: agency.ruc ?? '',
+      })),
+    }
+  }
+
   async create(
     createAgencyDto: CreateAgencyDto,
   ): Promise<CreateAgencyResponse> {
@@ -37,41 +82,6 @@ export class AgenciesService {
     return {
       message: 'Agency created successfully',
     }
-  }
-
-  async findAll(props: AgencySingleProps): Promise<PaginatedAgenciesResponse> {
-    const searchWhere = this.buildSearchWhere(props.search)
-
-    const res = paginator.paginate(
-      this.prismaService.agencies,
-      {
-        where: searchWhere,
-      },
-      props,
-    )
-
-    return res.then((result) => {
-      return {
-        ...result,
-        data: result.data.map((agency) => ({
-          ...agency,
-          email: agency.email ?? '',
-          ruc: agency.ruc ?? '',
-        })),
-      }
-    })
-  }
-
-  private buildSearchWhere(search?: string): Prisma.agenciesWhereInput {
-    const where: Prisma.agenciesWhereInput = {}
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
-        { ruc: { contains: search, mode: 'insensitive' } },
-      ]
-    }
-    return where
   }
 
   findOne({ id }: { id: string }): Promise<Agency> {
