@@ -1,3 +1,5 @@
+import { JwtAuthGuard } from '@libs/auth'
+import { JwtPayload } from '@libs/auth'
 import {
   Controller,
   Get,
@@ -7,8 +9,11 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common'
 import {
+  ApiBearerAuth,
   ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
@@ -32,11 +37,15 @@ import {
   CompanySingleProps,
 } from '@app/contracts/companies/companies.response'
 
+import { ACCESS_TOKEN_SWAGGER } from '@gateway/constants'
+
 import { CompaniesService } from './companies.service'
 
 @ApiTags('Empresas')
 @Controller('companies')
 @ApiExtraModels(PaginatedCompaniesResponse, Company)
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth(ACCESS_TOKEN_SWAGGER)
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
@@ -77,8 +86,14 @@ export class CompaniesController {
     description: 'Create a company',
     type: CreateCompanyResponse,
   })
-  create(@Body() data: CreateCompanyDto): Promise<CreateCompanyResponse> {
-    return this.companiesService.create(data)
+  create(
+    @Request() req: { user: JwtPayload },
+    @Body() data: CreateCompanyDto,
+  ): Promise<CreateCompanyResponse> {
+    return this.companiesService.create({
+      ...data,
+      userIds: [req.user.sub],
+    })
   }
 
   @Patch(':id')
@@ -111,7 +126,7 @@ export class CompaniesController {
     description: 'Add user to company',
     type: UpdateCompanyResponse,
   })
-  addUser(
+  addUsers(
     @Param('id') companyId: string,
     @Body() data: AddUsersBody,
   ): Promise<UpdateCompanyResponse> {

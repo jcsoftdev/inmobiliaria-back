@@ -99,8 +99,15 @@ export class CompaniesService {
           phone: createCompanyDto.phone,
         },
       })
+
       if (createCompanyDto.userIds?.length) {
-        await this.addUserToCompany(company.id, createCompanyDto.userIds)
+        await prisma.users_companies.createMany({
+          data: createCompanyDto.userIds.map((userId) => ({
+            id: uuidV7(),
+            company_id: company.id,
+            user_id: userId,
+          })),
+        })
       }
 
       return { message: 'Company created successfully' }
@@ -169,17 +176,13 @@ export class CompaniesService {
   }
 
   async addUserToCompany(companyId: string, userIds: string[]) {
-    try {
-      await this.prismaService.users_companies.createMany({
-        data: userIds.map((userId) => ({
-          id: uuidV7(),
-          company_id: companyId,
-          user_id: userId,
-        })),
-      })
-    } catch (error) {
-      console.error('Error en addUserToCompany', error)
-    }
+    await this.prismaService.users_companies.createMany({
+      data: userIds.map((userId) => ({
+        id: uuidV7(),
+        company_id: companyId,
+        user_id: userId,
+      })),
+    })
   }
 
   async removeUserFromCompany(

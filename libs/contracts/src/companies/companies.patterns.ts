@@ -23,7 +23,7 @@ export const COMPANIES_PATTERNS = {
   CREATE: 'create',
   UPDATE: 'update',
   DELETE: 'delete',
-  ADD_USER: 'addUser',
+  ADD_USERS: 'addUsers',
   REMOVE_USER: 'removeUser',
 }
 

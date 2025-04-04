@@ -55,7 +55,7 @@ export class CompaniesController {
     return this.companiesService.delete(payload)
   }
 
-  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.ADD_USER)
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.ADD_USERS)
   async addUsers(@Payload() payload: AddUsersBody): Promise<AddUsersResponse> {
     if (
       !payload.companyId ||

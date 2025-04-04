@@ -83,6 +83,6 @@ service CompanyService {
   rpc delete (DeleteCompanyRequest) returns (ActionResponse);
   rpc findOne (GetCompanyByIdRequest) returns (CompanyResponse);
   rpc findAll (CompanyProps) returns (CompanyList);
-  rpc addUser (AddUserRequest) returns (ActionResponse);
+  rpc addUsers (AddUserRequest) returns (ActionResponse);
   rpc removeUser (RemoveUserRequest) returns (ActionResponse);
 }

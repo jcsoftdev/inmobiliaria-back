@@ -42,13 +42,13 @@ export class CompaniesController {
     return this.companiesService.remove(payload.id)
   }
 
-  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.ADD_USER)
-  async AddUser(
+  @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.ADD_USERS)
+  async addUsers(
     @Payload()
     { companyId, userIds }: { companyId: string; userIds: string[] },
   ): Promise<UpdateCompanyResponse> {
     await this.companiesService.addUserToCompany(companyId, userIds)
-    return { message: 'User added to company successfuly' }
+    return { message: 'User added to company successfully' }
   }
 
   @GrpcMethod(SERVICES.COMPANY, COMPANIES_PATTERNS.REMOVE_USER)

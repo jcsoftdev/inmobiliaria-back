@@ -39,6 +39,8 @@ RUN pnpm config set registry https://registry.npmjs.org/
 RUN pnpm config set registry https://registry.npmjs.org/
 RUN pnpm add -g pm2 prisma
 
+RUN npx prisma db push
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/libs/common/src/protos ./libs/common/src/protos
