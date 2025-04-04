@@ -17,29 +17,29 @@ export class AgenciesController {
   constructor(private readonly agenciesService: AgenciesService) {}
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.CREATE)
-  async create(@Payload() createAgencyDto: CreateAgencyDto) {
+  create(@Payload() createAgencyDto: CreateAgencyDto) {
     return this.agenciesService.create(createAgencyDto)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.FIND_ALL)
-  async findAll(
+  findAll(
     @Payload() props: AgencySingleProps,
   ): Promise<PaginatedAgenciesResponse> {
     return this.agenciesService.findAll(props)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.FIND_ONE)
-  async findOne(@Payload() param: { id: string }) {
+  findOne(@Payload() param: { id: string }) {
     return this.agenciesService.findOne(param)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.UPDATE)
-  async update(@Payload() data: UpdateAgencyDto) {
+  update(@Payload() data: UpdateAgencyDto) {
     return this.agenciesService.update(data)
   }
 
   @GrpcMethod(SERVICES.AGENCY, AGENCIES_PATTERNS.DELETE)
-  async delete(@Payload() payload: { id: string }) {
+  delete(@Payload() payload: { id: string }) {
     return this.agenciesService.delete(payload)
   }
 }
